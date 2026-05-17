@@ -1,6 +1,6 @@
 ---
 name: daily-ai-work-impact-log
-description: Use when the user wants to record daily work, estimate daily AI usage or throughput, track Codex/Copilot/ChatGPT/API usage, capture evidence for performance reviews, or draft annual 考績表 accomplishments.
+description: Use when the user wants to record daily work, reconstruct a day from local Codex logs, estimate daily AI usage or throughput, track Codex/Copilot/ChatGPT/API usage, capture evidence for performance reviews, or draft annual 考績表 accomplishments.
 ---
 
 # Daily AI Work Impact Log
@@ -28,7 +28,9 @@ When the user wants to record today, ask only for missing details needed to make
   - Business impact: user pain reduced, workflow improved, cost/time saved, SLA/error/support metrics improved.
   - Growth / ownership: new tools learned, ambiguous problems clarified, decisions documented.
 
-Default to Markdown with these sections:
+If the user asks to "run" the log for a date and provides no details, do not return an empty template. First try the "Local Codex Log Reconstruction" workflow below. If there is no accessible evidence, return a compact draft with `unknown` / `not provided` labels and ask for only the highest-value missing details.
+
+Default to Markdown with these sections when creating or updating an entry:
 
 ```markdown
 # Daily Work + AI Usage Log
@@ -72,6 +74,37 @@ Date:
 - Quantified result:
 - Competency shown:
 ```
+
+### Local Codex Log Reconstruction
+
+Use this when the user asks to check Codex logs, reconstruct yesterday/today, summarize AI usage, or produce a daily entry from local activity.
+
+1. Resolve the date explicitly in the user's timezone. Say the exact date, for example `2026-05-16 Asia/Taipei`.
+2. Inspect local Codex records as best-effort evidence:
+   - `~/.codex/sessions/YYYY/MM/DD/*.jsonl`
+   - `~/.codex/archived_sessions/rollout-YYYY-MM-DD*.jsonl`
+   - `~/.codex/session_index.jsonl`
+   - `~/.codex/history.jsonl`
+   - `~/.codex/shell_snapshots/*`
+3. Extract only useful summary fields, not raw private logs:
+   - session id, timestamp, cwd, user prompts, final outcome, task duration, and token-count events when present.
+   - Count prompts and sum token usage from `last_token_usage` across token-count events when available. Label this as "local logged tokens", not official billing.
+4. Look for work evidence related to the log:
+   - Run `git log --since ... --until ... --pretty=format:'%h%x09%ad%x09%s' --date=iso-local` in relevant repositories found from session `cwd` values.
+   - Check created or modified files from that date only when it helps support the daily entry.
+5. Produce a concise daily log with:
+   - Work Done, Evidence, AI Usage, Metric Check, Time Saved, Review-Ready Bullets, and Notes for Annual 考績表.
+   - Confidence labels for evidence and estimates.
+
+Useful command patterns:
+
+```bash
+find ~/.codex/sessions/YYYY/MM/DD ~/.codex/archived_sessions -maxdepth 1 -type f -name 'rollout-YYYY-MM-DD*.jsonl' -print | sort
+jq -r 'select(.type=="event_msg" and .payload.type=="user_message") | .payload.message' file.jsonl
+jq -s '[.[] | select(.type=="event_msg" and .payload.type=="token_count") | .payload.info.last_token_usage] | map(.total_tokens // 0) | add // 0' file.jsonl
+```
+
+Do not expose credentials, API keys, private customer data, or long verbatim content from logs. If a user prompt contains a visible secret, summarize the action without repeating the secret.
 
 ### AI Usage Estimate
 
