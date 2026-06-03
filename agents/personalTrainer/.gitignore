@@ -1,0 +1,9 @@
+.env
+*.db
+__pycache__/
+*.pyc
+.DS_Store
+workspace/solution.py
+workspace/test_harness.py
+workspace/README.md
+.venv/

@@ -6,3 +6,6 @@ __pycache__/
 venv/
 markdown/
 conversion-report.json
+node_modules/
+agents/quant-python-ai/
+agents/stock-agent/
