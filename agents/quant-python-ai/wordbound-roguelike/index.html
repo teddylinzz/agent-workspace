@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Wordbound is a cozy vocabulary roguelike where every correct answer lands a hit."
+    />
+    <title>Wordbound — A Vocabulary Roguelike</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="paper-noise" aria-hidden="true"></div>
+
+    <div id="title-screen" class="title-screen">
+      <div class="title-orbit orbit-one" aria-hidden="true"></div>
+      <div class="title-orbit orbit-two" aria-hidden="true"></div>
+      <header class="landing-nav">
+        <a class="brand" href="#" aria-label="Wordbound home">
+          <span class="brand-mark">W</span>
+          <span>WORDBOUND</span>
+        </a>
+        <button id="sound-toggle-title" class="icon-button" aria-label="Toggle sound">♪</button>
+      </header>
+
+      <main class="hero">
+        <div class="eyebrow"><span></span> A vocabulary roguelike</div>
+        <h1>Every word is<br /><em>a weapon.</em></h1>
+        <p class="hero-copy">
+          Journey through a shifting world of language. Learn new words, build clever
+          combos, and see how far your vocabulary can carry you.
+        </p>
+        <div class="hero-actions">
+          <button id="new-run-button" class="button button-primary">
+            Begin a new journey <span>→</span>
+          </button>
+          <button id="continue-button" class="button button-ghost" hidden>
+            Continue journey
+          </button>
+        </div>
+        <div class="feature-strip" aria-label="Game features">
+          <div><b>∞</b><span>Endless<br />expeditions</span></div>
+          <div><b>6</b><span>Word<br />realms</span></div>
+          <div><b>60+</b><span>Words to<br />master</span></div>
+        </div>
+      </main>
+
+      <aside class="hero-card" aria-hidden="true">
+        <div class="mini-map">
+          <span class="mini-path path-a"></span>
+          <span class="mini-path path-b"></span>
+          <i class="mini-node node-a">✦</i>
+          <i class="mini-node node-b">?</i>
+          <i class="mini-node node-c">♜</i>
+        </div>
+        <div class="hero-word-card">
+          <span>WORD DISCOVERED</span>
+          <strong>luminous</strong>
+          <p>/ˈluː.mɪ.nəs/</p>
+          <blockquote>giving off light; bright or shining</blockquote>
+        </div>
+      </aside>
+
+      <footer class="landing-footer">Designed for curious minds · Progress saves locally</footer>
+    </div>
+
+    <div id="game-shell" class="game-shell" hidden>
+      <header class="game-header">
+        <a class="brand compact" href="#" id="home-button" aria-label="Return to title">
+          <span class="brand-mark">W</span><span>WORDBOUND</span>
+        </a>
+        <div class="run-meta">
+          <span id="region-label">THE VERDANT VERGE</span>
+          <b>DAY <span id="day-label">1</span></b>
+        </div>
+        <div class="header-actions">
+          <button id="collection-button" class="text-button">Lexicon <span id="learned-count">0</span></button>
+          <button id="sound-toggle" class="icon-button" aria-label="Toggle sound">♪</button>
+          <button id="settings-button" class="icon-button" aria-label="Open settings">⋯</button>
+        </div>
+      </header>
+
+      <main class="game-layout">
+        <aside class="adventurer-panel panel">
+          <div class="portrait-wrap">
+            <div class="portrait-halo"></div>
+            <div class="portrait" aria-label="Your explorer avatar">
+              <span class="portrait-face">•ᴗ•</span>
+              <span class="portrait-hat"></span>
+            </div>
+            <span id="level-badge" class="level-badge">LV. 1</span>
+          </div>
+          <div class="player-title">
+            <small>THE WANDERING</small>
+            <h2>Lexicographer</h2>
+          </div>
+          <div class="health-block">
+            <div class="stat-row"><span>Resolve</span><b id="hp-text">40 / 40</b></div>
+            <div class="meter"><span id="hp-bar"></span></div>
+          </div>
+          <div class="xp-block">
+            <div class="stat-row"><span>Insight</span><b id="xp-text">0 / 5</b></div>
+            <div class="meter xp-meter"><span id="xp-bar"></span></div>
+          </div>
+          <div class="resource-row">
+            <div><span>✦</span><b id="spark-count">3</b><small>Sparks</small></div>
+            <div><span>◈</span><b id="coin-count">0</b><small>Ink</small></div>
+          </div>
+          <div class="relics-block">
+            <div class="stat-row"><span>Relics</span><button id="relic-help" aria-label="About relics">?</button></div>
+            <div id="relic-list" class="relic-list">
+              <span class="empty-relic">Your satchel is empty</span>
+            </div>
+          </div>
+        </aside>
+
+        <section id="stage" class="stage" aria-live="polite"></section>
+
+        <aside class="journey-panel panel">
+          <div class="journey-heading">
+            <div><small>CURRENT PATH</small><h2>Journey</h2></div>
+            <span id="floor-label">1 / 5</span>
+          </div>
+          <div id="journey-map" class="journey-map"></div>
+          <div class="streak-card">
+            <div class="streak-icon">↗</div>
+            <div><small>CURRENT STREAK</small><strong><span id="streak-count">0</span> words</strong></div>
+            <span id="streak-bonus">+0%</span>
+          </div>
+          <div class="daily-card">
+            <span class="daily-kicker">DAILY QUEST</span>
+            <b id="quest-text">Master 8 words</b>
+            <div class="meter daily-meter"><span id="quest-bar"></span></div>
+            <small id="quest-progress">0 / 8 · Reward: 20 ink</small>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+    <dialog id="modal" class="modal">
+      <button id="modal-close" class="modal-close" aria-label="Close">×</button>
+      <div id="modal-content"></div>
+    </dialog>
+
+    <template id="battle-template">
+      <div class="battle-stage">
+        <div class="battle-topline">
+          <span id="encounter-type" class="encounter-type">WILD ENCOUNTER</span>
+          <span id="word-progress">WORD 1 OF 4</span>
+        </div>
+        <div class="enemy-zone">
+          <div class="enemy-info">
+            <div><small id="enemy-kind">INKLING</small><h2 id="enemy-name">The Mumbler</h2></div>
+            <span id="enemy-intent" class="enemy-intent">⚔ 7</span>
+          </div>
+          <div class="enemy-health"><span id="enemy-hp-bar"></span></div>
+          <div id="enemy-art" class="enemy-art">
+            <span class="enemy-shadow"></span>
+            <span class="enemy-body"></span>
+            <span class="enemy-eye eye-left"></span>
+            <span class="enemy-eye eye-right"></span>
+            <span class="enemy-mouth"></span>
+            <i class="scribble scribble-a">~</i>
+            <i class="scribble scribble-b">?</i>
+            <i class="scribble scribble-c">a</i>
+          </div>
+        </div>
+        <div class="challenge-card">
+          <div class="prompt-head">
+            <span id="difficulty-tag">COMMON · A2</span>
+            <button id="speak-button" class="speak-button" aria-label="Hear pronunciation">◖))</button>
+          </div>
+          <div class="word-row">
+            <div><h1 id="challenge-word">serene</h1><p id="pronunciation">/səˈriːn/</p></div>
+            <div id="combo-display" class="combo-display" hidden><b>×2</b><span>COMBO</span></div>
+          </div>
+          <p id="challenge-prompt" class="challenge-prompt">Choose the closest meaning</p>
+          <div id="answer-grid" class="answer-grid"></div>
+          <div class="power-row">
+            <button id="hint-button" class="power-button"><span>✦</span> Reveal a clue <small>1 spark</small></button>
+            <button id="skip-button" class="power-button"><span>↻</span> Swap word <small>1 spark</small></button>
+          </div>
+          <div id="clue-box" class="clue-box" hidden></div>
+          <div id="feedback-panel" class="feedback-panel" hidden></div>
+        </div>
+      </div>
+    </template>
+
+    <script src="game.js"></script>
+  </body>
+</html>
