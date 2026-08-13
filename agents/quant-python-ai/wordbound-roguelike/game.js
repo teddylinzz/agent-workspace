@@ -166,6 +166,7 @@ const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 let state = null;
 let battle = null;
+let practice = null;
 let soundEnabled = true;
 let audioContext = null;
 
@@ -182,10 +183,10 @@ function freshState() {
 }
 
 function loadMeta() {
-  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {} };
+  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {}, reviews: {} };
   try {
     const loaded = JSON.parse(localStorage.getItem(META_KEY));
-    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {} } : defaults;
+    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {}, reviews: loaded.reviews || {} } : defaults;
   } catch { return defaults; }
 }
 
@@ -205,6 +206,9 @@ function loadState() {
 
 function updateContinueButton() {
   $("#continue-button").hidden = !loadState();
+  const reviewCount = getReviewWords(true).length;
+  $("#practice-title-button").hidden = reviewCount === 0;
+  $("#title-review-count").textContent = reviewCount;
 }
 
 function startNewRun() {
@@ -257,6 +261,7 @@ function updateHUD() {
   $("#streak-count").textContent = state.streak;
   $("#streak-bonus").textContent = `+${Math.min(50, state.streak * 5)}%`;
   $("#learned-count").textContent = Object.keys(state.learned).length;
+  $("#review-count").textContent = getReviewWords(true).length;
   $("#quest-progress").textContent = `${Math.min(state.quest, 8)} / 8 · Reward: ${state.questClaimed ? "claimed" : "20 ink"}`;
   $("#quest-bar").style.width = `${Math.min(100, state.quest / 8 * 100)}%`;
   $("#sound-toggle").textContent = soundEnabled ? "♪" : "×";
@@ -390,10 +395,19 @@ function startBattle(type) {
 
 function getWord() {
   const regionWords = REGIONS[state.region % REGIONS.length].words;
+  const allWords = REGIONS.flatMap(region => region.words);
+  const reviewRecords = loadMeta().reviews;
+  const dueReviews = allWords.filter(word => {
+    const review = reviewRecords[word.word];
+    return review && review.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
+  });
   let available = regionWords.filter(word => !battle.usedWords.includes(word.word));
   if (!available.length) { battle.usedWords = []; available = regionWords; }
   const unseen = available.filter(word => !state.seen.includes(word.word));
-  const word = random(unseen.length ? unseen : available);
+  const reviewWord = dueReviews.length
+    ? shuffle(dueReviews).sort((a, b) => reviewRecords[b.word].misses - reviewRecords[a.word].misses)[0]
+    : null;
+  const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
   battle.usedWords.push(word.word);
   if (!state.seen.includes(word.word)) state.seen.push(word.word);
   if (state.seen.length > 35) state.seen.shift();
@@ -450,6 +464,7 @@ function answerQuestion(button, correct, mode) {
     state.maxStreak = Math.max(state.maxStreak, state.streak);
     state.quest += 1;
     state.learned[word.word] = (state.learned[word.word] || 0) + 1;
+    updateReviewRecord(word.word, true);
     gainXp(1);
     let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
     if (state.streak >= 5) damage += 4;
@@ -476,6 +491,7 @@ function answerQuestion(button, correct, mode) {
     if (protectedHit) battle.blocked = true;
     else state.hp = Math.max(0, state.hp - battle.damage);
     state.streak = 0;
+    updateReviewRecord(word.word, false);
     $("#enemy-art").classList.add("attack");
     document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
     setTimeout(() => $(".screen-flash")?.remove(), 400);
@@ -483,7 +499,7 @@ function answerQuestion(button, correct, mode) {
     tone(150, .14);
     showFeedback(false, protectedHit
       ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.”`
-      : `<b>Not quite.</b> ${word.word} means “${word.definition}.” <i>${word.sentence}</i>`);
+      : `<b>Not quite.</b> ${word.word} means “${word.definition}.” <i>${word.sentence}</i><br><small>Added to Words to Revisit.</small>`);
     battle.first = false;
     updateHUD();
     setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
@@ -530,12 +546,7 @@ function swapWord() {
 }
 
 function speakCurrentWord() {
-  if (!("speechSynthesis" in window) || !battle?.current) return;
-  speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(battle.current.word);
-  utterance.rate = .78;
-  utterance.lang = "en-US";
-  speechSynthesis.speak(utterance);
+  if (battle?.current) speakWord(battle.current.word);
 }
 
 function gainXp(amount) {
@@ -572,6 +583,36 @@ function updateMeta() {
   meta.bestStreak = Math.max(meta.bestStreak, state.streak);
   meta.learned[battle.current.word] = (meta.learned[battle.current.word] || 0) + 1;
   localStorage.setItem(META_KEY, JSON.stringify(meta));
+}
+
+function updateReviewRecord(word, correct) {
+  const meta = loadMeta();
+  const previous = meta.reviews[word];
+  if (!previous && correct) return;
+  const review = previous || { misses: 0, successes: 0, strength: 0, dueAt: 0, lastSeen: 0 };
+  review.lastSeen = Date.now();
+  if (correct) {
+    review.successes += 1;
+    review.strength = Math.min(4, review.strength + 1);
+    const intervals = [0, 10 * 60 * 1000, 24 * 60 * 60 * 1000, 3 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000];
+    review.dueAt = Date.now() + intervals[review.strength];
+    if (review.strength >= 4 && review.successes >= review.misses + 2) delete meta.reviews[word];
+    else meta.reviews[word] = review;
+  } else {
+    review.misses += 1;
+    review.strength = 0;
+    review.dueAt = Date.now();
+    meta.reviews[word] = review;
+  }
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
+}
+
+function getReviewWords(includeNotDue = false) {
+  const reviews = loadMeta().reviews;
+  const now = Date.now();
+  return Object.keys(reviews)
+    .filter(word => includeNotDue || reviews[word].dueAt <= now)
+    .sort((a, b) => reviews[b].misses - reviews[a].misses || reviews[a].dueAt - reviews[b].dueAt);
 }
 
 function winBattle() {
@@ -715,13 +756,128 @@ function showGameOver() {
 
 function showLexicon() {
   const knownWords = state?.learned || loadMeta().learned || {};
-  const learned = Object.entries(knownWords).sort((a, b) => b[1] - a[1]);
   const allWords = REGIONS.flatMap(region => region.words);
+  const reviews = loadMeta().reviews;
+  const catalog = new Set([...Object.keys(knownWords), ...Object.keys(reviews)]);
+  const learned = [...catalog].map(key => [key, knownWords[key] || 0]).sort((a, b) => {
+    if (Boolean(reviews[a[0]]) !== Boolean(reviews[b[0]])) return reviews[a[0]] ? -1 : 1;
+    return b[1] - a[1];
+  });
+  const reviewWords = getReviewWords(true);
+  const dueCount = getReviewWords().length;
   const content = learned.length ? learned.map(([key, count]) => {
     const word = allWords.find(item => item.word === key);
-    return `<div class="lexicon-word"><b>${word.word}</b><span>${word.phonetic} · seen ${count}×</span><p>${word.definition}</p></div>`;
+    const review = reviews[key];
+    return `<div class="lexicon-word ${review ? "needs-review" : ""}"><b>${word.word}</b><span>${word.phonetic} · recalled ${count}×</span>${review ? `<mark>${review.strength ? `stage ${review.strength}` : "revisit"}</mark>` : ""}<p>${word.definition}</p></div>`;
   }).join("") : '<p class="section-copy">Your lexicon is waiting for its first word.</p>';
-  openModal(`<span class="modal-kicker">YOUR LIVING RECORD</span><h2>Lexicon</h2><div class="lexicon-list">${content}</div>`);
+  openModal(`<span class="modal-kicker">YOUR LIVING RECORD</span><h2>Lexicon</h2>
+    ${reviewWords.length ? `<div class="review-callout"><div><small>WORDS TO REVISIT</small><b>${dueCount} due now · ${reviewWords.length} learning</b><p>Short, no-penalty recall sessions strengthen the words you missed.</p></div><button id="start-review-modal" class="button button-primary">Practice now →</button></div>` : ""}
+    <div class="lexicon-list">${content}</div>`);
+  $("#start-review-modal")?.addEventListener("click", requestPractice);
+}
+
+function requestPractice() {
+  if (state?.screen === "battle") {
+    if ($("#modal").open) $("#modal").close();
+    toast("Finish this encounter before starting a recall session.");
+    return;
+  }
+  startPractice();
+}
+
+function startPracticeFromTitle() {
+  state = loadState() || freshState();
+  soundEnabled = state.sound;
+  enterGame();
+  startPractice();
+}
+
+function startPractice() {
+  $("#modal").open && $("#modal").close();
+  const words = getReviewWords(true);
+  if (!words.length) { toast("No words need review right now."); return; }
+  practice = { words: words.slice(0, 10), index: 0, correct: 0, answered: false };
+  state.screen = "practice";
+  renderPracticeQuestion();
+}
+
+function renderPracticeQuestion() {
+  if (practice.index >= practice.words.length) { showPracticeSummary(); return; }
+  const allWords = REGIONS.flatMap(region => region.words);
+  const word = allWords.find(item => item.word === practice.words[practice.index]);
+  if (!word) { practice.index += 1; renderPracticeQuestion(); return; }
+  const mode = practice.index % 2 ? "synonym" : "definition";
+  const property = mode === "synonym" ? "synonym" : "definition";
+  const distractors = shuffle(allWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
+  const answers = shuffle([word[property], ...distractors]);
+  practice.answered = false;
+  $("#stage").innerHTML = `<div class="practice-stage">
+    <div class="practice-progress"><span>RECALL SESSION</span><b>${practice.index + 1} / ${practice.words.length}</b></div>
+    <div class="practice-meter"><span style="width:${practice.index / practice.words.length * 100}%"></span></div>
+    <div class="practice-card">
+      <span class="practice-kicker">${mode === "synonym" ? "SYNONYM RECALL" : "MEANING RECALL"} · NO PENALTY</span>
+      <div class="practice-word-row"><div><h1>${word.word}</h1><p>${word.phonetic}</p></div><button id="practice-speak" class="speak-button" aria-label="Hear pronunciation">◖))</button></div>
+      <p class="challenge-prompt">${mode === "synonym" ? "Which word is closest in meaning?" : "What does this word mean?"}</p>
+      <div class="answer-grid">${answers.map((answer, index) => `<button class="answer-button practice-answer" data-answer="${escapeAttribute(answer)}"><span>${String.fromCharCode(65 + index)}</span>${answer}</button>`).join("")}</div>
+      <div id="practice-feedback" class="practice-feedback" hidden></div>
+    </div>
+    <button id="leave-practice" class="practice-leave">← Return to journey</button>
+  </div>`;
+  $("#practice-speak").addEventListener("click", () => speakWord(word.word));
+  $("#leave-practice").addEventListener("click", resumeAfterPractice);
+  document.querySelectorAll(".practice-answer").forEach(button => button.addEventListener("click", () => {
+    answerPractice(button, button.dataset.answer === word[property], word, property);
+  }));
+}
+
+function answerPractice(button, correct, word, property) {
+  if (practice.answered) return;
+  practice.answered = true;
+  const buttons = [...document.querySelectorAll(".practice-answer")];
+  buttons.forEach(item => item.disabled = true);
+  const feedback = $("#practice-feedback");
+  feedback.hidden = false;
+  if (correct) {
+    practice.correct += 1;
+    button.classList.add("correct");
+    updateReviewRecord(word.word, true);
+    feedback.innerHTML = `<b>Remembered.</b> ${word.sentence}`;
+    tone(540, .08); setTimeout(() => tone(720, .08), 80);
+  } else {
+    button.classList.add("wrong");
+    buttons.find(item => item.dataset.answer === word[property])?.classList.add("correct");
+    updateReviewRecord(word.word, false);
+    feedback.classList.add("wrong");
+    feedback.innerHTML = `<b>Keep this one close.</b> ${word.word} means “${word.definition}.”<br><i>${word.sentence}</i>`;
+    tone(170, .12);
+  }
+  feedback.insertAdjacentHTML("beforeend", '<button id="next-practice" class="button button-primary">Next word →</button>');
+  $("#next-practice").addEventListener("click", () => { practice.index += 1; renderPracticeQuestion(); });
+  updateHUD();
+}
+
+function showPracticeSummary() {
+  const score = practice.correct;
+  const total = practice.words.length;
+  $("#stage").innerHTML = `<div class="reward-stage practice-summary"><span class="section-kicker">RECALL SESSION COMPLETE</span><h1>Your memory grows roots.</h1><p class="section-copy">Words answered correctly will rest longer before returning. Missed words stay close for another attempt.</p><div class="summary-stats"><div><b>${score}/${total}</b><span>Remembered</span></div><div><b>${getReviewWords().length}</b><span>Due now</span></div></div><div class="hero-actions"><button id="practice-again" class="button button-primary">Practice again →</button><button id="practice-done" class="button button-ghost">Return to journey</button></div></div>`;
+  $("#practice-again").addEventListener("click", startPractice);
+  $("#practice-done").addEventListener("click", resumeAfterPractice);
+  updateHUD();
+}
+
+function resumeAfterPractice() {
+  practice = null;
+  if (state.hp <= 0) showGameOver();
+  else showPathChoice();
+}
+
+function speakWord(word) {
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.rate = .78;
+  utterance.lang = "en-US";
+  speechSynthesis.speak(utterance);
 }
 
 function showSettings() {
@@ -780,8 +936,10 @@ function toast(html) {
 
 $("#new-run-button").addEventListener("click", startNewRun);
 $("#continue-button").addEventListener("click", continueRun);
+$("#practice-title-button").addEventListener("click", startPracticeFromTitle);
 $("#home-button").addEventListener("click", event => { event.preventDefault(); returnHome(); });
 $("#collection-button").addEventListener("click", showLexicon);
+$("#review-queue-button").addEventListener("click", requestPractice);
 $("#settings-button").addEventListener("click", showSettings);
 $("#sound-toggle").addEventListener("click", toggleSound);
 $("#sound-toggle-title").addEventListener("click", toggleSound);
