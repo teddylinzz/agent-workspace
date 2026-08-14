@@ -4209,6 +4209,33 @@ function saveHighScoreRecord(victory = false) {
   localStorage.setItem(META_KEY, JSON.stringify(meta));
 }
 
+
+function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    return fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "-9999px";
+    textarea.setAttribute("readonly", "");
+    document.body.appendChild(textarea);
+    textarea.select();
+    const success = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return success ? Promise.resolve() : Promise.reject(new Error("execCommand failed"));
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
 function showGameOver() {
   state.screen = "gameover";
   state.hp = 0;
@@ -4262,17 +4289,47 @@ function showGameOver() {
   });
   $("#review-button")?.addEventListener("click", showLexicon);
   $("#fame-gameover-btn")?.addEventListener("click", showHallOfFame);
-  $("#copy-chronicle-btn")?.addEventListener("click", () => {
-    let md = `# WordBound Expedition Chronicle — ${new Date().toLocaleDateString()}\n\n`;
+  const copyBtn = $("#copy-chronicle-btn");
+  copyBtn?.addEventListener("click", () => {
+    let md = `# 📖 WordBound Expedition Chronicle — ${new Date().toLocaleDateString()}\n\n`;
     md += `**Score:** ${score} PTS (Rank ${grade}) | ${state.wordsAnswered} words answered · ${accuracy}% accuracy · ${state.maxStreak} max streak\n\n`;
-    md += `## Words Encountered\n\n`;
-    runWords.forEach(w => {
-      md += `- **${w.word}** (${w.pos || "word"}, ${w.level || "B1"}): ${w.definition} | 釋義: ${w.zh || ""} | Near: ${w.synonym}\n`;
-      md += `  > *${w.sentence}*\n\n`;
+    md += `## Words Encountered (${runWords.length})\n\n`;
+    runWords.forEach((w, idx) => {
+      md += `${idx + 1}. **${w.word}** (${w.pos || "w."}, ${w.level || "B1"})\n`;
+      md += `   - **Meaning:** ${w.definition}\n`;
+      if (w.zh) md += `   - **中文釋義:** ${w.zh}\n`;
+      if (w.synonym) md += `   - **Synonym:** ${w.synonym}\n`;
+      if (w.sentence) md += `   - **Example:** *${w.sentence}*\n`;
+      if (w.root) md += `   - **Root:** ${w.root}\n`;
+      md += `\n`;
     });
-    navigator.clipboard.writeText(md).then(() => {
-      toast(isZh ? "📋 <b>學習筆記已複製到剪貼簿！</b> 可直接貼入 Notion 或 Obsidian。" : "📋 <b>Study Sheet copied to clipboard!</b> Ready to paste into Notion/Obsidian.");
-    });
+
+    const origHtml = copyBtn.innerHTML;
+    copyToClipboard(md)
+      .then(() => {
+        copyBtn.innerHTML = isZh ? "✅ 筆記已成功複製！" : "✅ Copied to Clipboard!";
+        copyBtn.style.borderColor = "var(--teal)";
+        copyBtn.style.color = "var(--teal-dark)";
+        toast(isZh ? "📋 <b>學習筆記已複製到剪貼簿！</b> 可直接貼入 Notion 或 Obsidian。" : "📋 <b>Study Sheet copied to clipboard!</b> Ready to paste into Notion/Obsidian.");
+        playChestFanfare();
+        setTimeout(() => {
+          if (copyBtn) {
+            copyBtn.innerHTML = origHtml;
+            copyBtn.style.borderColor = "";
+            copyBtn.style.color = "";
+          }
+        }, 3000);
+      })
+      .catch(() => {
+        copyBtn.innerHTML = isZh ? "✅ 筆記已生成" : "✅ Notes Ready";
+        toast(isZh ? "📋 請在彈窗中手動複製筆記" : "📋 Copy notes in the window below:");
+        openModal(`
+          <span class="modal-kicker">MARKDOWN STUDY NOTES</span>
+          <h2>${isZh ? "遠征學習筆記" : "Expedition Study Sheet"}</h2>
+          <p class="section-copy">${isZh ? "請直接全選下方文字並複製 (Ctrl+C / Cmd+C)：" : "Select and copy the markdown text below:"}</p>
+          <textarea style="width:100%;height:220px;font:500 11px var(--mono);padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--cream);" readonly>${md}</textarea>
+        `);
+      });
   });
   updateHUD();
 }
@@ -4640,9 +4697,20 @@ serendipity, finding good things by chance, good luck, Persian fairy tale, 意�
 ephemeral, lasting for a short time, fleeting, Greek ephemeros, 短暫的
 
 Please output only the CSV lines with no extra commentary.`;
-    navigator.clipboard.writeText(promptText).then(() => {
-      toast(isZh ? "📋 <b>已複製 ChatGPT 出題 Prompt！</b> 可直接貼給 AI 生成詞彙。" : "📋 <b>ChatGPT prompt copied!</b> Paste it into ChatGPT to generate custom decks.");
-    });
+    const pBtn = $("#copy-prompt-btn");
+    const origPText = pBtn ? pBtn.innerHTML : "";
+    copyToClipboard(promptText)
+      .then(() => {
+        if (pBtn) {
+          pBtn.innerHTML = isZh ? "✅ 已成功複製 Prompt！" : "✅ Prompt Copied!";
+          setTimeout(() => { if (pBtn) pBtn.innerHTML = origPText; }, 2500);
+        }
+        toast(isZh ? "📋 <b>已複製 ChatGPT 出題 Prompt！</b> 可直接貼給 AI 生成詞彙。" : "📋 <b>ChatGPT prompt copied!</b> Paste it into ChatGPT to generate custom decks.");
+        playChestFanfare();
+      })
+      .catch(() => {
+        toast(isZh ? "📋 已生成出題 Prompt" : "📋 ChatGPT prompt ready");
+      });
   });
 
   // Smart Bulk Importer
