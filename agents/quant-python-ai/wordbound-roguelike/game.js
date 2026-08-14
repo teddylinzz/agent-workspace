@@ -2688,8 +2688,13 @@ function answerQuestion(button, correct, mode) {
 
     const feedbackHtml = `
       <div class="feedback-correct-wrapper">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;">
-          <span style="font-weight:700;color:var(--teal);"><b>${feedbackHeader}</b></span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-weight:700;color:var(--teal);"><b>${feedbackHeader}</b></span>
+            <button id="add-to-study-btn" class="button button-ghost" style="padding:3px 9px;font-size:9px;border-color:var(--coral);color:var(--coral-dark);" title="${isZh ? '雖然答對但還想多複習？點擊加入待加強單字清單 (快捷鍵 R)' : 'Guessed right but want to practice? Add to study list (Hotkey R)'}">
+              ${isZh ? "📌 標記為待加強 (R)" : "📌 Mark to Study (R)"}
+            </button>
+          </div>
           <button id="next-question-btn" class="button button-primary" style="padding:4px 12px;font-size:9.5px;">
             ${isZh ? "下一題 ➔ (Space)" : "Next ➔ (Space)"}
           </button>
@@ -2699,6 +2704,22 @@ function answerQuestion(button, correct, mode) {
     `;
     showFeedback(true, feedbackHtml);
     $("#next-question-btn")?.addEventListener("click", advanceNext);
+
+    $("#add-to-study-btn")?.addEventListener("click", () => {
+      if (nextTimeout) { clearTimeout(nextTimeout); nextTimeout = null; }
+      updateReviewRecord(word.word, false);
+      const btn = $("#add-to-study-btn");
+      if (btn) {
+        btn.textContent = isZh ? "✅ 已加入待加強清單" : "✅ In Study List";
+        btn.style.borderColor = "var(--teal)";
+        btn.style.color = "var(--teal-dark)";
+        btn.style.background = "rgba(47,122,114,0.12)";
+        btn.disabled = true;
+      }
+      toast(isZh ? `📌 已將 <b>${word.word}</b> 加入待加強複習清單！` : `📌 Marked <b>${word.word}</b> for future study!`);
+      tone(480, 0.08); setTimeout(() => tone(620, 0.12), 80);
+      updateHUD();
+    });
     
     if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
     handleQuest();
@@ -4330,6 +4351,16 @@ document.addEventListener("keydown", event => {
   if (event.shiftKey && (event.key === "@" || event.key === "2")) {
     usePotion(1);
     return;
+  }
+
+  // If Mark to Study button is present, 'R' marks the word
+  if (event.key.toLowerCase() === "r") {
+    const studyBtn = $("#add-to-study-btn");
+    if (studyBtn && !studyBtn.disabled && !studyBtn.hidden) {
+      event.preventDefault();
+      studyBtn.click();
+      return;
+    }
   }
 
   // If failed continue button or correct next question button is present, Space or Enter proceeds immediately
