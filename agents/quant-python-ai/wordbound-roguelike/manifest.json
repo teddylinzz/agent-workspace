@@ -1,0 +1,9 @@
+{
+  "name": "WordBound — A Vocabulary Roguelike",
+  "short_name": "WordBound",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b2727",
+  "theme_color": "#2f7a72",
+  "description": "An interactive roguelike adventure where words are your weapons."
+}

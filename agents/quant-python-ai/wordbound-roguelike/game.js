@@ -1802,16 +1802,55 @@ function showGameOver() {
   state.hp = 0;
   const accuracy = state.wordsAnswered ? Math.round(state.correct / state.wordsAnswered * 100) : 0;
   const known = Object.keys(state.learned).length;
+  const allWords = REGIONS.flatMap(r => r.words);
+  const runWords = (state.seen || []).map(w => allWords.find(item => item.word === w)).filter(Boolean);
+  
   $("#stage").innerHTML = `
-    <div class="reward-stage"><span class="section-kicker">THE INK RUNS DRY</span><h1>Your journey rests.</h1>
-      <p class="section-copy">No expedition is wasted. The words you discovered remain in your lexicon, ready for the next journey.</p>
+    <div class="reward-stage gameover-stage">
+      <span class="section-kicker">THE INK RUNS DRY</span>
+      <h1>Expedition Chronicle</h1>
+      <p class="section-copy">No voyage into language is wasted. Review your run's vocabulary sheet below or export it directly into your notes.</p>
+      
       <div class="summary-stats">
-        <div><b>${known}</b><span>Words discovered</span></div><div><b>${accuracy}%</b><span>Accuracy</span></div><div><b>${state.maxStreak}</b><span>Best streak</span></div>
+        <div><b>${state.wordsAnswered}</b><span>Words Answered</span></div>
+        <div><b>${accuracy}%</b><span>Accuracy</span></div>
+        <div><b>${state.maxStreak}</b><span>Best Streak</span></div>
       </div>
-      <div class="hero-actions"><button id="retry-button" class="button button-primary">Begin again <span>→</span></button><button id="review-button" class="button button-ghost">Review lexicon</button></div>
+      
+      <div class="hero-actions" style="margin-bottom: 20px;">
+        <button id="retry-button" class="button button-primary">Begin Again <span>→</span></button>
+        <button id="copy-chronicle-btn" class="button button-ghost">📋 Copy Study Sheet</button>
+        <button id="review-button" class="button button-ghost">Review Lexicon</button>
+      </div>
+
+      <div class="run-chronicle-box">
+        <span class="modal-kicker">EXPEDITION VOCABULARY (${runWords.length} WORDS)</span>
+        <div class="run-words-list">
+          ${runWords.map(w => `
+            <div class="run-word-chip">
+              <b>${w.word}</b>
+              <small>${w.pos || "w."} · ${w.zh || w.synonym}</small>
+              <p>${w.definition}</p>
+            </div>
+          `).join("")}
+        </div>
+      </div>
     </div>`;
-  $("#retry-button").addEventListener("click", startNewRun);
-  $("#review-button").addEventListener("click", showLexicon);
+
+  $("#retry-button")?.addEventListener("click", showClassSelection);
+  $("#review-button")?.addEventListener("click", showLexicon);
+  $("#copy-chronicle-btn")?.addEventListener("click", () => {
+    let md = `# WordBound Expedition Chronicle — ${new Date().toLocaleDateString()}\n\n`;
+    md += `**Stats:** ${state.wordsAnswered} words answered · ${accuracy}% accuracy · ${state.maxStreak} max streak\n\n`;
+    md += `## Words Encountered\n\n`;
+    runWords.forEach(w => {
+      md += `- **${w.word}** (${w.pos || "word"}, ${w.level || "B1"}): ${w.definition} | 釋義: ${w.zh || ""} | Near: ${w.synonym}\n`;
+      md += `  > *${w.sentence}*\n\n`;
+    });
+    navigator.clipboard.writeText(md).then(() => {
+      toast("📋 <b>Study Sheet copied to clipboard!</b> Ready to paste into Notion/Obsidian.");
+    });
+  });
   updateHUD();
 }
 
@@ -2263,3 +2302,9 @@ document.addEventListener("keydown", event => {
 });
 
 updateContinueButton();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}

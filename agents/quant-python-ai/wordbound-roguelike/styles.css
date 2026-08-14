@@ -310,6 +310,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .toggle-deck-btn { font-size: 9.5px; padding: 7px 12px; }
 .import-textarea { width: 100%; border: 1px solid var(--line); border-radius: 4px 12px 4px 12px; padding: 10px; font: 500 11px var(--mono); color: var(--ink); background: var(--paper-deep); resize: vertical; box-sizing: border-box; }
 
+/* Expedition Chronicle Study Sheet */
+.run-chronicle-box { margin-top: 20px; text-align: left; padding: 18px; border: 1px solid var(--line); border-radius: 4px 20px 4px 20px; background: var(--cream); }
+.run-words-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; max-height: 40vh; overflow-y: auto; padding-right: 6px; }
+.run-word-chip { padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px 12px 4px 12px; background: rgba(255,250,240,.7); }
+.run-word-chip b { display: block; font: 700 14px var(--display); color: var(--ink); }
+.run-word-chip small { display: block; font: 600 8px var(--mono); color: var(--teal-dark); margin: 2px 0 4px; }
+.run-word-chip p { margin: 0; font-size: 9px; line-height: 1.4; color: var(--ink-soft); }
+
 .settings-list { display: grid; gap: 12px; }.settings-list button { display: flex; justify-content: space-between; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }.danger-button { color: var(--coral-dark) !important; }
 .toast-region { position: fixed; z-index: 100; right: 22px; top: 88px; display: grid; gap: 8px; }
 .toast { min-width: 220px; padding: 12px 14px; border-radius: 3px 12px 3px 12px; color: white; background: var(--ink); box-shadow: 0 12px 35px rgba(20,42,40,.25); font-size: 10px; animation: toastIn .35s ease both; }.toast b { color: var(--gold); }
