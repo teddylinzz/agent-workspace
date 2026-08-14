@@ -457,26 +457,119 @@ function showAchievements() {
   `);
 }
 
+const SANCTUARY_TALENTS = [
+  {
+    id: "vitality", name: "Heart of Wisdom", icon: "💖",
+    desc: "+3 Max Resolve per rank at start of all expeditions.",
+    maxRank: 5, baseCost: 30, costMult: 1.5
+  },
+  {
+    id: "sparks", name: "Spark Crucible", icon: "⚡",
+    desc: "+1 Starting Spark slot per rank.",
+    maxRank: 3, baseCost: 40, costMult: 1.8
+  },
+  {
+    id: "inkwell", name: "Gilded Quill", icon: "◈",
+    desc: "+10% extra Ink gained across all battles and events per rank.",
+    maxRank: 4, baseCost: 35, costMult: 1.6
+  },
+  {
+    id: "reflex", name: "Chronos Focus", icon: "⏱️",
+    desc: "+0.4s extended Quick Wit speed reflex window per rank.",
+    maxRank: 3, baseCost: 45, costMult: 1.7
+  },
+  {
+    id: "merchant", name: "Bazaar Favor", icon: "🤝",
+    desc: "6% discount on all Merchant prices per rank.",
+    maxRank: 4, baseCost: 30, costMult: 1.5
+  },
+  {
+    id: "phoenix", name: "Phoenix Aegis", icon: "🪶",
+    desc: "Survive a lethal blow once per run, recovering 20 Resolve.",
+    maxRank: 1, baseCost: 80, costMult: 1.0
+  }
+];
+
+function showSanctuary() {
+  const meta = loadMeta();
+  meta.talents = meta.talents || {};
+  meta.totalInk = meta.totalInk !== undefined ? meta.totalInk : 0;
+  
+  openModal(`
+    <span class="modal-kicker">ANCIENT METAPROGRESSION</span>
+    <h2>The Word Sanctuary</h2>
+    <p class="section-copy">Channel your accumulated Ink into permanent blessings that empower all future expeditions. Permanent Ink Stash: <b>${meta.totalInk} ◈</b></p>
+    
+    <div class="sanctuary-grid">
+      ${SANCTUARY_TALENTS.map(t => {
+        const currRank = meta.talents[t.id] || 0;
+        const isMax = currRank >= t.maxRank;
+        const cost = Math.round(t.baseCost * Math.pow(t.costMult, currRank));
+        const canAfford = meta.totalInk >= cost;
+        return `
+          <div class="sanctuary-card">
+            <span class="sanctuary-icon">${t.icon}</span>
+            <div class="sanctuary-info">
+              <div class="sanctuary-top">
+                <b>${t.name}</b>
+                <span class="sanctuary-rank">Rank ${currRank} / ${t.maxRank}</span>
+              </div>
+              <p>${t.desc}</p>
+            </div>
+            <button class="button button-primary buy-talent-btn" data-talent="${t.id}" ${isMax || !canAfford ? "disabled" : ""}>
+              ${isMax ? "MAX RANK" : `Upgrade · ${cost} ◈`}
+            </button>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `);
+
+  document.querySelectorAll(".buy-talent-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const talentId = btn.dataset.talent;
+      const talent = SANCTUARY_TALENTS.find(t => t.id === talentId);
+      const currRank = meta.talents[talentId] || 0;
+      const cost = Math.round(talent.baseCost * Math.pow(talent.costMult, currRank));
+      if (meta.totalInk >= cost && currRank < talent.maxRank) {
+        meta.totalInk -= cost;
+        meta.talents[talentId] = currRank + 1;
+        localStorage.setItem(META_KEY, JSON.stringify(meta));
+        toast(`Upgraded <b>${talent.name}</b> to Rank ${meta.talents[talentId]}!`);
+        playLevelUpChime();
+        showSanctuary();
+        if (state) updateHUD();
+      }
+    });
+  });
+}
+
 function freshState(classId = "bard") {
   const meta = loadMeta();
   const knownWords = meta.learned || {};
   const heroClass = CLASSES.find(c => c.id === classId) || CLASSES[0];
+  const talents = meta.talents || {};
+  const bonusHp = (talents.vitality || 0) * 3;
+  const bonusSparks = talents.sparks || 0;
+  const hasPhoenixAegis = Boolean(talents.phoenix && talents.phoenix > 0);
+
   return {
     characterClass: heroClass.id,
-    hp: heroClass.hp, maxHp: heroClass.hp, level: 1, xp: 0, xpNext: 6,
-    sparks: heroClass.sparks, ink: heroClass.ink, streak: 0, maxStreak: 0,
+    hp: heroClass.hp + bonusHp, maxHp: heroClass.hp + bonusHp, level: 1, xp: 0, xpNext: 6,
+    sparks: heroClass.sparks + bonusSparks, ink: heroClass.ink, streak: 0, maxStreak: 0,
     region: 0, cycle: 0, node: 0, day: 1,
     wordsAnswered: 0, correct: 0, quest: 0, questClaimed: false,
     learned: { ...knownWords }, seen: [], relics: heroClass.relic ? [heroClass.relic] : [],
-    sound: true, screen: "choice", startedAt: Date.now(), usedRevive: false,
+    sound: true, screen: "choice", startedAt: Date.now(),
+    usedRevive: !hasPhoenixAegis,
     isDaily: false
   };
 }
 
 function loadMeta() {
   const defaults = {
-    totalWords: 0, bestStreak: 0, expeditions: 0,
-    learned: {}, reviews: {}, notes: {},
+    totalWords: 0, bestStreak: 0, expeditions: 0, totalInk: 0,
+    learned: {}, reviews: {}, notes: {}, talents: {},
     bilingual: true, achievements: [], studyHistory: {},
     speechRate: 0.85, autoSpeak: false
   };
@@ -487,8 +580,10 @@ function loadMeta() {
       learned: loaded.learned || {},
       reviews: loaded.reviews || {},
       notes: loaded.notes || {},
+      talents: loaded.talents || {},
       achievements: loaded.achievements || [],
       studyHistory: loaded.studyHistory || {},
+      totalInk: typeof loaded.totalInk === "number" ? loaded.totalInk : 0,
       bilingual: loaded.bilingual !== undefined ? loaded.bilingual : true
     } : defaults;
   } catch { return defaults; }
@@ -1199,9 +1294,13 @@ function getReviewWords(includeNotDue = false) {
 
 function winBattle() {
   playVictoryFanfare();
+  const meta = loadMeta();
+  const talentBonus = 1 + (meta.talents?.inkwell || 0) * 0.10;
   const baseInk = battle.type === "boss" ? 35 : battle.type === "elite" ? 22 : 12;
-  const ink = Math.round(baseInk * (hasRelic("bookmark") ? 1.3 : 1));
+  const ink = Math.round(baseInk * (hasRelic("bookmark") ? 1.3 : 1) * talentBonus);
   state.ink += ink;
+  meta.totalInk = (meta.totalInk || 0) + ink;
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
   state.sparks = Math.min(9, state.sparks + (battle.type === "boss" ? 2 : 1));
   const rewardType = battle.type;
   completeNode(false);
@@ -1930,6 +2029,8 @@ function toast(html) {
 
 $("#new-run-button").addEventListener("click", showClassSelection);
 $("#daily-run-button")?.addEventListener("click", startDailyExpedition);
+$("#sanctuary-title-button")?.addEventListener("click", showSanctuary);
+$("#sanctuary-button")?.addEventListener("click", showSanctuary);
 $("#achievements-title-button")?.addEventListener("click", showAchievements);
 $("#achievements-button")?.addEventListener("click", showAchievements);
 $("#continue-button").addEventListener("click", continueRun);

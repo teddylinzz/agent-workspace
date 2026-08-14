@@ -289,8 +289,16 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .achieve-info b { display: block; font: 700 13px var(--display); color: var(--ink); }
 .achieve-info p { margin: 2px 0 0; font-size: 9px; line-height: 1.4; color: var(--ink-soft); }
 .achieve-status { font: 700 7px var(--mono); letter-spacing: .1em; padding: 2px 5px; border-radius: 4px; }
-.achieve-card.unlocked .achieve-status { color: var(--teal-dark); background: rgba(47,122,114,.12); }
-.achieve-card.locked .achieve-status { color: var(--ink-soft); background: rgba(0,0,0,.08); }
+/* Sanctuary Grid */
+.sanctuary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; max-height: 55vh; overflow-y: auto; padding-right: 6px; }
+.sanctuary-card { display: flex; flex-direction: column; justify-content: space-between; padding: 14px; border: 1px solid var(--line); border-radius: 4px 16px 4px 16px; background: var(--cream); text-align: left; }
+.sanctuary-card:hover { border-color: var(--teal); }
+.sanctuary-icon { font-size: 24px; margin-bottom: 6px; }
+.sanctuary-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.sanctuary-top b { font: 700 14px var(--display); color: var(--ink); }
+.sanctuary-rank { font: 700 8px var(--mono); color: var(--gold); background: rgba(227,172,70,.15); padding: 2px 6px; border-radius: 4px; }
+.sanctuary-info p { margin: 0 0 10px; font-size: 9.5px; line-height: 1.45; color: var(--ink-soft); }
+.buy-talent-btn { width: 100%; font-size: 10.5px; padding: 8px; }
 
 .settings-list { display: grid; gap: 12px; }.settings-list button { display: flex; justify-content: space-between; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }.danger-button { color: var(--coral-dark) !important; }
 .toast-region { position: fixed; z-index: 100; right: 22px; top: 88px; display: grid; gap: 8px; }
