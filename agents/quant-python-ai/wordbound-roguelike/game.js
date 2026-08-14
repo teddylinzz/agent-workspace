@@ -2409,16 +2409,14 @@ function renderQuestion() {
   const regionWords = REGIONS[state.region % REGIONS.length].words;
   const isZh = loadMeta().bilingual;
   
-  // Question Archetype selection
+  // Question Archetype selection: Ensure question and answer are never identical
   let mode = "definition";
   if (battle.bossBlind && battle.bossBlind.id === "cloze_only") {
     mode = "cloze";
   } else if (battle.turn > 1) {
     const roll = Math.random();
-    if (roll < 0.25) mode = "synonym";
-    else if (roll < 0.50) mode = "cloze";
-    else if (roll < 0.65 && word.synonym) mode = "antonym";
-    else if (roll < 0.80) mode = "collocation";
+    if (roll < 0.35 && word.synonym && word.synonym !== word.word) mode = "synonym";
+    else if (roll < 0.70) mode = "cloze";
     else mode = "definition";
   }
 
@@ -2427,27 +2425,27 @@ function renderQuestion() {
   let correctVal = word.definition;
   let distractors = [];
 
-  if (mode === "synonym") {
+  if (mode === "synonym" && word.synonym && word.synonym !== word.word) {
     property = "synonym";
     promptText = isZh ? "選擇最相近的英文同義詞 (Closest Synonym)" : "Choose the closest synonym";
-    correctVal = word.synonym || word.definition;
-    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.synonym || w.word);
+    correctVal = word.synonym;
+    distractors = shuffle(regionWords.filter(w => w.word !== word.word && w.synonym && w.synonym !== word.synonym))
+      .slice(0, 3)
+      .map(w => w.synonym);
+    if (distractors.length < 3) {
+      mode = "definition";
+      property = "definition";
+      promptText = isZh ? "選擇最符合的英文釋義 (Choose the closest meaning)" : "Choose the closest meaning";
+      correctVal = word.definition;
+      distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.definition);
+    }
   } else if (mode === "cloze") {
     property = "word";
     promptText = makeCloze(word);
     correctVal = word.word;
     distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.word);
-  } else if (mode === "antonym") {
-    property = "word";
-    promptText = isZh ? `找出與「${word.word}」意義最相反的詞 (Select the OPPOSITE meaning)` : `Select the word with the OPPOSITE meaning of "${word.word}"`;
-    correctVal = word.word;
-    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.word);
-  } else if (mode === "collocation") {
-    property = "word";
-    promptText = isZh ? `在語境中最道地的自然搭配詞是？ (Natural Collocation)` : `Which word naturally completes this phrase?`;
-    correctVal = word.word;
-    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.word);
   } else {
+    mode = "definition";
     property = "definition";
     promptText = isZh ? "選擇最符合的英文釋義 (Choose the closest meaning)" : "Choose the closest meaning";
     correctVal = word.definition;
@@ -2678,18 +2676,36 @@ function answerQuestion(button, correct, mode) {
     playHitSound(damage > 18, isQuickWit);
     playStreakChord(state.streak);
     const isZh = loadMeta().bilingual;
-    const feedbackHeader = isQuickWit ? (isZh ? "<b>⚡ 急速直覺！</b> " : "<b>⚡ Quick Wit!</b> ") : (isZh ? "<b>完全正確！</b> " : "<b>Exactly.</b> ");
-    showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
+    const feedbackHeader = isQuickWit ? (isZh ? "⚡ 急速直覺！" : "⚡ Quick Wit!") : (isZh ? "完全正確！" : "Exactly.");
+    
+    let nextTimeout = null;
+    function advanceNext() {
+      if (nextTimeout) { clearTimeout(nextTimeout); nextTimeout = null; }
+      battle.locked = false;
+      if (battle.hp <= 0) winBattle();
+      else renderQuestion();
+    }
+
+    const feedbackHtml = `
+      <div class="feedback-correct-wrapper">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;">
+          <span style="font-weight:700;color:var(--teal);"><b>${feedbackHeader}</b></span>
+          <button id="next-question-btn" class="button button-primary" style="padding:4px 12px;font-size:9.5px;">
+            ${isZh ? "下一題 ➔ (Space)" : "Next ➔ (Space)"}
+          </button>
+        </div>
+        ${wordMemoryMap(word)}
+      </div>
+    `;
+    showFeedback(true, feedbackHtml);
+    $("#next-question-btn")?.addEventListener("click", advanceNext);
     
     if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
     handleQuest();
     battle.first = false;
     updateMeta();
     updateHUD();
-    setTimeout(() => {
-      if (battle.hp <= 0) winBattle();
-      else renderQuestion();
-    }, 1200);
+    nextTimeout = setTimeout(advanceNext, 3800);
   } else {
     button.classList.add("wrong");
     triggerScreenShake("lg");
@@ -4316,8 +4332,8 @@ document.addEventListener("keydown", event => {
     return;
   }
 
-  // If failed feedback continue button is present, Space or Enter proceeds
-  const contBtn = $("#continue-battle-btn");
+  // If failed continue button or correct next question button is present, Space or Enter proceeds immediately
+  const contBtn = $("#continue-battle-btn") || $("#next-question-btn");
   if (contBtn && !contBtn.hidden && (event.code === "Space" || event.key === "Enter")) {
     event.preventDefault();
     contBtn.click();
