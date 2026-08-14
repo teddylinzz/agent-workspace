@@ -232,6 +232,16 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .lex-zh { color: var(--teal-dark); font-weight: 600; font-size: 11px; }
 .lex-meta { margin-left: 0; display: block; margin-top: 3px; color: var(--ink-soft); font: 400 9px var(--mono); }
 .lex-root { display: block; margin-top: 5px; color: var(--ink-soft); font-style: italic; font-size: 8.5px; opacity: .85; }
+.class-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
+.class-card { display: flex; gap: 14px; align-items: flex-start; padding: 16px; border: 1px solid var(--line); border-radius: 4px 18px 4px 18px; background: var(--cream); cursor: pointer; text-align: left; transition: .22s ease; }
+.class-card:hover { transform: translateY(-4px); border-color: var(--teal); box-shadow: 0 10px 25px rgba(47,122,114,.15); }
+.class-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--paper-deep); font-size: 24px; flex-shrink: 0; }
+.class-info small { font: 500 7.5px var(--mono); letter-spacing: .12em; color: var(--coral-dark); text-transform: uppercase; }
+.class-info h3 { margin: 2px 0 6px; font: 700 18px var(--display); color: var(--ink); }
+.class-info p { margin: 0 0 10px; font-size: 10px; line-height: 1.45; color: var(--ink-soft); }
+.class-stats { display: flex; gap: 12px; font: 500 8.5px var(--mono); color: var(--ink-soft); }
+.class-stats b { color: var(--teal-dark); font-weight: 700; }
+.class-quote { display: block; margin-top: 8px; font-style: italic; font-size: 9px; color: var(--gold); opacity: .9; }
 .settings-list { display: grid; gap: 12px; }.settings-list button { display: flex; justify-content: space-between; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }.danger-button { color: var(--coral-dark) !important; }
 .toast-region { position: fixed; z-index: 100; right: 22px; top: 88px; display: grid; gap: 8px; }
 .toast { min-width: 220px; padding: 12px 14px; border-radius: 3px 12px 3px 12px; color: white; background: var(--ink); box-shadow: 0 12px 35px rgba(20,42,40,.25); font-size: 10px; animation: toastIn .35s ease both; }.toast b { color: var(--gold); }

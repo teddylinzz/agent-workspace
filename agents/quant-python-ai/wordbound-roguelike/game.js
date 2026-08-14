@@ -239,6 +239,57 @@ const ENEMIES = {
   ]
 };
 
+const CLASSES = [
+  {
+    id: "scholar",
+    name: "The Scholar",
+    subtitle: "Seeker of Etymology",
+    icon: "🎓",
+    hp: 38,
+    sparks: 5,
+    ink: 10,
+    relic: "prism",
+    desc: "Starts with +2 Sparks and the Meaning Prism. Clues remove 2 wrong answers.",
+    quote: "Every word is an open book."
+  },
+  {
+    id: "bard",
+    name: "The Bard",
+    subtitle: "Rhythmic Master",
+    icon: "🪕",
+    hp: 42,
+    sparks: 3,
+    ink: 15,
+    relic: "ember",
+    desc: "Streaks heal resolve and deal +40% combo power. Starts with Ember Vial.",
+    quote: "Language is music in disguise."
+  },
+  {
+    id: "duelist",
+    name: "The Duelist",
+    subtitle: "Blade of Wit",
+    icon: "⚔️",
+    hp: 40,
+    sparks: 3,
+    ink: 0,
+    relic: "needle",
+    desc: "Longer Quick Wit window (+1.5s) and deals massive opening burst damage.",
+    quote: "Cut through confusion with razor wit."
+  },
+  {
+    id: "cartographer",
+    name: "The Cartographer",
+    subtitle: "Uncharted Explorer",
+    icon: "🧭",
+    hp: 50,
+    sparks: 3,
+    ink: 30,
+    relic: "bookmark",
+    desc: "High starting Resolve (+10 HP), extra starting Ink (+30), and Golden Bookmark.",
+    quote: "Every uncharted phrase is a new horizon."
+  }
+];
+
 const RELICS = [
   { id: "echo", icon: "❞", name: "Echo Quill", text: "+3 damage for every correct answer." },
   { id: "shield", icon: "◉", name: "Patient Stone", text: "Ignore the first wrong answer in each battle." },
@@ -247,7 +298,15 @@ const RELICS = [
   { id: "boots", icon: "⌁", name: "Wayfarer Boots", text: "+8 maximum resolve immediately." },
   { id: "prism", icon: "◇", name: "Meaning Prism", text: "Clues remove two wrong answers." },
   { id: "crown", icon: "♛", name: "Scholar's Crown", text: "Start each battle with +1 spark." },
-  { id: "needle", icon: "↟", name: "Compass Needle", text: "Deal +5 damage on your first answer." }
+  { id: "needle", icon: "↟", name: "Compass Needle", text: "Deal +5 damage on your first answer." },
+  { id: "hourglass", icon: "⌛", name: "Chronos Hourglass", text: "Quick Wit reflex deals +6 extra damage and timer is 1.5s longer." },
+  { id: "alembic", icon: "⚗️", name: "Alchemist's Crucible", text: "Gain +1 Ink for every letter in correct answers." },
+  { id: "mirror", icon: "🪞", name: "Oracle's Mirror", text: "Gain +1 Insight whenever you take damage." },
+  { id: "feather", icon: "🪶", name: "Phoenix Feather", text: "Revive with 20 Resolve once upon fatal damage." },
+  { id: "magnifier", icon: "🔍", name: "Etymology Glass", text: "Always shows root/origin hint during battles." },
+  { id: "ring", icon: "💍", name: "Ring of Fluency", text: "Streaks of 4+ restore 1 spark." },
+  { id: "horn", icon: "📯", name: "Resonance Horn", text: "Deal +30% bonus damage to Elite and Boss guardians." },
+  { id: "candle", icon: "🕯️", name: "Scholar's Candle", text: "Rest sites restore an extra 20% Resolve." }
 ];
 
 const EVENTS = [
@@ -290,16 +349,18 @@ let practice = null;
 let soundEnabled = true;
 let audioContext = null;
 
-function freshState() {
+function freshState(classId = "bard") {
   const meta = loadMeta();
   const knownWords = meta.learned || {};
+  const heroClass = CLASSES.find(c => c.id === classId) || CLASSES[0];
   return {
-    hp: 42, maxHp: 42, level: 1, xp: 0, xpNext: 6,
-    sparks: 3, ink: 0, streak: 0, maxStreak: 0,
+    characterClass: heroClass.id,
+    hp: heroClass.hp, maxHp: heroClass.hp, level: 1, xp: 0, xpNext: 6,
+    sparks: heroClass.sparks, ink: heroClass.ink, streak: 0, maxStreak: 0,
     region: 0, cycle: 0, node: 0, day: 1,
     wordsAnswered: 0, correct: 0, quest: 0, questClaimed: false,
-    learned: { ...knownWords }, seen: [], relics: [], sound: true,
-    screen: "choice", startedAt: Date.now()
+    learned: { ...knownWords }, seen: [], relics: heroClass.relic ? [heroClass.relic] : [],
+    sound: true, screen: "choice", startedAt: Date.now(), usedRevive: false
   };
 }
 
@@ -321,7 +382,7 @@ function loadState() {
   try {
     const loaded = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (!loaded || typeof loaded.hp !== "number") return null;
-    return { ...freshState(), ...loaded };
+    return { ...freshState(loaded.characterClass || "bard"), ...loaded };
   } catch { return null; }
 }
 
@@ -332,8 +393,40 @@ function updateContinueButton() {
   $("#title-review-count").textContent = reviewCount;
 }
 
-function startNewRun() {
-  state = freshState();
+function showClassSelection() {
+  openModal(`
+    <span class="modal-kicker">CHOOSE YOUR PATHFINDER</span>
+    <h2>Select Archetype</h2>
+    <p class="section-copy">Each archetype shapes your expedition with unique starting stats, resources, and passive relics.</p>
+    <div class="class-grid">
+      ${CLASSES.map(cls => `
+        <button class="class-card" data-class="${cls.id}">
+          <span class="class-icon">${cls.icon}</span>
+          <div class="class-info">
+            <small>${cls.subtitle}</small>
+            <h3>${cls.name}</h3>
+            <p>${cls.desc}</p>
+            <div class="class-stats">
+              <span><b>${cls.hp}</b> HP</span>
+              <span><b>${cls.sparks}</b> Sparks</span>
+              <span><b>${cls.ink}</b> Ink</span>
+            </div>
+            <span class="class-quote">“${cls.quote}”</span>
+          </div>
+        </button>
+      `).join("")}
+    </div>
+  `);
+  document.querySelectorAll("[data-class]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      $("#modal").close();
+      startNewRun(btn.dataset.class);
+    });
+  });
+}
+
+function startNewRun(classId = "bard") {
+  state = freshState(classId);
   soundEnabled = true;
   const meta = loadMeta();
   meta.expeditions += 1;
@@ -343,7 +436,7 @@ function startNewRun() {
 }
 
 function continueRun() {
-  state = loadState() || freshState();
+  state = loadState() || freshState("bard");
   soundEnabled = state.sound;
   enterGame();
   if (state.screen === "gameover") showGameOver();
@@ -373,6 +466,13 @@ function updateHUD() {
   $("#day-label").textContent = state.day;
   $("#floor-label").textContent = `${state.node + 1} / 5`;
   $("#level-badge").textContent = `LV. ${state.level}`;
+  
+  const heroClass = CLASSES.find(c => c.id === state.characterClass) || CLASSES[0];
+  const titleSmall = $(".player-title small");
+  const titleH2 = $(".player-title h2");
+  if (titleSmall) titleSmall.textContent = `${heroClass.subtitle.toUpperCase()}`;
+  if (titleH2) titleH2.textContent = heroClass.name;
+  
   $("#hp-text").textContent = `${state.hp} / ${state.maxHp}`;
   $("#hp-bar").style.width = `${100 * state.hp / state.maxHp}%`;
   $("#xp-text").textContent = `${state.xp} / ${state.xpNext}`;
@@ -636,6 +736,10 @@ function renderQuestion() {
   $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
   updateEnemyShieldUI();
   $("#clue-box").hidden = true;
+  if (hasRelic("magnifier") && word.root) {
+    $("#clue-box").hidden = false;
+    $("#clue-box").innerHTML = `<b>Origin Note (Etymology Glass):</b> ${word.root}`;
+  }
   $("#feedback-panel").hidden = true;
   $("#combo-display").hidden = state.streak < 2;
   if (state.streak >= 2) $("#combo-display b").textContent = `×${Math.min(5, 1 + Math.floor(state.streak / 2))}`;
@@ -685,12 +789,31 @@ function answerQuestion(button, correct, mode) {
     let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
     if (state.streak >= 5) damage += 4;
     
-    // Quick Wit Bonus for rapid accurate recall
+    // Quick Wit Bonus with Chronos Hourglass synergy
+    const reflexThreshold = hasRelic("hourglass") ? 5.2 : 3.8;
     let isQuickWit = false;
-    if (elapsedSec <= 3.8) {
+    if (elapsedSec <= reflexThreshold) {
       isQuickWit = true;
-      damage += 4;
-      state.ink += 2;
+      const bonusDmg = hasRelic("hourglass") ? 9 : 4;
+      damage += bonusDmg;
+      state.ink += (hasRelic("hourglass") ? 4 : 2);
+    }
+    
+    // Horn of Resonance (+30% vs Boss/Elite)
+    if ((battle.type === "boss" || battle.type === "elite") && hasRelic("horn")) {
+      damage = Math.round(damage * 1.3);
+    }
+    
+    // Alchemist Crucible (+1 ink per letter)
+    if (hasRelic("alembic")) {
+      const letters = word.word.replace(/[^a-zA-Z]/g, "").length;
+      state.ink += letters;
+    }
+    
+    // Ring of Fluency (+1 spark on streak)
+    if (hasRelic("ring") && state.streak >= 4 && state.streak % 4 === 0) {
+      state.sparks = Math.min(9, state.sparks + 1);
+      toast("💍 <b>Ring of Fluency:</b> +1 Spark on streak!");
     }
     
     // Shield absorption logic
@@ -714,7 +837,7 @@ function answerQuestion(button, correct, mode) {
     $("#enemy-art").classList.add("hurt");
     
     tone(520, .08); setTimeout(() => tone(690, .08), 80);
-    const feedbackHeader = isQuickWit ? "<b>⚡ Quick Wit! (+4 bonus dmg & +2 ink)</b> " : "<b>Exactly.</b> ";
+    const feedbackHeader = isQuickWit ? "<b>⚡ Quick Wit!</b> " : "<b>Exactly.</b> ";
     showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
     
     if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
@@ -738,7 +861,10 @@ function answerQuestion(button, correct, mode) {
       battle.blocked = true;
     } else {
       state.hp = Math.max(0, state.hp - intent.damage);
-      // Apply intent special effects
+      if (hasRelic("mirror")) {
+        gainXp(1);
+        toast("🪞 <b>Oracle's Mirror:</b> Gained +1 Insight from adversity.");
+      }
       if (intent.siphon && state.sparks > 0) {
         state.sparks -= 1;
         toast("✦ <b>Spark Siphoned by enemy!</b>");
@@ -752,6 +878,15 @@ function answerQuestion(button, correct, mode) {
         battle.shield = (battle.shield || 0) + intent.shieldGain;
         battle.maxShield = Math.max(battle.maxShield, battle.shield);
         updateEnemyShieldUI();
+      }
+      
+      // Phoenix feather revive
+      if (state.hp <= 0 && hasRelic("feather") && !state.usedRevive) {
+        state.usedRevive = true;
+        state.hp = 20;
+        toast("🪶 <b>Phoenix Feather shattered!</b> Restored 20 Resolve.");
+        showDamage("REVIVE", true);
+        tone(600, .15); setTimeout(() => tone(880, .25), 100);
       }
     }
     
@@ -974,17 +1109,18 @@ function showRelicReward(ink, type) {
 
 function showRest() {
   state.screen = "event";
+  const healPercent = hasRelic("candle") ? 0.50 : 0.35;
   $("#stage").innerHTML = `
     <div class="event-stage">
       <div class="event-illustration">♨</div><span class="section-kicker">A QUIET CLEARING</span>
       <h1>Rest between words.</h1><p class="section-copy">For a moment, the forest stops asking questions. You may tend your resolve or prepare your mind.</p>
       <div class="event-options">
-        <button class="button button-primary" data-rest="heal">Brew restorative tea<small>Restore 35% resolve</small></button>
+        <button class="button button-primary" data-rest="heal">Brew restorative tea<small>Restore ${Math.round(healPercent * 100)}% resolve${hasRelic("candle") ? " (Scholar's Candle +15%)" : ""}</small></button>
         <button class="button button-ghost" data-rest="spark">Study by firelight<small>Gain 2 sparks and 1 insight</small></button>
       </div>
     </div>`;
   document.querySelectorAll("[data-rest]").forEach(button => button.addEventListener("click", () => {
-    if (button.dataset.rest === "heal") heal(Math.ceil(state.maxHp * .35));
+    if (button.dataset.rest === "heal") heal(Math.ceil(state.maxHp * healPercent));
     else { state.sparks = Math.min(9, state.sparks + 2); gainXp(1); toast("Your mind feels sharper. <b>+2 sparks</b>"); }
     completeNode();
   }));
@@ -1305,7 +1441,7 @@ function toast(html) {
   setTimeout(() => item.remove(), 2800);
 }
 
-$("#new-run-button").addEventListener("click", startNewRun);
+$("#new-run-button").addEventListener("click", showClassSelection);
 $("#continue-button").addEventListener("click", continueRun);
 $("#practice-title-button").addEventListener("click", startPracticeFromTitle);
 $("#home-button").addEventListener("click", event => { event.preventDefault(); returnHome(); });
