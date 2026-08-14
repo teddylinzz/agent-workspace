@@ -396,37 +396,1105 @@ const RELICS = [
 ];
 
 const EXAM_DECKS = {
-  toeic: {
-    name: "TOEIC Business Core", icon: "💼",
-    desc: "Essential workplace, commercial negotiation, and administrative vocabulary.",
-    words: [
-      { word: "negotiate", phonetic: "/nəˈɡoʊ.ʃi.eɪt/", pos: "v.", level: "B2", zh: "談判，協商", root: "Latin negotium (business)", definition: "to obtain or bring about by discussion", synonym: "bargain", sentence: "They met to negotiate a new multi-year contract.", clue: "Finding mutual agreement through discussion." },
-      { word: "procure", phonetic: "/prəˈkjʊr/", pos: "v.", level: "C1", zh: "採購，獲得", root: "Latin procurare (take care of)", definition: "to obtain something, especially with care or effort", synonym: "acquire", sentence: "The department must procure raw materials on schedule.", clue: "Obtaining supplies for an organization." },
-      { word: "expedite", phonetic: "/ˈek.spə.daɪt/", pos: "v.", level: "C1", zh: "加快，加速", root: "Latin expedire (extricate)", definition: "to make an action or process happen sooner", synonym: "accelerate", sentence: "Please pay an extra fee to expedite the shipping.", clue: "Speeding up a process." },
-      { word: "compliance", phonetic: "/kəmˈplaɪ.əns/", pos: "n.", level: "B2", zh: "順從，合規", root: "Latin complere (fulfill)", definition: "the state of according with rules or laws", synonym: "conformity", sentence: "Safety compliance is mandatory in every workshop.", clue: "Following laws and regulations." },
-      { word: "feasibility", phonetic: "/ˌfiː.zəˈbɪl.ə.t̬i/", pos: "n.", level: "B2", zh: "可行性", root: "French faisable (doable)", definition: "the state or degree of being easily done", synonym: "viability", sentence: "We conducted a feasibility study before investing.", clue: "Whether an idea can practically work." }
+  "toeic": {
+    "name": "TOEIC 750~990 Master",
+    "icon": "💼",
+    "desc": "Essential high-frequency commercial negotiation, finance, procurement, and enterprise management vocabulary.",
+    "words": [
+      {
+        "word": "negotiate",
+        "phonetic": "/nəˈɡoʊ.ʃi.eɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "談判，協商",
+        "root": "Latin negotium (business)",
+        "definition": "to obtain or bring about by discussion",
+        "synonym": "bargain",
+        "sentence": "They met to negotiate a new multi-year supplier contract.",
+        "clue": "Finding mutual agreement through discussion."
+      },
+      {
+        "word": "procure",
+        "phonetic": "/prəˈkjʊr/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "採購，獲得",
+        "root": "Latin procurare (take care of)",
+        "definition": "to obtain something, especially with care or effort",
+        "synonym": "acquire",
+        "sentence": "The department must procure raw materials on schedule.",
+        "clue": "Obtaining supplies for an organization."
+      },
+      {
+        "word": "expedite",
+        "phonetic": "/ˈek.spə.daɪt/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "加快，加速",
+        "root": "Latin expedire (extricate)",
+        "definition": "to make an action or process happen sooner",
+        "synonym": "accelerate",
+        "sentence": "Please pay an extra fee to expedite the shipping.",
+        "clue": "Speeding up a process."
+      },
+      {
+        "word": "compliance",
+        "phonetic": "/kəmˈplaɪ.əns/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "順從，合規",
+        "root": "Latin complere (fulfill)",
+        "definition": "the state of according with rules or laws",
+        "synonym": "conformity",
+        "sentence": "Safety compliance is mandatory in every workshop.",
+        "clue": "Following laws and regulations."
+      },
+      {
+        "word": "feasibility",
+        "phonetic": "/ˌfiː.zəˈbɪl.ə.t̬i/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "可行性",
+        "root": "French faisable (doable)",
+        "definition": "the state or degree of being easily done",
+        "synonym": "viability",
+        "sentence": "We conducted a feasibility study before investing.",
+        "clue": "Whether an idea can practically work."
+      },
+      {
+        "word": "remuneration",
+        "phonetic": "/rɪˌmjuː.nəˈreɪ.ʃən/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "報酬，薪資",
+        "root": "Latin remunerari (reward)",
+        "definition": "money paid for work or a service",
+        "synonym": "compensation",
+        "sentence": "The executive compensation package includes generous remuneration.",
+        "clue": "Payment received for professional work."
+      },
+      {
+        "word": "discrepancy",
+        "phonetic": "/dɪˈskrep.ən.si/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "差異，不一致",
+        "root": "Latin discrepare (sound different)",
+        "definition": "a lack of compatibility or similarity between facts",
+        "synonym": "inconsistency",
+        "sentence": "Auditors found a major discrepancy in the quarterly accounts.",
+        "clue": "Mismatch between two financial numbers."
+      },
+      {
+        "word": "streamline",
+        "phonetic": "/ˈstriːm.laɪn/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "精簡，簡化",
+        "root": "English stream + line",
+        "definition": "to make an organization or system more efficient",
+        "synonym": "simplify",
+        "sentence": "Management introduced automation to streamline the fulfillment process.",
+        "clue": "Making operations faster and simpler."
+      },
+      {
+        "word": "contingency",
+        "phonetic": "/kənˈtɪn.dʒən.si/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "應變計畫，突發狀況",
+        "root": "Latin contingere (happen)",
+        "definition": "a future event or circumstance which is possible but cannot be predicted with certainty",
+        "synonym": "backup-plan",
+        "sentence": "The supply chain team drafted a robust contingency plan.",
+        "clue": "Backup plan for unexpected emergencies."
+      },
+      {
+        "word": "lucrative",
+        "phonetic": "/ˈluː.krə.tɪv/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "獲利豐厚的",
+        "root": "Latin lucrum (profit)",
+        "definition": "producing a great deal of profit",
+        "synonym": "profitable",
+        "sentence": "The merger opened up a highly lucrative overseas market.",
+        "clue": "Generating substantial profit."
+      },
+      {
+        "word": "delegation",
+        "phonetic": "/ˌdel.əˈɡeɪ.ʃən/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "授權，代表團",
+        "root": "Latin delegare (send)",
+        "definition": "the assignment of responsibility or authority to another person",
+        "synonym": "deputation",
+        "sentence": "Effective leaders master the art of delegation.",
+        "clue": "Assigning tasks to team members."
+      },
+      {
+        "word": "indemnity",
+        "phonetic": "/ɪnˈdem.nə.t̬i/",
+        "pos": "n.",
+        "level": "C2",
+        "zh": "賠償，補償金",
+        "root": "Latin indemnis (unhurt)",
+        "definition": "security or protection against a loss or financial burden",
+        "synonym": "insurance",
+        "sentence": "The contract includes a comprehensive indemnity clause.",
+        "clue": "Legal guarantee against financial loss."
+      },
+      {
+        "word": "turnover",
+        "phonetic": "/ˈtɜːnˌəʊ.vər/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "營業額，員工流動率",
+        "root": "English turn + over",
+        "definition": "the amount of money taken in by a business, or rate of employee replacement",
+        "synonym": "revenue",
+        "sentence": "The retailer reported a record annual turnover of fifty million.",
+        "clue": "Total sales volume or staff change rate."
+      },
+      {
+        "word": "fiduciary",
+        "phonetic": "/fɪˈdjuː.ʃi.ər.i/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "信託的，受信託責任的",
+        "root": "Latin fiducia (trust)",
+        "definition": "involving trust, especially regarding the relationship between a trustee and beneficiary",
+        "synonym": "trustee",
+        "sentence": "Board members have a fiduciary duty to act in shareholders' best interests.",
+        "clue": "Legal obligation of financial trust."
+      },
+      {
+        "word": "moratorium",
+        "phonetic": "/ˌmɒr.əˈtɔː.ri.əm/",
+        "pos": "n.",
+        "level": "C2",
+        "zh": "暫停，延期償付",
+        "root": "Latin morari (to delay)",
+        "definition": "a temporary prohibition or postponement of an activity",
+        "synonym": "freeze",
+        "sentence": "The central bank declared a three-month debt moratorium.",
+        "clue": "Official temporary suspension."
+      },
+      {
+        "word": "requisition",
+        "phonetic": "/ˌrek.wɪˈzɪʃ.ən/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "正式申請，徵用",
+        "root": "Latin requirere (seek)",
+        "definition": "an official order laying claim to the use of property or materials",
+        "synonym": "order",
+        "sentence": "Submit a formal purchase requisition to the finance department.",
+        "clue": "Official request form for equipment."
+      },
+      {
+        "word": "tentative",
+        "phonetic": "/ˈten.tə.tɪv/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "暫定的，試驗性的",
+        "root": "Latin tentare (to try)",
+        "definition": "not certain or fixed; provisional",
+        "synonym": "provisional",
+        "sentence": "We scheduled a tentative launch date for late October.",
+        "clue": "Subject to future confirmation."
+      },
+      {
+        "word": "appraisal",
+        "phonetic": "/əˈpreɪ.zəl/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "績效評估，估價",
+        "root": "Latin appretiare (value)",
+        "definition": "an act of assessing something or someone",
+        "synonym": "evaluation",
+        "sentence": "Annual employee performance appraisals take place next week.",
+        "clue": "Reviewing job performance or asset value."
+      },
+      {
+        "word": "consensus",
+        "phonetic": "/kənˈsen.səs/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "共識，意見一致",
+        "root": "Latin consentire (agree)",
+        "definition": "a general agreement among a group of people",
+        "synonym": "agreement",
+        "sentence": "The committee reached a consensus on budget allocations.",
+        "clue": "Unanimous group agreement."
+      },
+      {
+        "word": "solvent",
+        "phonetic": "/ˈsɒl.vənt/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "有償債能力的",
+        "root": "Latin solvere (loosen, pay)",
+        "definition": "having assets in excess of liabilities; able to pay debts",
+        "synonym": "financially-sound",
+        "sentence": "The startup remained solvent through careful cash flow management.",
+        "clue": "Able to pay off all debts."
+      },
+      {
+        "word": "collateral",
+        "phonetic": "/kəˈlæt.ər.əl/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "抵押品，擔保物",
+        "root": "Latin com (together) + lateralis",
+        "definition": "something pledged as security for repayment of a loan",
+        "synonym": "security",
+        "sentence": "The bank required property deeds as loan collateral.",
+        "clue": "Asset promised in case of loan default."
+      },
+      {
+        "word": "severance",
+        "phonetic": "/ˈsev.ər.əns/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "資遣費，斷絕",
+        "root": "Latin separare (separate)",
+        "definition": "the action of ending a connection, or pay given on termination",
+        "synonym": "redundancy-pay",
+        "sentence": "Laid-off workers received six months of severance pay.",
+        "clue": "Financial compensation upon dismissal."
+      },
+      {
+        "word": "audit",
+        "phonetic": "/ˈɔː.dɪt/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "審計，查帳",
+        "root": "Latin audire (to hear)",
+        "definition": "an official inspection of an organization's accounts",
+        "synonym": "inspection",
+        "sentence": "External auditors conducted a surprise financial audit.",
+        "clue": "Official examination of accounting records."
+      },
+      {
+        "word": "conglomerate",
+        "phonetic": "/kənˈɡlɒm.ər.ət/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "跨國企業集團",
+        "root": "Latin conglomerare (roll together)",
+        "definition": "a number of different things or parts that are grouped together; multi-industry corporation",
+        "synonym": "multinational",
+        "sentence": "The media conglomerate owns television networks and film studios.",
+        "clue": "Large diversified corporate group."
+      },
+      {
+        "word": "merger",
+        "phonetic": "/ˈmɜː.dʒər/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "企業合併",
+        "root": "Latin mergere (plunge)",
+        "definition": "a combination of two things, especially commercial companies, into one",
+        "synonym": "amalgamation",
+        "sentence": "The proposed merger will create the world's largest airline.",
+        "clue": "Two corporations joining as one."
+      },
+      {
+        "word": "quota",
+        "phonetic": "/ˈkwəʊ.tə/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "配額，定額",
+        "root": "Latin quota pars (how great a part)",
+        "definition": "a limited or fixed number or amount of people or things",
+        "synonym": "allocation",
+        "sentence": "The sales team easily exceeded their fourth-quarter quota.",
+        "clue": "Assigned target number to achieve."
+      },
+      {
+        "word": "subsidy",
+        "phonetic": "/ˈsʌb.sɪ.di/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "補貼，津貼",
+        "root": "Latin subsidium (support)",
+        "definition": "a sum of money granted by the government to assist an industry",
+        "synonym": "grant",
+        "sentence": "Government subsidies accelerated the adoption of electric vehicles.",
+        "clue": "Financial aid given to support businesses."
+      },
+      {
+        "word": "depreciation",
+        "phonetic": "/dɪˌpriː.ʃiˈeɪ.ʃən/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "折舊，貶值",
+        "root": "Latin de (down) + pretium (price)",
+        "definition": "a reduction in the value of an asset over time",
+        "synonym": "devaluation",
+        "sentence": "Machinery depreciation was recorded as a business expense.",
+        "clue": "Gradual loss in monetary value."
+      },
+      {
+        "word": "bilateral",
+        "phonetic": "/ˌbaɪˈlæt.ər.əl/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "雙邊的，雙方的",
+        "root": "Latin bi (two) + latus (side)",
+        "definition": "having or relating to two sides; affecting both sides",
+        "synonym": "two-sided",
+        "sentence": "The two nations signed a bilateral free trade pact.",
+        "clue": "Agreed between two independent parties."
+      },
+      {
+        "word": "benchmark",
+        "phonetic": "/ˈbentʃ.mɑːk/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "基準，參照點",
+        "root": "English surveyor mark",
+        "definition": "a standard or point of reference against which things may be compared",
+        "synonym": "standard",
+        "sentence": "Their customer satisfaction score became the industry benchmark.",
+        "clue": "Quality point for measuring success."
+      }
     ]
   },
-  toefl: {
-    name: "TOEFL Academic & Science", icon: "🎓",
-    desc: "Key academic reading, scientific hypothesis, and argumentative terms.",
-    words: [
-      { word: "hypothesis", phonetic: "/haɪˈpɑː.θə.sɪs/", pos: "n.", level: "B2", zh: "假設，假說", root: "Greek hypo (under) + thesis", definition: "a proposed explanation based on limited evidence", synonym: "theory", sentence: "The laboratory experiments confirmed their initial hypothesis.", clue: "A testable scientific idea." },
-      { word: "empirical", phonetic: "/emˈpɪr.ɪ.kəl/", pos: "adj.", level: "C1", zh: "經驗主義的，實證的", root: "Greek empeiria (experience)", definition: "based on observation or experiment rather than theory", synonym: "observational", sentence: "They gathered solid empirical evidence to support the claim.", clue: "Based on real-world testing." },
-      { word: "paradigm", phonetic: "/ˈper.ə.daɪm/", pos: "n.", level: "C1", zh: "範例，典範", root: "Greek paradeigma (pattern)", definition: "a typical example, pattern, or framework of ideas", synonym: "model", sentence: "Quantum mechanics caused a major paradigm shift.", clue: "A fundamental framework or model." },
-      { word: "synthesize", phonetic: "/ˈsɪn.θə.saɪz/", pos: "v.", level: "B2", zh: "綜合，合成", root: "Greek synthesis (putting together)", definition: "to combine diverse ideas or substances into a whole", synonym: "integrate", sentence: "The essay synthesizes data from multiple research papers.", clue: "Combining parts into a single whole." },
-      { word: "ubiquitous", phonetic: "/juːˈbɪk.wə.t̬əs/", pos: "adj.", level: "C2", zh: "無處不在的", root: "Latin ubique (everywhere)", definition: "present, appearing, or found everywhere", synonym: "omnipresent", sentence: "Smartphones have become ubiquitous across modern life.", clue: "Found all around us." }
+  "toefl": {
+    "name": "TOEFL & IELTS Academic",
+    "icon": "🎓",
+    "desc": "High-yield academic prose, research methodology, scientific inquiry, and critical analysis vocabulary.",
+    "words": [
+      {
+        "word": "hypothesis",
+        "phonetic": "/haɪˈpɑː.θə.sɪs/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "假設，假說",
+        "root": "Greek hypo (under) + thesis",
+        "definition": "a proposed explanation based on limited evidence",
+        "synonym": "theory",
+        "sentence": "The laboratory experiments confirmed their initial hypothesis.",
+        "clue": "A testable scientific idea."
+      },
+      {
+        "word": "empirical",
+        "phonetic": "/emˈpɪr.ɪ.kəl/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "經驗主義的，實證的",
+        "root": "Greek empeiria (experience)",
+        "definition": "based on observation or experiment rather than theory",
+        "synonym": "observational",
+        "sentence": "They gathered solid empirical evidence to support the claim.",
+        "clue": "Based on real-world testing."
+      },
+      {
+        "word": "paradigm",
+        "phonetic": "/ˈper.ə.daɪm/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "範例，典範",
+        "root": "Greek paradeigma (pattern)",
+        "definition": "a typical example, pattern, or framework of ideas",
+        "synonym": "model",
+        "sentence": "Quantum mechanics caused a major paradigm shift.",
+        "clue": "A fundamental framework or model."
+      },
+      {
+        "word": "synthesize",
+        "phonetic": "/ˈsɪn.θə.saɪz/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "綜合，合成",
+        "root": "Greek synthesis (putting together)",
+        "definition": "to combine diverse ideas or substances into a whole",
+        "synonym": "integrate",
+        "sentence": "The essay synthesizes data from multiple research papers.",
+        "clue": "Combining parts into a single whole."
+      },
+      {
+        "word": "ubiquitous",
+        "phonetic": "/juːˈbɪk.wə.t̬əs/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "無處不在的",
+        "root": "Latin ubique (everywhere)",
+        "definition": "present, appearing, or found everywhere",
+        "synonym": "omnipresent",
+        "sentence": "Smartphones have become ubiquitous across modern life.",
+        "clue": "Found all around us."
+      },
+      {
+        "word": "corroborate",
+        "phonetic": "/kəˈrɒb.ə.reɪt/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "證實，確證",
+        "root": "Latin com + robur (strength)",
+        "definition": "to confirm or give support to a statement or theory",
+        "synonym": "confirm",
+        "sentence": "Independent geological surveys corroborated the climate findings.",
+        "clue": "Providing evidence to back up a fact."
+      },
+      {
+        "word": "delineate",
+        "phonetic": "/dɪˈlɪn.i.eɪt/",
+        "pos": "v.",
+        "level": "C2",
+        "zh": "描繪，詳細闡明",
+        "root": "Latin de + linea (line)",
+        "definition": "to describe or portray something precisely",
+        "synonym": "outline",
+        "sentence": "The research paper clearly delineates the methodology used.",
+        "clue": "Setting out exact boundaries or descriptions."
+      },
+      {
+        "word": "substantiate",
+        "phonetic": "/səbˈstæn.ʃi.eɪt/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "證實，證明…有根據",
+        "root": "Latin substantia (substance)",
+        "definition": "to provide evidence to support or prove the truth of",
+        "synonym": "verify",
+        "sentence": "Researchers must substantiate claims with peer-reviewed data.",
+        "clue": "Proving that a claim is solidly true."
+      },
+      {
+        "word": "anomaly",
+        "phonetic": "/əˈnɒm.ə.li/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "異常，反常現象",
+        "root": "Greek an (not) + homalos (even)",
+        "definition": "something that deviates from what is standard, normal, or expected",
+        "synonym": "irregularity",
+        "sentence": "Astronomers detected an electromagnetic anomaly near the star.",
+        "clue": "Unexpected deviation from the norm."
+      },
+      {
+        "word": "aggregate",
+        "phonetic": "/ˈæɡ.rɪ.ɡət/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "總計，聚集體",
+        "root": "Latin ad + grex (flock)",
+        "definition": "a whole formed by combining several separate elements",
+        "synonym": "total",
+        "sentence": "The aggregate data revealed long-term demographic shifts.",
+        "clue": "Sum total of combined pieces."
+      },
+      {
+        "word": "plausible",
+        "phonetic": "/ˈplɔː.zə.bəl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "合理的，貌似可信的",
+        "root": "Latin plaudere (applaud)",
+        "definition": "seeming reasonable or probable",
+        "synonym": "credible",
+        "sentence": "The detective presented a plausible explanation for the event.",
+        "clue": "Believable and logical."
+      },
+      {
+        "word": "fluctuate",
+        "phonetic": "/ˈflʌk.tʃu.eɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "波動，起伏不定",
+        "root": "Latin fluctuare (surge)",
+        "definition": "to rise and fall irregularly in number or amount",
+        "synonym": "vary",
+        "sentence": "Surface temperatures fluctuate wildly on the moon.",
+        "clue": "Going up and down continually."
+      },
+      {
+        "word": "concurrent",
+        "phonetic": "/kənˈkʌr.ənt/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "同時發生的，並存的",
+        "root": "Latin con + currere (run)",
+        "definition": "existing, happening, or done at the same time",
+        "synonym": "simultaneous",
+        "sentence": "The symposium hosted four concurrent technical workshops.",
+        "clue": "Occurring at the identical time."
+      },
+      {
+        "word": "analogous",
+        "phonetic": "/əˈnæl.ə.ɡəs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "類似的，可類比的",
+        "root": "Greek ana (according to) + logos",
+        "definition": "comparable in certain respects, typically in a way which makes clearer",
+        "synonym": "comparable",
+        "sentence": "The wings of bats and birds are functionally analogous.",
+        "clue": "Similar in structure or purpose."
+      },
+      {
+        "word": "intrinsic",
+        "phonetic": "/ɪnˈtrɪn.zɪk/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "固有的，內在的",
+        "root": "Latin intrinsecus (inwardly)",
+        "definition": "belonging naturally; essential",
+        "synonym": "inherent",
+        "sentence": "Curiosity is an intrinsic part of human nature.",
+        "clue": "Inborn and inseparable from within."
+      },
+      {
+        "word": "manifest",
+        "phonetic": "/ˈmæn.ɪ.fest/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "顯現，表明",
+        "root": "Latin manifestus (evident)",
+        "definition": "to show or demonstrate clearly",
+        "synonym": "display",
+        "sentence": "Stress often manifests in physical exhaustion.",
+        "clue": "Making inner feelings visible."
+      },
+      {
+        "word": "qualitative",
+        "phonetic": "/ˈkwɒl.ɪ.tə.tɪv/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "質化的，質的",
+        "root": "Latin qualitas (quality)",
+        "definition": "relating to, measuring, or measured by the quality of something",
+        "synonym": "descriptive",
+        "sentence": "Interviews provided rich qualitative insights into consumer psychology.",
+        "clue": "Measured by quality rather than raw numbers."
+      },
+      {
+        "word": "quantitative",
+        "phonetic": "/ˈkwɒn.tɪ.tə.tɪv/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "量化的，數量的",
+        "root": "Latin quantitas (amount)",
+        "definition": "relating to, measuring, or measured by the quantity of something",
+        "synonym": "numerical",
+        "sentence": "The laboratory relies on precise quantitative measurements.",
+        "clue": "Based on numerical data and stats."
+      },
+      {
+        "word": "volatile",
+        "phonetic": "/ˈvɒl.ə.taɪl/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "不穩定的，易揮發的",
+        "root": "Latin volare (to fly)",
+        "definition": "liable to change rapidly and unpredictably",
+        "synonym": "unstable",
+        "sentence": "The political situation in the border region remained volatile.",
+        "clue": "Subject to explosive or sudden shift."
+      },
+      {
+        "word": "susceptible",
+        "phonetic": "/səˈsep.tə.bəl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "易受影響的，敏感的",
+        "root": "Latin suscipere (take up)",
+        "definition": "likely or liable to be influenced or harmed by a particular thing",
+        "synonym": "vulnerable",
+        "sentence": "Elderly patients are especially susceptible to winter influenza.",
+        "clue": "Easily affected or caught off guard."
+      },
+      {
+        "word": "scrutinize",
+        "phonetic": "/ˈskruː.tɪ.naɪz/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "仔細審查，徹底檢查",
+        "root": "Latin scrutari (search)",
+        "definition": "to examine or inspect closely and thoroughly",
+        "synonym": "inspect",
+        "sentence": "Scholars scrutinized the ancient papyrus under ultraviolet light.",
+        "clue": "Examining with surgical care."
+      },
+      {
+        "word": "coherent",
+        "phonetic": "/kəʊˈhɪə.rənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "條理分明的，連貫的",
+        "root": "Latin cohaerere (cling together)",
+        "definition": "logical and consistent in argument or thought",
+        "synonym": "logical",
+        "sentence": "She presented a coherent thesis supported by clear evidence.",
+        "clue": "Clear, rational, and well-knit."
+      },
+      {
+        "word": "deduce",
+        "phonetic": "/dɪˈdjuːs/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "推論，演繹",
+        "root": "Latin deducere (lead down)",
+        "definition": "to arrive at a fact by reasoning from general rules",
+        "synonym": "infer",
+        "sentence": "From the footprints, the detective deduced the suspect's height.",
+        "clue": "Logical reasoning from facts."
+      },
+      {
+        "word": "premise",
+        "phonetic": "/ˈprem.ɪs/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "前提，假定",
+        "root": "Latin praemittere (send before)",
+        "definition": "a previous statement from which another is inferred as a conclusion",
+        "synonym": "assumption",
+        "sentence": "The entire argument rests upon a false foundational premise.",
+        "clue": "Starting assumption of a logical argument."
+      },
+      {
+        "word": "pervasive",
+        "phonetic": "/pəˈveɪ.sɪv/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "普遍蔓延的，滲透的",
+        "root": "Latin pervadere (spread through)",
+        "definition": "spreading widely throughout an area or a group of people",
+        "synonym": "widespread",
+        "sentence": "Social media has a pervasive influence on modern culture.",
+        "clue": "Spreading into every corner of society."
+      },
+      {
+        "word": "autonomous",
+        "phonetic": "/ɔːˈtɒn.ə.məs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "自治的，自主運行的",
+        "root": "Greek auto (self) + nomos (law)",
+        "definition": "having the freedom to act independently",
+        "synonym": "self-governing",
+        "sentence": "Engineers developed an autonomous drone for ocean exploration.",
+        "clue": "Operating freely on its own."
+      },
+      {
+        "word": "integral",
+        "phonetic": "/ˈɪn.tɪ.ɡrəl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "不可或缺的，構成整體所必需的",
+        "root": "Latin integer (untouched, whole)",
+        "definition": "necessary to make a whole complete; essential",
+        "synonym": "essential",
+        "sentence": "Practical experiments are an integral component of the syllabus.",
+        "clue": "Essential piece of a puzzle."
+      },
+      {
+        "word": "prevalent",
+        "phonetic": "/ˈprev.əl.ənt/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "盛行的，普遍存在的",
+        "root": "Latin praevalere (prevail)",
+        "definition": "widespread in a particular area or at a particular time",
+        "synonym": "dominant",
+        "sentence": "The view that exercise improves mental focus is prevalent today.",
+        "clue": "Common and widely accepted."
+      },
+      {
+        "word": "versatile",
+        "phonetic": "/ˈvɜː.sə.taɪl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "多才多藝的，多功能的",
+        "root": "Latin versare (turn about)",
+        "definition": "able to adapt or be adapted to many different functions",
+        "synonym": "adaptable",
+        "sentence": "The Swiss army knife is famous as a versatile survival tool.",
+        "clue": "Able to handle many diverse tasks."
+      },
+      {
+        "word": "pertinent",
+        "phonetic": "/ˈpɜː.tɪ.nənt/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "切題的，直接相關的",
+        "root": "Latin pertinere (belong to)",
+        "definition": "relevant or applicable to a particular matter; apposite",
+        "synonym": "relevant",
+        "sentence": "The lawyer asked pertinent questions regarding the contract date.",
+        "clue": "Directly relevant to the discussion."
+      }
     ]
   },
-  gre: {
-    name: "GRE Verbal High-Yield", icon: "🏛️",
-    desc: "Nuanced, high-level vocabulary for advanced prose and analytical reasoning.",
-    words: [
-      { word: "laconic", phonetic: "/ləˈkɑː.nɪk/", pos: "adj.", level: "C2", zh: "簡潔的，言簡意賅的", root: "Greek Lakon (Spartan)", definition: "using very few words to express much", synonym: "terse", sentence: "His laconic reply conveyed calm authority.", clue: "Expressing thoughts in very few words." },
-      { word: "alacrity", phonetic: "/əˈlæk.rə.t̬i/", pos: "n.", level: "C2", zh: "敏捷，欣然", root: "Latin alacer (lively)", definition: "brisk and cheerful readiness to act", synonym: "eagerness", sentence: "She accepted the challenging project with alacrity.", clue: "Cheerful and brisk eagerness." },
-      { word: "enervate", phonetic: "/ˈen.ɚ.veɪt/", pos: "v.", level: "C2", zh: "使衰弱，使無力", root: "Latin e- (out) + nervus (sinew)", definition: "to drain energy or vitality from", synonym: "weaken", sentence: "The relentless desert sun threatened to enervate the travelers.", clue: "Draining one's strength." },
-      { word: "obsequious", phonetic: "/əbˈsiː.kwi.əs/", pos: "adj.", level: "C2", zh: "諂媚的，奉承的", root: "Latin obsequi (comply)", definition: "obedient or attentive to an excessive degree", synonym: "fawning", sentence: "The courtiers were obsequious in the king's presence.", clue: "Excessively flattering." },
-      { word: "capricious", phonetic: "/kəˈprɪʃ.əs/", pos: "adj.", level: "C1", zh: "善變的，反覆無常的", root: "Italian capriccio (whim)", definition: "given to sudden and unaccountable changes of mood", synonym: "fickle", sentence: "The mountain weather is famously capricious.", clue: "Changing rapidly on a whim." }
+  "gre": {
+    "name": "GRE Verbal Elite",
+    "icon": "🏛️",
+    "desc": "Nuanced, high-level vocabulary for advanced literary prose, philosophical debates, and critical reasoning.",
+    "words": [
+      {
+        "word": "laconic",
+        "phonetic": "/ləˈkɑː.nɪk/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "簡潔的，言簡意賅的",
+        "root": "Greek Lakon (Spartan)",
+        "definition": "using very few words to express much",
+        "synonym": "terse",
+        "sentence": "His laconic reply conveyed calm authority.",
+        "clue": "Expressing thoughts in very few words."
+      },
+      {
+        "word": "alacrity",
+        "phonetic": "/əˈlæk.rə.t̬i/",
+        "pos": "n.",
+        "level": "C2",
+        "zh": "敏捷，欣然",
+        "root": "Latin alacer (lively)",
+        "definition": "brisk and cheerful readiness to act",
+        "synonym": "eagerness",
+        "sentence": "She accepted the challenging project with alacrity.",
+        "clue": "Cheerful and brisk eagerness."
+      },
+      {
+        "word": "enervate",
+        "phonetic": "/ˈen.ɚ.veɪt/",
+        "pos": "v.",
+        "level": "C2",
+        "zh": "使衰弱，使無力",
+        "root": "Latin e- (out) + nervus (sinew)",
+        "definition": "to drain energy or vitality from",
+        "synonym": "weaken",
+        "sentence": "The relentless desert sun threatened to enervate the travelers.",
+        "clue": "Draining one's strength."
+      },
+      {
+        "word": "obsequious",
+        "phonetic": "/əbˈsiː.kwi.əs/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "諂媚的，奉承的",
+        "root": "Latin obsequi (comply)",
+        "definition": "obedient or attentive to an excessive degree",
+        "synonym": "fawning",
+        "sentence": "The courtiers were obsequious in the king's presence.",
+        "clue": "Excessively flattering."
+      },
+      {
+        "word": "capricious",
+        "phonetic": "/kəˈprɪʃ.əs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "善變的，反覆無常的",
+        "root": "Italian capriccio (whim)",
+        "definition": "given to sudden and unaccountable changes of mood",
+        "synonym": "fickle",
+        "sentence": "The mountain weather is famously capricious.",
+        "clue": "Changing rapidly on a whim."
+      },
+      {
+        "word": "magnanimous",
+        "phonetic": "/mæɡˈnæn.ɪ.məs/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "寬宏大量的，心胸開闊的",
+        "root": "Latin magnus (great) + animus (soul)",
+        "definition": "generous or forgiving, especially toward a rival",
+        "synonym": "generous",
+        "sentence": "The victor was magnanimous in extending peace terms to the vanquished.",
+        "clue": "Showing a noble, forgiving spirit."
+      },
+      {
+        "word": "fastidious",
+        "phonetic": "/fæsˈtɪd.i.əs/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "挑剔的，極度注重細節的",
+        "root": "Latin fastidium (disgust)",
+        "definition": "very attentive to and concerned about accuracy and detail",
+        "synonym": "scrupulous",
+        "sentence": "The curator was fastidious in restoring the renaissance oil painting.",
+        "clue": "Perfectionist attention to cleanliness."
+      },
+      {
+        "word": "cacophony",
+        "phonetic": "/kəˈkɒf.ə.ni/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "刺耳雜音，喧囂聲",
+        "root": "Greek kakos (bad) + phone (sound)",
+        "definition": "a harsh, discordant mixture of sounds",
+        "synonym": "din",
+        "sentence": "A cacophony of car horns echoed through the busy marketplace.",
+        "clue": "Loud, grating noise."
+      },
+      {
+        "word": "garrulous",
+        "phonetic": "/ˈɡær.əl.əs/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "喋喋不休的，饒舌的",
+        "root": "Latin garrire (to chatter)",
+        "definition": "excessively talkative, especially on trivial matters",
+        "synonym": "loquacious",
+        "sentence": "The garrulous cab driver told stories during the entire journey.",
+        "clue": "Talking endlessly about minor things."
+      },
+      {
+        "word": "venerate",
+        "phonetic": "/ˈven.ər.eɪt/",
+        "pos": "v.",
+        "level": "C2",
+        "zh": "崇敬，尊崇",
+        "root": "Latin venus (love, grace)",
+        "definition": "to regard with great respect; revere",
+        "synonym": "revere",
+        "sentence": "Scholars venerate the ancient philosopher for his ethical teachings.",
+        "clue": "Holding in the highest spiritual esteem."
+      },
+      {
+        "word": "repudiate",
+        "phonetic": "/rɪˈpjuː.di.eɪt/",
+        "pos": "v.",
+        "level": "C2",
+        "zh": "斷然拒絕，否認駁斥",
+        "root": "Latin repudiare (divorce, reject)",
+        "definition": "to refuse to accept or be associated with",
+        "synonym": "renounce",
+        "sentence": "The leader repudiated the extremist allegations with fierce resolve.",
+        "clue": "Completely rejecting a claim."
+      },
+      {
+        "word": "exacerbate",
+        "phonetic": "/ɪɡˈzæs.ə.beɪt/",
+        "pos": "v.",
+        "level": "C1",
+        "zh": "加劇，使惡化",
+        "root": "Latin ex + acerbus (harsh)",
+        "definition": "to make a problem, bad situation, or negative feeling worse",
+        "synonym": "worsen",
+        "sentence": "The heatwave only exacerbated the severe drought.",
+        "clue": "Making a bad situation much worse."
+      },
+      {
+        "word": "mitigate",
+        "phonetic": "/ˈmɪt.ɪ.ɡeɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "緩和，減輕",
+        "root": "Latin mitis (mild)",
+        "definition": "to make less severe, serious, or painful",
+        "synonym": "alleviate",
+        "sentence": "Planting mangrove trees mitigates storm surge damage.",
+        "clue": "Softening the harsh impact."
+      },
+      {
+        "word": "laudable",
+        "phonetic": "/ˈlɔː.də.bəl/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "值得稱讚的",
+        "root": "Latin laudare (praise)",
+        "definition": "deserving praise and commendation",
+        "synonym": "praiseworthy",
+        "sentence": "Her dedication to animal welfare is truly laudable.",
+        "clue": "Worthy of high public praise."
+      },
+      {
+        "word": "castigate",
+        "phonetic": "/ˈkæs.tɪ.ɡeɪt/",
+        "pos": "v.",
+        "level": "C2",
+        "zh": "嚴厲指責，痛斥",
+        "root": "Latin castus (pure) + agere",
+        "definition": "to reprimand someone severely",
+        "synonym": "rebuke",
+        "sentence": "The editorial castigated the company for concealing pollution data.",
+        "clue": "Harshly criticizing wrongdoing."
+      },
+      {
+        "word": "equivocal",
+        "phonetic": "/ɪˈkwɪv.ə.kəl/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "含糊其辭的，模稜兩可的",
+        "root": "Latin aequus (equal) + vox (voice)",
+        "definition": "open to more than one interpretation; ambiguous",
+        "synonym": "ambiguous",
+        "sentence": "His equivocal statement left both political sides confused.",
+        "clue": "Speaking with two possible meanings."
+      },
+      {
+        "word": "audacious",
+        "phonetic": "/ɔːˈdeɪ.ʃəs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "大膽大無畏的，放肆的",
+        "root": "Latin audere (to dare)",
+        "definition": "showing a willingness to take surprisingly bold risks",
+        "synonym": "daring",
+        "sentence": "The startup executed an audacious plan to challenge the tech monopoly.",
+        "clue": "Brazenly bold and daring."
+      },
+      {
+        "word": "pedantic",
+        "phonetic": "/pəˈdæn.tɪk/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "迂腐的，學究氣的",
+        "root": "Italian pedante (teacher)",
+        "definition": "excessively concerned with minor details or rules in scholarship",
+        "synonym": "nitpicking",
+        "sentence": "The professor's pedantic lecture lost the students' interest.",
+        "clue": "Obsessing over trivial technicalities."
+      },
+      {
+        "word": "nadir",
+        "phonetic": "/ˈneɪ.dɪər/",
+        "pos": "n.",
+        "level": "C2",
+        "zh": "最低點，最不幸的時刻",
+        "root": "Arabic nazir (opposite to zenith)",
+        "definition": "the lowest point in the fortunes of a person or organization",
+        "synonym": "rock-bottom",
+        "sentence": "The stock market hit its nadir during the financial crisis.",
+        "clue": "The direct opposite of the zenith."
+      },
+      {
+        "word": "bolster",
+        "phonetic": "/ˈbəʊl.stər/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "支持，增強",
+        "root": "Old English bolster (pillow)",
+        "definition": "to support or strengthen",
+        "synonym": "reinforce",
+        "sentence": "Fresh clinical trials bolstered confidence in the vaccine.",
+        "clue": "Propping up with solid support."
+      },
+      {
+        "word": "gregarious",
+        "phonetic": "/ɡrɪˈɡeə.ri.əs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "合群的，愛交際的",
+        "root": "Latin grex (flock)",
+        "definition": "fond of company; sociable",
+        "synonym": "sociable",
+        "sentence": "Dolphins are gregarious mammals that swim in large pods.",
+        "clue": "Thriving in social groups."
+      },
+      {
+        "word": "innocuous",
+        "phonetic": "/ɪˈnɒk.ju.əs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "無害的，平淡無奇的",
+        "root": "Latin in- (not) + nocere (harm)",
+        "definition": "not harmful or offensive",
+        "synonym": "harmless",
+        "sentence": "The question seemed innocuous, but it disguised a trap.",
+        "clue": "Completely incapable of doing harm."
+      },
+      {
+        "word": "austere",
+        "phonetic": "/ɔːˈstɪər/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "樸素嚴峻的，苦行的",
+        "root": "Greek austeros (harsh, dry)",
+        "definition": "severe or strict in manner, attitude, or appearance",
+        "synonym": "spartan",
+        "sentence": "Monks lived in austere stone chambers without luxury.",
+        "clue": "Spiritual simplicity without comforts."
+      },
+      {
+        "word": "avarice",
+        "phonetic": "/ˈæv.ər.ɪs/",
+        "pos": "n.",
+        "level": "C2",
+        "zh": "貪婪，貪得無厭",
+        "root": "Latin avere (crave)",
+        "definition": "extreme greed for wealth or material gain",
+        "synonym": "greed",
+        "sentence": "His insatiable avarice ruined lifelong friendships.",
+        "clue": "Uncontrollable lust for gold."
+      },
+      {
+        "word": "chicanery",
+        "phonetic": "/ʃɪˈkeɪ.nər.i/",
+        "pos": "n.",
+        "level": "C2",
+        "zh": "詭計，強詞奪理",
+        "root": "French chicaner (to quibble)",
+        "definition": "the use of trickery to achieve a political, financial, or legal purpose",
+        "synonym": "deception",
+        "sentence": "Financial regulators uncovered layers of corporate chicanery.",
+        "clue": "Devious legal or financial tricks."
+      },
+      {
+        "word": "circumspect",
+        "phonetic": "/ˈsɜː.kəm.spekt/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "謹慎小心的，深思熟慮的",
+        "root": "Latin circum (around) + specere (look)",
+        "definition": "wary and unwilling to take risks",
+        "synonym": "cautious",
+        "sentence": "Diplomats gave circumspect responses during the peace talks.",
+        "clue": "Looking around carefully before acting."
+      },
+      {
+        "word": "cogent",
+        "phonetic": "/ˈkəʊ.dʒənt/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "令人信服的，有說服力的",
+        "root": "Latin cogere (compel)",
+        "definition": "clear, logical, and convincing in argument",
+        "synonym": "compelling",
+        "sentence": "The scientist delivered a cogent defense of the new paradigm.",
+        "clue": "Powerfully compelling logic."
+      },
+      {
+        "word": "copious",
+        "phonetic": "/ˈkəʊ.pi.əs/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "豐富的，大量的",
+        "root": "Latin copia (plenty)",
+        "definition": "abundant in supply or quantity",
+        "synonym": "plentiful",
+        "sentence": "She took copious notes throughout the symposium.",
+        "clue": "Overflowing in great abundance."
+      },
+      {
+        "word": "craven",
+        "phonetic": "/ˈkreɪ.vən/",
+        "pos": "adj.",
+        "level": "C2",
+        "zh": "怯懦膽小的",
+        "root": "Latin crepare (crack, break)",
+        "definition": "contemptibly lacking in courage; cowardly",
+        "synonym": "cowardly",
+        "sentence": "The craven minister fled the palace during the rebellion.",
+        "clue": "Despicably cowardly."
+      },
+      {
+        "word": "deference",
+        "phonetic": "/ˈdef.ər.əns/",
+        "pos": "n.",
+        "level": "C1",
+        "zh": "順從，尊崇",
+        "root": "Latin deferre (yield)",
+        "definition": "polite submission and respect",
+        "synonym": "respect",
+        "sentence": "Young apprentices treated the master craftsman with deep deference.",
+        "clue": "Respectful submission to authority."
+      }
     ]
   }
 };
@@ -2625,6 +3693,49 @@ function showLexicon() {
   $("#export-csv-btn")?.addEventListener("click", exportDeckCSV);
 }
 
+async function fetchOnlineWord(rawWord) {
+  const word = rawWord.trim().toLowerCase();
+  if (!word) return null;
+  try {
+    const dictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+    if (!dictRes.ok) throw new Error("Word not found in online dictionary.");
+    const data = await dictRes.json();
+    const entry = data[0];
+    const phonetic = entry.phonetic || (entry.phonetics && entry.phonetics[0] && entry.phonetics[0].text) || "";
+    const firstMeaning = entry.meanings && entry.meanings[0];
+    const pos = firstMeaning ? `${firstMeaning.partOfSpeech.slice(0, 3)}.` : "w.";
+    const firstDef = firstMeaning && firstMeaning.definitions && firstMeaning.definitions[0];
+    const definition = (firstDef && firstDef.definition) || `General definition for ${word}`;
+    const sentence = (firstDef && firstDef.example) || `A typical context showing usage of ${word}.`;
+
+    // Fetch top synonyms from Datamuse API
+    let synonym = "related";
+    try {
+      const synRes = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&max=3`);
+      if (synRes.ok) {
+        const synData = await synRes.json();
+        if (synData && synData.length) synonym = synData.map(s => s.word).join(", ");
+      }
+    } catch {}
+
+    return {
+      word,
+      phonetic,
+      pos,
+      level: "B2",
+      zh: "",
+      root: "",
+      definition,
+      synonym,
+      sentence,
+      clue: definition
+    };
+  } catch (err) {
+    console.warn("Dictionary API fetch error:", err);
+    return null;
+  }
+}
+
 function showDeckManager() {
   const isZh = loadMeta().bilingual;
   const meta = loadMeta();
@@ -2632,9 +3743,9 @@ function showDeckManager() {
   meta.customWords = meta.customWords || [];
   
   openModal(`
-    <span class="modal-kicker">${isZh ? "主題詞庫與自訂匯入" : "CUSTOM DECKS & IMPORTER"}</span>
-    <h2>${isZh ? "主題詞庫管理" : "Curated Decks"}</h2>
-    <p class="section-copy">${isZh ? "自由啟用各類升學與檢定單字庫（多益、托福、GRE），或貼上自己的單字清單。" : "Enable targeted exam presets or import your own vocabulary lists."}</p>
+    <span class="modal-kicker">${isZh ? "主題詞庫與線上字典擴展" : "CURATED DECKS & ONLINE DICTIONARY"}</span>
+    <h2>${isZh ? "詞彙庫管理與即時擴充" : "Deck & Vocabulary Hub"}</h2>
+    <p class="section-copy">${isZh ? "啟用內建檢定詞庫（多益、托福、GRE），使用線上字典 API 即時查詞擴充，或貼上外部詞彙表。" : "Enable high-yield exam presets, fetch live words via the Dictionary API, or paste external decks."}</p>
     
     <div class="deck-list">
       ${Object.entries(EXAM_DECKS).map(([key, deck]) => {
@@ -2654,12 +3765,25 @@ function showDeckManager() {
       }).join("")}
     </div>
 
-    <div class="import-section" style="margin-top: 18px;">
-      <span class="modal-kicker">${isZh ? "自訂單字匯入器" : "CUSTOM VOCABULARY IMPORTER"}</span>
-      <p class="section-copy" style="margin-bottom: 8px;">${isZh ? "貼上單字清單 (格式: <code>單字, 英文釋義, 同義詞, 語源, 繁中釋義</code> 或 <code>單字 - 英文釋義</code>):" : "Paste words (format: <code>word, definition, synonym, root, zh</code> or <code>word - definition</code>):"}</p>
-      <textarea id="import-textarea" class="import-textarea" placeholder="ephemeral, lasting a short time, fleeting, Greek ephemeros, 短暫的&#10;serendipity, finding good things by chance, luck, English, 機緣湊巧" rows="4"></textarea>
+    <div class="online-lookup-section" style="margin-top: 18px; border: 1px solid var(--gold); background: rgba(245, 230, 211, 0.4); border-radius: 8px; padding: 12px;">
+      <span class="modal-kicker">${isZh ? "線上字典 API 即時查詞擴充" : "ONLINE DICTIONARY API GENERATOR"}</span>
+      <p class="section-copy" style="margin-bottom: 8px;">${isZh ? "輸入任何英文單字（如 <code>perseverance</code>, <code>heuristic</code>），系統自動抓取音標、詞性、釋義與例句！" : "Type any English word to automatically fetch IPA, part of speech, definitions, and synonyms via API:"}</p>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <input id="api-search-input" style="flex: 1; min-width: 200px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); font: 12px var(--mono);" placeholder="e.g. serendipity, cognitive, quantum..." />
+        <button id="api-fetch-btn" class="button button-primary" style="font-size: 10px; white-space: nowrap;">${isZh ? "🌐 API 查詞並收錄" : "🌐 Fetch & Add Word"}</button>
+      </div>
+      <div id="api-preview-box" style="margin-top: 8px; font-size: 11px; display: none;"></div>
+    </div>
+
+    <div class="import-section" style="margin-top: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <span class="modal-kicker">${isZh ? "智慧批次匯入器 (支援 Anki / CSV / 列表)" : "SMART BULK IMPORTER"}</span>
+        <button id="copy-chatgpt-prompt" class="button button-ghost" style="font-size: 9px; padding: 2px 7px;">${isZh ? "📋 複製 ChatGPT 出題 Prompt" : "📋 Copy ChatGPT Prompt"}</button>
+      </div>
+      <p class="section-copy" style="margin-bottom: 8px;">${isZh ? "支援一行一個單字、CSV 格式 <code>word, definition, synonym, root, zh</code>，或 Anki 製表符 Tab 格式：" : "Paste one word per line, or CSV <code>word, definition, synonym, root, zh</code>:"}</p>
+      <textarea id="import-textarea" class="import-textarea" placeholder="resilient, able to recover quickly, tough, Latin resilire, 有韌性的&#10;ephemeral&#10;serendipity - finding good things by chance" rows="3"></textarea>
       <div style="display: flex; gap: 8px; margin-top: 8px;">
-        <button id="submit-import-btn" class="button button-primary" style="font-size: 10px;">${isZh ? "確認匯入單字" : "Import Words"}</button>
+        <button id="submit-import-btn" class="button button-primary" style="font-size: 10px;">${isZh ? "確認批次匯入" : "Import All Words"}</button>
         <button id="back-to-lexicon" class="button button-ghost" style="font-size: 10px;">${isZh ? "返回字彙庫" : "Back to Lexicon"}</button>
       </div>
     </div>
@@ -2676,21 +3800,78 @@ function showDeckManager() {
     });
   });
 
+  // Online API Fetcher
+  $("#api-fetch-btn")?.addEventListener("click", async () => {
+    const wordInput = $("#api-search-input")?.value.trim();
+    if (!wordInput) return;
+    const btn = $("#api-fetch-btn");
+    const preview = $("#api-preview-box");
+    btn.disabled = true;
+    btn.textContent = isZh ? "正在連線查詢..." : "Fetching...";
+    
+    const wordData = await fetchOnlineWord(wordInput);
+    btn.disabled = false;
+    btn.textContent = isZh ? "🌐 API 查詞並收錄" : "🌐 Fetch & Add Word";
+
+    if (!wordData) {
+      if (preview) {
+        preview.style.display = "block";
+        preview.innerHTML = `<span style="color:var(--crimson);">${isZh ? "❌ 查無此單字，請檢查拼字後重試。" : "❌ Word not found. Please check spelling."}</span>`;
+      }
+      return;
+    }
+
+    meta.customWords.push(wordData);
+    meta.learned[wordData.word] = (meta.learned[wordData.word] || 0) + 1;
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+
+    if (preview) {
+      preview.style.display = "block";
+      preview.innerHTML = `
+        <div style="background:var(--cream);padding:8px;border-radius:6px;border:1px solid var(--line);">
+          <b>✅ ${wordData.word}</b> <small>${wordData.phonetic} · ${wordData.pos}</small>
+          <p style="margin:4px 0 0;color:var(--ink-soft);">${wordData.definition}</p>
+          <small style="color:var(--gold);">${isZh ? "已成功加入字彙庫！" : "Successfully added to your active Lexicon!"}</small>
+        </div>
+      `;
+    }
+    toast(isZh ? `已透過字典 API 成功收錄 <b>${wordData.word}</b>！` : `Successfully added <b>${wordData.word}</b> via Dictionary API!`);
+    playChestFanfare();
+  });
+
+  // Copy ChatGPT Prompt
+  $("#copy-chatgpt-prompt")?.addEventListener("click", () => {
+    const promptText = `Please generate 15 advanced English vocabulary words for my vocabulary learning game WordBound. 
+Format each word exactly as a CSV line:
+word, definition, synonym, root, zh_translation
+
+Example:
+serendipity, finding good things by chance, good luck, Persian fairy tale, 意外收穫
+ephemeral, lasting for a short time, fleeting, Greek ephemeros, 短暫的
+
+Please output only the CSV lines with no extra commentary.`;
+    navigator.clipboard.writeText(promptText).then(() => {
+      toast(isZh ? "📋 <b>已複製 ChatGPT 出題 Prompt！</b> 可直接貼給 AI 生成詞彙。" : "📋 <b>ChatGPT prompt copied!</b> Paste it into ChatGPT to generate custom decks.");
+    });
+  });
+
+  // Smart Bulk Importer
   $("#submit-import-btn")?.addEventListener("click", () => {
     const raw = $("#import-textarea")?.value.trim();
     if (!raw) return;
     const lines = raw.split("\n").map(l => l.trim()).filter(Boolean);
     let count = 0;
     lines.forEach(line => {
-      let parts = line.split(",").map(p => p.trim());
+      let parts = line.includes("\t") ? line.split("\t").map(p => p.trim()) : line.split(",").map(p => p.trim());
       if (parts.length < 2) parts = line.split("-").map(p => p.trim());
-      if (parts.length >= 2) {
-        const word = parts[0].toLowerCase();
-        const definition = parts[1];
+      
+      const word = (parts[0] || "").toLowerCase().trim();
+      if (word && /^[a-z\- ]+$/i.test(word)) {
+        const definition = parts[1] || `Vocabulary entry for ${word}`;
         const synonym = parts[2] || "related";
         const root = parts[3] || "";
         const zh = parts[4] || "";
-        meta.customWords.push({ word, definition, synonym, root, zh, phonetic: "", level: "Custom", pos: "n.", sentence: `Example context for ${word}.`, clue: definition });
+        meta.customWords.push({ word, definition, synonym, root, zh, phonetic: "", level: "Custom", pos: "w.", sentence: `Example context for ${word}.`, clue: definition });
         meta.learned[word] = (meta.learned[word] || 0) + 1;
         count += 1;
       }
@@ -3176,8 +4357,8 @@ function applyLanguageToUI() {
   const strip = $(".feature-strip");
   if (strip) {
     strip.innerHTML = isZh
-      ? `<div><b>∞</b><span>無盡遠征<br />Expeditions</span></div><div><b>6</b><span>主題領域<br />Realms</span></div><div><b>180+</b><span>待掌握單字<br />Words</span></div>`
-      : `<div><b>∞</b><span>Endless<br />expeditions</span></div><div><b>6</b><span>Word<br />realms</span></div><div><b>180+</b><span>Words to<br />master</span></div>`;
+      ? `<div><b>∞</b><span>無盡遠征<br />Expeditions</span></div><div><b>6</b><span>主題領域<br />Realms</span></div><div><b>450+</b><span>待掌握單字<br />Words</span></div>`
+      : `<div><b>∞</b><span>Endless<br />expeditions</span></div><div><b>6</b><span>Word<br />realms</span></div><div><b>450+</b><span>Words to<br />master</span></div>`;
   }
   
   const heroCardSpan = $(".hero-word-card span");
