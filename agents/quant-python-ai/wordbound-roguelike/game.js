@@ -1,6 +1,7 @@
 const REGIONS = [
   {
     name: "The Verdant Verge",
+    zhName: "翠綠邊境",
     tone: "#2f7a72",
     words: [
       ["serene", "/səˈriːn/", "calm, peaceful, and untroubled", "peaceful", "The lake was serene before sunrise.", "It describes still water or a very calm person.", "A2", "adj.", "安詳寧靜的", "Latin serenus (clear, unclouded)"],
@@ -37,6 +38,7 @@ const REGIONS = [
   },
   {
     name: "The Ember Archives",
+    zhName: "餘燼檔案館",
     tone: "#c5573f",
     words: [
       ["ancient", "/ˈeɪn.ʃənt/", "belonging to the very distant past", "age-old", "They uncovered an ancient inscription.", "Far older than simply old.", "A2", "adj.", "古老久遠的", "Latin ante (before)"],
@@ -73,6 +75,7 @@ const REGIONS = [
   },
   {
     name: "The Moonlit Mere",
+    zhName: "月影池畔",
     tone: "#665089",
     words: [
       ["tranquil", "/ˈtræŋ.kwɪl/", "quiet and free from disturbance", "placid", "The garden felt tranquil at dusk.", "A peaceful atmosphere with no interruption.", "B2", "adj.", "寧靜安詳的", "Latin tranquillus (calm)"],
@@ -109,6 +112,7 @@ const REGIONS = [
   },
   {
     name: "The Gilded Heights",
+    zhName: "鍍金高地",
     tone: "#b7832f",
     words: [
       ["ascend", "/əˈsend/", "to move upward", "climb", "They began to ascend the narrow ridge.", "The opposite of descend.", "B2", "v.", "攀登、上升", "Latin ad (to) + scandere (to climb)"],
@@ -145,6 +149,7 @@ const REGIONS = [
   },
   {
     name: "The Clockwork Quarter",
+    zhName: "發條城區",
     tone: "#39758c",
     words: [
       ["intricate", "/ˈɪn.trɪ.kət/", "having many small, connected details", "complex", "The lock contained an intricate mechanism.", "Detailed in a complicated, impressive way.", "C1", "adj.", "錯綜複雜精細的", "Latin intricare (to entangle)"],
@@ -181,6 +186,7 @@ const REGIONS = [
   },
   {
     name: "The Celestial Library",
+    zhName: "星穹圖書館",
     tone: "#3c6570",
     words: [
       ["profound", "/prəˈfaʊnd/", "having deep meaning or great insight", "deep", "The discovery had a profound effect on her.", "Far beneath the surface in meaning or impact.", "B2", "adj.", "深奧的、深刻深遠的", "Latin pro (forward) + fundus (bottom)"],
@@ -377,35 +383,38 @@ const ACHIEVEMENTS = [
 ];
 
 const DAILY_QUESTS = [
-  { id: "words_8", text: "Answer 8 words correctly", target: 8, reward: 20 },
-  { id: "quick_3", text: "Score 3 Quick Wit answers", target: 3, reward: 25 },
-  { id: "streak_5", text: "Achieve a 5x streak in battle", target: 5, reward: 22 },
-  { id: "elites_1", text: "Defeat 1 Elite or Boss Guardian", target: 1, reward: 30 }
+  { id: "words_8", text: "Answer 8 words correctly", zhText: "答對 8 個英文單字", target: 8, reward: 20 },
+  { id: "quick_3", text: "Score 3 Quick Wit answers", zhText: "達成 3 次急速直覺作答", target: 3, reward: 25 },
+  { id: "streak_5", text: "Achieve a 5x streak in battle", zhText: "在戰鬥中達成 5 連擊", target: 5, reward: 22 },
+  { id: "elites_1", text: "Defeat 1 Elite or Boss Guardian", zhText: "擊敗 1 位精英怪或區域領主", target: 1, reward: 30 }
 ];
 
 const EVENTS = [
   {
-    icon: "⌘", title: "The Whispering Signpost",
+    icon: "⌘", title: "The Whispering Signpost", zhTitle: "呢喃路標",
     copy: "Three wooden arms point in impossible directions. One is carved with a word you nearly remember.",
+    zhCopy: "三根木質路標指向不可思議的方位，其中一根刻著一個你彷彿隱約記得的古老單字。",
     options: [
-      { label: "Study the carving", detail: "Learn a word · gain 2 insight", effect: "study" },
-      { label: "Follow the humming path", detail: "50% treasure · 50% trouble", effect: "gamble" }
+      { label: "Study the carving", zhLabel: "研讀路標刻文", detail: "Learn a word · gain 2 insight", zhDetail: "解鎖新單字 · 獲得 2 點頓悟經驗", effect: "study" },
+      { label: "Follow the humming path", zhLabel: "沿著共鳴小徑前行", detail: "50% treasure · 50% trouble", zhDetail: "50% 獲得寶藏 · 50% 遭受傷害", effect: "gamble" }
     ]
   },
   {
-    icon: "☕", title: "A Tea-Seller's Tale",
+    icon: "☕", title: "A Tea-Seller's Tale", zhTitle: "茶商的傳聞",
     copy: "A traveling merchant offers a fragrant cup and a story told entirely in synonyms.",
+    zhCopy: "一位旅途中的茶商為你遞上一杯清香熱茶，並用一連串生動的同義詞講述了一則冒險故事。",
     options: [
-      { label: "Listen to the whole story", detail: "Heal 10 resolve", effect: "heal" },
-      { label: "Trade notes", detail: "Pay 12 ink · gain 3 sparks", effect: "trade" }
+      { label: "Listen to the whole story", zhLabel: "靜心聆聽故事", detail: "Heal 10 resolve", zhDetail: "恢復 10 點意志生命", effect: "heal" },
+      { label: "Trade notes", zhLabel: "交換筆記心得", detail: "Pay 12 ink · gain 3 sparks", zhDetail: "支付 12 墨水 · 獲得 3 點火花", effect: "trade" }
     ]
   },
   {
-    icon: "✧", title: "The Unfinished Sentence",
+    icon: "✧", title: "The Unfinished Sentence", zhTitle: "未完成的詩句",
     copy: "A golden sentence floats above the path, waiting for a final word that only you can provide.",
+    zhCopy: "一行發光的金色詩句懸浮在林徑上方，等待著唯有你才能填補上的最後一個關鍵單字。",
     options: [
-      { label: "Complete it carefully", detail: "Gain 18 ink", effect: "ink" },
-      { label: "Rewrite it boldly", detail: "Lose 5 resolve · gain 4 insight", effect: "bold" }
+      { label: "Complete it carefully", zhLabel: "謹慎補齊詩句", detail: "Gain 18 ink", zhDetail: "獲得 18 點墨水", effect: "ink" },
+      { label: "Rewrite it boldly", zhLabel: "大膽改寫全篇", detail: "Lose 5 resolve · gain 4 insight", zhDetail: "消耗 5 點生命 · 獲得 4 點頓悟經驗", effect: "bold" }
     ]
   }
 ];
@@ -747,9 +756,11 @@ function startDailyExpedition() {
 
 function updateHUD() {
   if (!state) return;
+  const meta = loadMeta();
+  const isZh = Boolean(meta.bilingual);
   const region = REGIONS[state.region % REGIONS.length];
   document.documentElement.style.setProperty("--teal", region.tone);
-  $("#region-label").textContent = region.name.toUpperCase();
+  $("#region-label").textContent = isZh ? (region.zhName || region.name).toUpperCase() : region.name.toUpperCase();
   $("#day-label").textContent = state.day;
   $("#floor-label").textContent = `${state.node + 1} / 5`;
   $("#level-badge").textContent = `LV. ${state.level}`;
@@ -757,8 +768,8 @@ function updateHUD() {
   const heroClass = CLASSES.find(c => c.id === state.characterClass) || CLASSES[0];
   const titleSmall = $(".player-title small");
   const titleH2 = $(".player-title h2");
-  if (titleSmall) titleSmall.textContent = `${heroClass.subtitle.toUpperCase()}`;
-  if (titleH2) titleH2.textContent = heroClass.name;
+  if (titleSmall) titleSmall.textContent = isZh ? heroClass.zhSubtitle : heroClass.subtitle.toUpperCase();
+  if (titleH2) titleH2.textContent = isZh ? heroClass.zhName : heroClass.name;
   
   $("#hp-text").textContent = `${state.hp} / ${state.maxHp}`;
   $("#hp-bar").style.width = `${100 * state.hp / state.maxHp}%`;
@@ -772,14 +783,19 @@ function updateHUD() {
   $("#review-count").textContent = getReviewWords(true).length;
   
   const badgeCount = $("#badge-count");
-  if (badgeCount) badgeCount.textContent = (loadMeta().achievements || []).length;
+  if (badgeCount) badgeCount.textContent = (meta.achievements || []).length;
 
-  $("#quest-progress").textContent = `${Math.min(state.quest, 8)} / 8 · Reward: ${state.questClaimed ? "claimed" : "20 ink"}`;
+  const currentQuest = DAILY_QUESTS[0];
+  if ($("#quest-text")) $("#quest-text").textContent = isZh ? (currentQuest?.zhText || "答對 8 個單字") : (currentQuest?.text || "Master 8 words");
+  $("#quest-progress").textContent = isZh
+    ? `${Math.min(state.quest, 8)} / 8 · 獎勵: ${state.questClaimed ? "已領取" : "20 墨水"}`
+    : `${Math.min(state.quest, 8)} / 8 · Reward: ${state.questClaimed ? "claimed" : "20 ink"}`;
   $("#quest-bar").style.width = `${Math.min(100, state.quest / 8 * 100)}%`;
   $("#sound-toggle").textContent = soundEnabled ? "♪" : "×";
   $("#sound-toggle-title").textContent = soundEnabled ? "♪" : "×";
   renderRelics();
   updateHabitTracker();
+  applyLanguageToUI();
 
   // Achievement milestones
   if (state.node > 0 || state.region > 0) checkAchievement("first_step");
@@ -795,12 +811,15 @@ function updateHUD() {
 
 function updateJourneyMap() {
   if (!state) return;
+  const isZh = loadMeta().bilingual;
   const map = $("#journey-map");
   map.innerHTML = "";
   const positions = [
     [22, 295], [105, 237], [30, 174], [120, 108], [50, 38]
   ];
-  const labels = ["Encounter", "Crossroad", "Challenge", "Unknown", "Guardian"];
+  const labels = isZh
+    ? ["遭遇野怪", "命運岔路", "精英挑戰", "未知事件", "區域領主"]
+    : ["Encounter", "Crossroad", "Challenge", "Unknown", "Guardian"];
   positions.forEach(([x, y], index) => {
     if (index < positions.length - 1) {
       const [nx, ny] = positions[index + 1];
@@ -824,14 +843,17 @@ function updateJourneyMap() {
 }
 
 function renderRelics() {
+  const isZh = loadMeta().bilingual;
   const list = $("#relic-list");
   if (!state.relics.length) {
-    list.innerHTML = '<span class="empty-relic">Your satchel is empty</span>';
+    list.innerHTML = `<span class="empty-relic">${isZh ? "行囊目前空空如也" : "Your satchel is empty"}</span>`;
     return;
   }
   list.innerHTML = state.relics.map(id => {
     const relic = RELICS.find(item => item.id === id);
-    return `<span class="relic" title="${relic.name}: ${relic.text}">${relic.icon}</span>`;
+    const rName = isZh ? (relic.zhName || relic.name) : relic.name;
+    const rText = isZh ? (relic.zhText || relic.text) : relic.text;
+    return `<span class="relic" title="${rName}: ${rText}">${relic.icon}</span>`;
   }).join("");
 }
 
@@ -1482,16 +1504,18 @@ function completeNode(advanceScreen = true) {
 
 function showVictory(ink) {
   state.screen = "reward";
+  const isZh = loadMeta().bilingual;
   $("#stage").innerHTML = `
     <div class="reward-stage">
-      <span class="section-kicker">ENCOUNTER CLEARED</span><h1>The word is yours.</h1>
-      <p class="section-copy">You add another line to your living lexicon and continue a little wiser.</p>
+      <span class="section-kicker">${isZh ? "戰鬥勝利 · 對決完成" : "ENCOUNTER CLEARED"}</span>
+      <h1>${isZh ? "單字已收錄於你的字彙庫" : "The word is yours."}</h1>
+      <p class="section-copy">${isZh ? "你為生動的字彙庫增添了新單字，並帶著更豐富的智慧繼續踏上旅途。" : "You add another line to your living lexicon and continue a little wiser."}</p>
       <div class="summary-stats">
-        <div><b>+${ink}</b><span>Ink found</span></div>
-        <div><b>${state.streak}</b><span>Current streak</span></div>
-        <div><b>${Object.keys(state.learned).length}</b><span>Words learned</span></div>
+        <div><b>+${ink}</b><span>${isZh ? "獲得墨水" : "Ink found"}</span></div>
+        <div><b>${state.streak}</b><span>${isZh ? "當前連擊" : "Current streak"}</span></div>
+        <div><b>${Object.keys(state.learned).length}</b><span>${isZh ? "已掌握單字" : "Words learned"}</span></div>
       </div>
-      <button id="continue-path" class="button button-primary">Continue the journey <span>→</span></button>
+      <button id="continue-path" class="button button-primary">${isZh ? "繼續前進探索 ➔" : "Continue the journey <span>→</span>"}</button>
     </div>`;
   $("#continue-path").addEventListener("click", showPathChoice);
   updateHUD();
@@ -1499,17 +1523,20 @@ function showVictory(ink) {
 
 function showRelicReward(ink, type) {
   state.screen = "reward";
+  const isZh = loadMeta().bilingual;
   const available = RELICS.filter(relic => !state.relics.includes(relic.id));
   const picks = shuffle(available).slice(0, 3);
   if (!picks.length) { state.ink += 25; showVictory(ink + 25); return; }
   $("#stage").innerHTML = `
     <div class="reward-stage">
-      <span class="section-kicker">${type === "boss" ? "GUARDIAN DEFEATED" : "RARE DISCOVERY"}</span>
-      <h1>Choose a relic.</h1><p class="section-copy">Each relic changes how future encounters unfold. Choose the build that suits your journey.</p>
+      <span class="section-kicker">${type === "boss" ? (isZh ? "擊敗區域守護領主！" : "GUARDIAN DEFEATED") : (isZh ? "發現稀有古代遺物！" : "RARE DISCOVERY")}</span>
+      <h1>${isZh ? "挑選一件古老遺物" : "Choose a relic."}</h1>
+      <p class="section-copy">${isZh ? "每一件遺物都會永久改變後續戰鬥的機制。選擇最契合你冒險構築的被動效果。" : "Each relic changes how future encounters unfold. Choose the build that suits your journey."}</p>
       <div class="reward-grid">
         ${picks.map(relic => `<button class="reward-card" data-relic="${relic.id}">
-          <span class="reward-rarity">DISCOVERED RELIC</span><span class="reward-icon">${relic.icon}</span>
-          <h3>${relic.name}</h3><p>${relic.text}</p>
+          <span class="reward-rarity">${isZh ? "古代遺物" : "DISCOVERED RELIC"}</span><span class="reward-icon">${relic.icon}</span>
+          <h3>${isZh ? relic.zhName : relic.name}</h3>
+          <p>${isZh ? relic.zhText : relic.text}</p>
         </button>`).join("")}
       </div>
     </div>`;
@@ -1518,7 +1545,7 @@ function showRelicReward(ink, type) {
     state.relics.push(relic.id);
     if (relic.id === "boots") { state.maxHp += 8; state.hp += 8; }
     tone(460, .08); setTimeout(() => tone(740, .12), 90);
-    toast(`<b>${relic.name}</b> added to your satchel.`);
+    toast(isZh ? `已將 <b>${relic.zhName}</b> 放入行囊！` : `<b>${relic.name}</b> added to your satchel.`);
     showVictory(ink);
   }));
   updateHUD();
@@ -1527,18 +1554,21 @@ function showRelicReward(ink, type) {
 function showRest() {
   state.screen = "event";
   const healPercent = hasRelic("candle") ? 0.50 : 0.35;
+  const isZh = loadMeta().bilingual;
   $("#stage").innerHTML = `
     <div class="event-stage">
-      <div class="event-illustration">♨</div><span class="section-kicker">A QUIET CLEARING</span>
-      <h1>Rest between words.</h1><p class="section-copy">For a moment, the forest stops asking questions. You may tend your resolve or prepare your mind.</p>
+      <div class="event-illustration">♨</div>
+      <span class="section-kicker">${isZh ? "靜謐營火休憩處" : "A QUIET CLEARING"}</span>
+      <h1>${isZh ? "字與字之間的片刻寧靜" : "Rest between words."}</h1>
+      <p class="section-copy">${isZh ? "此處的森林暫時停止了對決。你可以烹茶休養意志，或在火光下研讀字彙。" : "For a moment, the forest stops asking questions. You may tend your resolve or prepare your mind."}</p>
       <div class="event-options">
-        <button class="button button-primary" data-rest="heal">Brew restorative tea<small>Restore ${Math.round(healPercent * 100)}% resolve${hasRelic("candle") ? " (Scholar's Candle +15%)" : ""}</small></button>
-        <button class="button button-ghost" data-rest="spark">Study by firelight<small>Gain 2 sparks and 1 insight</small></button>
+        <button class="button button-primary" data-rest="heal">${isZh ? "烹煮修復花茶" : "Brew restorative tea"}<small>${isZh ? `恢復 ${Math.round(healPercent * 100)}% 意志生命${hasRelic("candle") ? "（學者之燭 +15%）" : ""}` : `Restore ${Math.round(healPercent * 100)}% resolve${hasRelic("candle") ? " (Scholar's Candle +15%)" : ""}`}</small></button>
+        <button class="button button-ghost" data-rest="spark">${isZh ? "在火光下研讀" : "Study by firelight"}<small>${isZh ? "獲得 2 點火花與 1 點頓悟經驗" : "Gain 2 sparks and 1 insight"}</small></button>
       </div>
     </div>`;
   document.querySelectorAll("[data-rest]").forEach(button => button.addEventListener("click", () => {
     if (button.dataset.rest === "heal") heal(Math.ceil(state.maxHp * healPercent));
-    else { state.sparks = Math.min(9, state.sparks + 2); gainXp(1); toast("Your mind feels sharper. <b>+2 sparks</b>"); }
+    else { state.sparks = Math.min(9, state.sparks + 2); gainXp(1); toast(isZh ? "思緒更加清晰敏銳！<b>+2 火花</b>" : "Your mind feels sharper. <b>+2 sparks</b>"); }
     completeNode();
   }));
 }
@@ -1546,28 +1576,35 @@ function showRest() {
 function showEvent() {
   state.screen = "event";
   const event = random(EVENTS);
+  const isZh = loadMeta().bilingual;
   $("#stage").innerHTML = `
     <div class="event-stage"><div class="event-illustration">${event.icon}</div>
-      <span class="section-kicker">AN UNWRITTEN TURN</span><h1>${event.title}</h1><p class="section-copy">${event.copy}</p>
+      <span class="section-kicker">${isZh ? "未知的命運岔路" : "AN UNWRITTEN TURN"}</span>
+      <h1>${isZh ? event.zhTitle : event.title}</h1>
+      <p class="section-copy">${isZh ? event.zhCopy : event.copy}</p>
       <div class="event-options">${event.options.map(option => `
-        <button class="button ${option.effect === "gamble" || option.effect === "bold" ? "button-ghost" : "button-primary"}" data-event="${option.effect}">${option.label}<small>${option.detail}</small></button>`).join("")}</div>
+        <button class="button ${option.effect === "gamble" || option.effect === "bold" ? "button-ghost" : "button-primary"}" data-event="${option.effect}">
+          ${isZh ? option.zhLabel : option.label}
+          <small>${isZh ? option.zhDetail : option.detail}</small>
+        </button>`).join("")}</div>
     </div>`;
   document.querySelectorAll("[data-event]").forEach(button => button.addEventListener("click", () => resolveEvent(button.dataset.event)));
 }
 
 function resolveEvent(effect) {
-  if (effect === "study") { gainXp(2); state.quest += 1; toast("A forgotten word returns to you. <b>+2 insight</b>"); }
+  const isZh = loadMeta().bilingual;
+  if (effect === "study") { gainXp(2); state.quest += 1; toast(isZh ? "回想起一個遺忘的單字。<b>+2 頓悟經驗</b>" : "A forgotten word returns to you. <b>+2 insight</b>"); }
   if (effect === "gamble") {
-    if (Math.random() > .5) { state.ink += 28; toast("The path leads to a hidden inkwell. <b>+28 ink</b>"); }
-    else { state.hp = Math.max(1, state.hp - 8); toast("The path loops through thorns. <b>−8 resolve</b>"); }
+    if (Math.random() > .5) { state.ink += 28; toast(isZh ? "小徑通往一處隱密的墨水池！<b>+28 墨水</b>" : "The path leads to a hidden inkwell. <b>+28 ink</b>"); }
+    else { state.hp = Math.max(1, state.hp - 8); toast(isZh ? "小徑穿過荊棘叢林。<b>−8 意志生命</b>" : "The path loops through thorns. <b>−8 resolve</b>"); }
   }
   if (effect === "heal") heal(10);
   if (effect === "trade") {
-    if (state.ink >= 12) { state.ink -= 12; state.sparks = Math.min(9, state.sparks + 3); toast("A fair exchange. <b>+3 sparks</b>"); }
-    else { toast("Not enough ink, but the merchant shares a small cup."); heal(4, false); }
+    if (state.ink >= 12) { state.ink -= 12; state.sparks = Math.min(9, state.sparks + 3); toast(isZh ? "公平的交易。<b>+3 火花</b>" : "A fair exchange. <b>+3 sparks</b>"); }
+    else { toast(isZh ? "墨水不足，但茶商依舊贈送了一小杯熱茶。" : "Not enough ink, but the merchant shares a small cup."); heal(4, false); }
   }
-  if (effect === "ink") { state.ink += 18; toast("The sentence shines. <b>+18 ink</b>"); }
-  if (effect === "bold") { state.hp = Math.max(1, state.hp - 5); gainXp(4); toast("Bold language leaves a mark. <b>+4 insight</b>"); }
+  if (effect === "ink") { state.ink += 18; toast(isZh ? "詩句綻放出金色光芒！<b>+18 墨水</b>" : "The sentence shines. <b>+18 ink</b>"); }
+  if (effect === "bold") { state.hp = Math.max(1, state.hp - 5); gainXp(4); toast(isZh ? "大膽的語言留下了深刻印記。<b>+4 頓悟經驗</b>" : "Bold language leaves a mark. <b>+4 insight</b>"); }
   handleQuest();
   completeNode();
 }
@@ -1577,6 +1614,7 @@ function showShop() {
   const unowned = RELICS.filter(r => !state.relics.includes(r.id));
   const relicItem = unowned.length ? random(unowned) : null;
   const isCartographer = state.characterClass === "cartographer";
+  const isZh = loadMeta().bilingual;
   const discount = isCartographer ? 0.8 : 1.0;
   
   const relicPrice = Math.round(24 * discount);
@@ -1587,55 +1625,55 @@ function showShop() {
   $("#stage").innerHTML = `
     <div class="event-stage shop-stage">
       <div class="event-illustration shop-icon">◈</div>
-      <span class="section-kicker">WANDERING BAZAAR${isCartographer ? " · CARTOGRAPHER 20% DISCOUNT" : ""}</span>
-      <h1>Lexicon Bazaar</h1>
-      <p class="section-copy">A cloaked scholar lays out rare curio, elixirs, and ancient relics. Your current ink: <b>${state.ink} ◈</b></p>
+      <span class="section-kicker">${isZh ? `流浪黑市商人${isCartographer ? " · 製圖師專屬 8 折優惠" : ""}` : `WANDERING BAZAAR${isCartographer ? " · CARTOGRAPHER 20% DISCOUNT" : ""}`}</span>
+      <h1>${isZh ? "字彙黑市 (Lexicon Bazaar)" : "Lexicon Bazaar"}</h1>
+      <p class="section-copy">${isZh ? `一位披著斗篷的神秘學者在此兜售珍稀古物、靈藥與遺物。你目前的墨水：<b>${state.ink} ◈</b>` : `A cloaked scholar lays out rare curio, elixirs, and ancient relics. Your current ink: <b>${state.ink} ◈</b>`}</p>
       
       <div class="shop-grid">
         ${relicItem ? `
           <div class="shop-item">
             <span class="shop-item-icon">${relicItem.icon}</span>
             <div class="shop-item-info">
-              <b>${relicItem.name}</b>
-              <p>${relicItem.text}</p>
+              <b>${isZh ? relicItem.zhName : relicItem.name}</b>
+              <p>${isZh ? relicItem.zhText : relicItem.text}</p>
             </div>
             <button id="buy-relic" class="button button-primary" ${state.ink < relicPrice ? "disabled" : ""}>
-              Buy · ${relicPrice} ◈
+              ${isZh ? `購買 · ${relicPrice} ◈` : `Buy · ${relicPrice} ◈`}
             </button>
           </div>
         ` : ""}
         <div class="shop-item">
           <span class="shop-item-icon">♨</span>
           <div class="shop-item-info">
-            <b>Tonic of Resolve</b>
-            <p>Restore 16 Resolve immediately.</p>
+            <b>${isZh ? "意志之靈藥" : "Tonic of Resolve"}</b>
+            <p>${isZh ? "立即恢復 16 點意志生命。" : "Restore 16 Resolve immediately."}</p>
           </div>
           <button id="buy-heal" class="button button-primary" ${state.ink < healPrice ? "disabled" : ""}>
-            Buy · ${healPrice} ◈
+            ${isZh ? `購買 · ${healPrice} ◈` : `Buy · ${healPrice} ◈`}
           </button>
         </div>
         <div class="shop-item">
           <span class="shop-item-icon">✦</span>
           <div class="shop-item-info">
-            <b>Spark Crystals</b>
-            <p>Gain +2 Sparks for hints & swaps.</p>
+            <b>${isZh ? "專注火花水晶" : "Spark Crystals"}</b>
+            <p>${isZh ? "獲得 +2 火花 (用於線索提示與換題)。" : "Gain +2 Sparks for hints & swaps."}</p>
           </div>
           <button id="buy-sparks" class="button button-primary" ${state.ink < sparkPrice ? "disabled" : ""}>
-            Buy · ${sparkPrice} ◈
+            ${isZh ? `購買 · ${sparkPrice} ◈` : `Buy · ${sparkPrice} ◈`}
           </button>
         </div>
         <div class="shop-item">
           <span class="shop-item-icon">✧</span>
           <div class="shop-item-info">
-            <b>Scroll of Insight</b>
-            <p>Gain +3 Insight towards leveling up.</p>
+            <b>${isZh ? "洞悉智慧卷軸" : "Scroll of Insight"}</b>
+            <p>${isZh ? "獲得 +3 點頓悟升級經驗。" : "Gain +3 Insight towards leveling up."}</p>
           </div>
           <button id="buy-insight" class="button button-primary" ${state.ink < insightPrice ? "disabled" : ""}>
-            Buy · ${insightPrice} ◈
+            ${isZh ? `購買 · ${insightPrice} ◈` : `Buy · ${insightPrice} ◈`}
           </button>
         </div>
       </div>
-      <button id="leave-shop" class="button button-ghost" style="margin-top: 24px;">Continue the Journey →</button>
+      <button id="leave-shop" class="button button-ghost" style="margin-top: 24px;">${isZh ? "離開黑市繼續前行 →" : "Continue the Journey →"}</button>
     </div>
   `;
 
@@ -1692,6 +1730,7 @@ function showShop() {
 
 function showAnagramChest() {
   state.screen = "event";
+  const isZh = loadMeta().bilingual;
   const regionWords = REGIONS[state.region % REGIONS.length].words;
   const word = random(regionWords);
   let shuffledLetters = shuffle(word.word.toUpperCase().split(""));
@@ -1702,24 +1741,24 @@ function showAnagramChest() {
   $("#stage").innerHTML = `
     <div class="event-stage riddle-stage">
       <div class="event-illustration riddle-icon">🧩</div>
-      <span class="section-kicker">ANCIENT PUZZLE</span>
-      <h1>The Riddler's Chest</h1>
-      <p class="section-copy">A brass chest is sealed by scrambled runes. Unscramble the letters to claim the hidden relics and ink within.</p>
+      <span class="section-kicker">${isZh ? "古代字謎考驗" : "ANCIENT PUZZLE"}</span>
+      <h1>${isZh ? "謎語人黃銅寶箱" : "The Riddler's Chest"}</h1>
+      <p class="section-copy">${isZh ? "一個黃銅寶箱被混亂的符文鎖定。重組這些英文字母以解開寶箱，獲取其中的遺物與墨水。" : "A brass chest is sealed by scrambled runes. Unscramble the letters to claim the hidden relics and ink within."}</p>
       
       <div class="riddle-box">
-        <span class="riddle-clue-label">CLUE / DEFINITION</span>
+        <span class="riddle-clue-label">${isZh ? "線索 / 英文釋義" : "CLUE / DEFINITION"}</span>
         <blockquote class="riddle-clue">“${word.definition}”</blockquote>
-        ${word.zh ? `<small class="riddle-zh">釋義: ${word.zh}</small>` : ""}
+        ${word.zh ? `<small class="riddle-zh">${isZh ? "繁中釋義" : "Meaning"}: ${word.zh}</small>` : ""}
         
         <div class="letter-tiles" id="letter-tiles">
           ${shuffledLetters.map(l => `<span class="letter-tile">${l}</span>`).join("")}
         </div>
         
         <form id="anagram-form" class="anagram-form">
-          <input id="anagram-input" type="text" autocomplete="off" spellcheck="false" placeholder="Type the unscrambled word…" aria-label="Unscrambled word">
-          <button type="submit" class="button button-primary">Unlock Chest ➔</button>
+          <input id="anagram-input" type="text" autocomplete="off" spellcheck="false" placeholder="${isZh ? "輸入重組後的正確單字…" : "Type the unscrambled word…"}" aria-label="Unscrambled word">
+          <button type="submit" class="button button-primary">${isZh ? "解鎖寶箱 ➔" : "Unlock Chest ➔"}</button>
         </form>
-        <button id="skip-riddle" class="reveal-answer" style="margin-top: 14px;">Leave the chest (+8 Ink consolation)</button>
+        <button id="skip-riddle" class="reveal-answer" style="margin-top: 14px;">${isZh ? "放棄寶箱 (獲得 8 點安慰墨水)" : "Leave the chest (+8 Ink consolation)"}</button>
       </div>
     </div>
   `;
@@ -1732,20 +1771,20 @@ function showAnagramChest() {
       state.learned[word.word] = (state.learned[word.word] || 0) + 1;
       updateReviewRecord(word.word, true, "easy");
       tone(540, .08); setTimeout(() => tone(720, .12), 80); setTimeout(() => tone(960, .2), 160);
-      toast("🎉 <b>Chest Unlocked!</b> +22 Ink & Discovered Relic choice!");
+      toast(isZh ? "🎉 <b>寶箱成功解鎖！</b> 獲得 +22 墨水與自選古代遺物！" : "🎉 <b>Chest Unlocked!</b> +22 Ink & Discovered Relic choice!");
       completeNode(false);
       showRelicReward(22, "elite");
     } else {
       tone(180, .15);
       $("#anagram-input").classList.add("wrong");
       setTimeout(() => $("#anagram-input")?.classList.remove("wrong"), 600);
-      toast("Not the right word. Look at the clue closely!");
+      toast(isZh ? "單字不正確，請再仔細閱讀線索！" : "Not the right word. Look at the clue closely!");
     }
   });
 
   $("#skip-riddle")?.addEventListener("click", () => {
     state.ink += 8;
-    toast("You pocketed 8 loose ink and moved forward.");
+    toast(isZh ? "你收下 8 點墨水並繼續前行。" : "You pocketed 8 loose ink and moved forward.");
     completeNode();
   });
 
@@ -1754,13 +1793,14 @@ function showAnagramChest() {
 
 function showAlchemyShrine() {
   state.screen = "event";
+  const isZh = loadMeta().bilingual;
   const ROOTS_QUIZ = [
-    { root: "trans-", meaning: "across / beyond", word: "transcend", distractors: ["under / beneath", "backward / reverse", "against / anti"] },
-    { root: "bene-", meaning: "good / well", word: "benefactor", distractors: ["dark / evil", "small / tiny", "fast / swift"] },
-    { root: "chron-", meaning: "time", word: "synchronize", distractors: ["sound / voice", "fire / heat", "measure / count"] },
-    { root: "luc- / lum-", meaning: "light / brightness", word: "luminous", distractors: ["water / fluid", "earth / ground", "wind / air"] },
-    { root: "dur-", meaning: "hard / lasting", word: "endure", distractors: ["soft / fragile", "quick / momentary", "cold / ice"] },
-    { root: "scend-", meaning: "climb / step", word: "ascend", distractors: ["fall / drop", "burn / fire", "write / mark"] }
+    { root: "trans-", meaning: "across / beyond", zhMeaning: "穿越 / 超越", word: "transcend", distractors: ["under / beneath", "backward / reverse", "against / anti"] },
+    { root: "bene-", meaning: "good / well", zhMeaning: "良善 / 良好", word: "benefactor", distractors: ["dark / evil", "small / tiny", "fast / swift"] },
+    { root: "chron-", meaning: "time", zhMeaning: "時間 / 時光", word: "synchronize", distractors: ["sound / voice", "fire / heat", "measure / count"] },
+    { root: "luc- / lum-", meaning: "light / brightness", zhMeaning: "光芒 / 明亮", word: "luminous", distractors: ["water / fluid", "earth / ground", "wind / air"] },
+    { root: "dur-", meaning: "hard / lasting", zhMeaning: "持久 / 堅韌", word: "endure", distractors: ["soft / fragile", "quick / momentary", "cold / ice"] },
+    { root: "scend-", meaning: "climb / step", zhMeaning: "攀登 / 梯級", word: "ascend", distractors: ["fall / drop", "burn / fire", "write / mark"] }
   ];
 
   const quiz = random(ROOTS_QUIZ);
@@ -1769,12 +1809,12 @@ function showAlchemyShrine() {
   $("#stage").innerHTML = `
     <div class="event-stage alchemy-stage">
       <div class="event-illustration alchemy-icon">🔮</div>
-      <span class="section-kicker">ETYMOLOGY ALTAR</span>
-      <h1>Word Alchemy Shrine</h1>
-      <p class="section-copy">Ancient runes glow with linguistic power. Connect the root to its primal meaning to receive a blessing from the altar.</p>
+      <span class="section-kicker">${isZh ? "語源古老祭壇" : "ETYMOLOGY ALTAR"}</span>
+      <h1>${isZh ? "字根煉金祭壇 (Alchemy Shrine)" : "Word Alchemy Shrine"}</h1>
+      <p class="section-copy">${isZh ? "古老的符文流淌著語言的力量。將字根與其原始字義連結，領取來自祭壇的祝福。" : "Ancient runes glow with linguistic power. Connect the root to its primal meaning to receive a blessing from the altar."}</p>
       
       <div class="alchemy-quiz">
-        <span class="alchemy-prompt">What does the root <b>“${quiz.root}”</b> (as in <em>${quiz.word}</em>) mean?</span>
+        <span class="alchemy-prompt">${isZh ? `字根 <b>“${quiz.root}”</b>（如單字 <em>${quiz.word}</em>）的核心含義是？` : `What does the root <b>“${quiz.root}”</b> (as in <em>${quiz.word}</em>) mean?`}</span>
         <div class="alchemy-options">
           ${options.map(opt => `<button class="button button-ghost alchemy-opt" data-ans="${escapeAttribute(opt)}">${opt}</button>`).join("")}
         </div>
@@ -1790,7 +1830,7 @@ function showAlchemyShrine() {
       } else {
         tone(190, .15);
         gainXp(1);
-        toast(`The correct meaning was “${quiz.meaning}”. Gained +1 insight.`);
+        toast(isZh ? `正確字義為 “${quiz.meaning}”。獲得 +1 點頓悟經驗。` : `The correct meaning was “${quiz.meaning}”. Gained +1 insight.`);
         completeNode();
       }
     });
@@ -1798,30 +1838,31 @@ function showAlchemyShrine() {
 }
 
 function showAlchemyBlessing() {
+  const isZh = loadMeta().bilingual;
   $("#stage").innerHTML = `
     <div class="reward-stage">
-      <span class="section-kicker">ROOT HARMONIZED</span>
-      <h1>Choose Your Blessing</h1>
-      <p class="section-copy">The shrine's glyphs align in brilliant golden light. Select your permanent expedition blessing:</p>
+      <span class="section-kicker">${isZh ? "字根古語共鳴" : "ROOT HARMONIZED"}</span>
+      <h1>${isZh ? "選擇你的祭壇祝福" : "Choose Your Blessing"}</h1>
+      <p class="section-copy">${isZh ? "祭壇上的符文綻放出耀眼的金色光芒。為本次遠征選擇一項永久增益祝福：" : "The shrine's glyphs align in brilliant golden light. Select your permanent expedition blessing:"}</p>
       
       <div class="reward-grid">
         <button class="reward-card" id="bless-vitality">
-          <span class="reward-rarity">BLESSING</span>
+          <span class="reward-rarity">${isZh ? "生命祝福" : "BLESSING"}</span>
           <span class="reward-icon">💖</span>
-          <h3>Blessing of Vitality</h3>
-          <p>+6 Maximum Resolve & restore 12 HP immediately.</p>
+          <h3>${isZh ? "生機古語祝福" : "Blessing of Vitality"}</h3>
+          <p>${isZh ? "最大生命 +6 HP，並立即恢復 12 點意志生命。" : "+6 Maximum Resolve & restore 12 HP immediately."}</p>
         </button>
         <button class="reward-card" id="bless-sparks">
-          <span class="reward-rarity">BLESSING</span>
+          <span class="reward-rarity">${isZh ? "心智祝福" : "BLESSING"}</span>
           <span class="reward-icon">⚡</span>
-          <h3>Blessing of Clarity</h3>
-          <p>Gain +3 Sparks and +1 Insight.</p>
+          <h3>${isZh ? "清明心智祝福" : "Blessing of Clarity"}</h3>
+          <p>${isZh ? "獲得 +3 火花與 +1 點頓悟經驗。" : "Gain +3 Sparks and +1 Insight."}</p>
         </button>
         <button class="reward-card" id="bless-ink">
-          <span class="reward-rarity">BLESSING</span>
+          <span class="reward-rarity">${isZh ? "財富祝福" : "BLESSING"}</span>
           <span class="reward-icon">◈</span>
-          <h3>Blessing of Fortune</h3>
-          <p>Gain +26 Ink to spend at the Bazaar.</p>
+          <h3>${isZh ? "黑市財富祝福" : "Blessing of Fortune"}</h3>
+          <p>${isZh ? "獲得 +26 點墨水以在流浪黑市購買遺物。" : "Gain +26 Ink to spend at the Bazaar."}</p>
         </button>
       </div>
     </div>
@@ -1830,20 +1871,20 @@ function showAlchemyBlessing() {
   $("#bless-vitality")?.addEventListener("click", () => {
     state.maxHp += 6;
     heal(12);
-    toast("<b>Blessing of Vitality:</b> +6 Max HP!");
+    toast(isZh ? "<b>生機祝福：</b> 最大生命 +6 HP！" : "<b>Blessing of Vitality:</b> +6 Max HP!");
     completeNode();
   });
 
   $("#bless-sparks")?.addEventListener("click", () => {
     state.sparks = Math.min(9, state.sparks + 3);
     gainXp(1);
-    toast("<b>Blessing of Clarity:</b> +3 Sparks!");
+    toast(isZh ? "<b>心智祝福：</b> 獲得 +3 火花！" : "<b>Blessing of Clarity:</b> +3 Sparks!");
     completeNode();
   });
 
   $("#bless-ink")?.addEventListener("click", () => {
     state.ink += 26;
-    toast("<b>Blessing of Fortune:</b> +26 Ink!");
+    toast(isZh ? "<b>財富祝福：</b> 獲得 +26 墨水！" : "<b>Blessing of Fortune:</b> +26 Ink!");
     completeNode();
   });
 }
@@ -1851,6 +1892,7 @@ function showAlchemyBlessing() {
 function showGameOver() {
   state.screen = "gameover";
   state.hp = 0;
+  const isZh = loadMeta().bilingual;
   const accuracy = state.wordsAnswered ? Math.round(state.correct / state.wordsAnswered * 100) : 0;
   const known = Object.keys(state.learned).length;
   const allWords = REGIONS.flatMap(r => r.words);
@@ -1858,24 +1900,24 @@ function showGameOver() {
   
   $("#stage").innerHTML = `
     <div class="reward-stage gameover-stage">
-      <span class="section-kicker">THE INK RUNS DRY</span>
-      <h1>Expedition Chronicle</h1>
-      <p class="section-copy">No voyage into language is wasted. Review your run's vocabulary sheet below or export it directly into your notes.</p>
+      <span class="section-kicker">${isZh ? "墨水耗盡 · 意志消逝" : "THE INK RUNS DRY"}</span>
+      <h1>${isZh ? "遠征探險紀錄誌" : "Expedition Chronicle"}</h1>
+      <p class="section-copy">${isZh ? "每一次探索語言的旅程都不會白費。在下方複習本次遠征遇到的所有單字，或一鍵複製成學習筆記。" : "No voyage into language is wasted. Review your run's vocabulary sheet below or export it directly into your notes."}</p>
       
       <div class="summary-stats">
-        <div><b>${state.wordsAnswered}</b><span>Words Answered</span></div>
-        <div><b>${accuracy}%</b><span>Accuracy</span></div>
-        <div><b>${state.maxStreak}</b><span>Best Streak</span></div>
+        <div><b>${state.wordsAnswered}</b><span>${isZh ? "答題總數" : "Words Answered"}</span></div>
+        <div><b>${accuracy}%</b><span>${isZh ? "正確率" : "Accuracy"}</span></div>
+        <div><b>${state.maxStreak}</b><span>${isZh ? "最高連擊" : "Best Streak"}</span></div>
       </div>
       
       <div class="hero-actions" style="margin-bottom: 20px;">
-        <button id="retry-button" class="button button-primary">Begin Again <span>→</span></button>
-        <button id="copy-chronicle-btn" class="button button-ghost">📋 Copy Study Sheet</button>
-        <button id="review-button" class="button button-ghost">Review Lexicon</button>
+        <button id="retry-button" class="button button-primary">${isZh ? "重新啟程 ➔" : "Begin Again <span>→</span>"}</button>
+        <button id="copy-chronicle-btn" class="button button-ghost">${isZh ? "📋 複製 Markdown 筆記" : "📋 Copy Study Sheet"}</button>
+        <button id="review-button" class="button button-ghost">${isZh ? "檢視字彙庫" : "Review Lexicon"}</button>
       </div>
 
       <div class="run-chronicle-box">
-        <span class="modal-kicker">EXPEDITION VOCABULARY (${runWords.length} WORDS)</span>
+        <span class="modal-kicker">${isZh ? `本次遠征單字集 (${runWords.length} 個單字)` : `EXPEDITION VOCABULARY (${runWords.length} WORDS)`}</span>
         <div class="run-words-list">
           ${runWords.map(w => `
             <div class="run-word-chip">
@@ -1899,13 +1941,14 @@ function showGameOver() {
       md += `  > *${w.sentence}*\n\n`;
     });
     navigator.clipboard.writeText(md).then(() => {
-      toast("📋 <b>Study Sheet copied to clipboard!</b> Ready to paste into Notion/Obsidian.");
+      toast(isZh ? "📋 <b>學習筆記已複製到剪貼簿！</b> 可直接貼入 Notion 或 Obsidian。" : "📋 <b>Study Sheet copied to clipboard!</b> Ready to paste into Notion/Obsidian.");
     });
   });
   updateHUD();
 }
 
 function showLexicon() {
+  const isZh = loadMeta().bilingual;
   const knownWords = state?.learned || loadMeta().learned || {};
   const allWords = REGIONS.flatMap(region => region.words);
   const reviews = loadMeta().reviews;
@@ -1929,6 +1972,9 @@ function showLexicon() {
     if (!word) return "";
     const review = reviews[key];
     const status = review ? review.mastered || review.strength >= 5 ? "mastered" : review.strength >= 3 ? "strong" : "learning" : "discovered";
+    const statusLabel = isZh
+      ? (status === "mastered" ? "完全精通" : status === "strong" ? "熟練掌握" : status === "learning" ? "學習中" : "已解鎖")
+      : status;
     const showZh = meta.bilingual && word.zh;
     return `<div class="lexicon-word ${review && !review.mastered ? "needs-review" : ""}">
       <div class="lex-header">
@@ -1937,24 +1983,29 @@ function showLexicon() {
         <span class="lex-level">${word.level || ""}</span>
         ${showZh ? `<span class="lex-zh">${word.zh}</span>` : ""}
       </div>
-      <span class="lex-meta">${word.phonetic} · recalled ${count}×</span>
-      <mark class="${status}">${status}</mark>
+      <span class="lex-meta">${word.phonetic} · ${isZh ? `已回想 ${count} 次` : `recalled ${count}×`}</span>
+      <mark class="${status}">${statusLabel}</mark>
       <p>${word.definition}</p>
-      ${word.root ? `<small class="lex-root">Origin: ${word.root}</small>` : ""}
+      ${word.root ? `<small class="lex-root">${isZh ? "字根語源" : "Origin"}: ${word.root}</small>` : ""}
       ${notes[key] ? `<blockquote>“${notes[key]}”</blockquote>` : ""}
     </div>`;
-  }).filter(Boolean).join("") : '<p class="section-copy">Your lexicon is waiting for its first word.</p>';
+  }).filter(Boolean).join("") : `<p class="section-copy">${isZh ? "你的字彙庫正等待著收錄第一個單字。" : "Your lexicon is waiting for its first word."}</p>`;
+  
   openModal(`
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-      <span class="modal-kicker">YOUR LIVING RECORD</span>
+      <span class="modal-kicker">${isZh ? "專屬詞彙紀錄庫" : "YOUR LIVING RECORD"}</span>
       <div style="display:flex; gap:6px;">
-        <button id="open-decks-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">📚 Presets & Import</button>
-        <button id="export-csv-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">📥 Export CSV</button>
+        <button id="open-decks-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">${isZh ? "📚 考試詞庫與匯入" : "📚 Presets & Import"}</button>
+        <button id="export-csv-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">${isZh ? "📥 匯出 CSV" : "📥 Export CSV"}</button>
       </div>
     </div>
-    <h2>Lexicon</h2>
-    <div class="mastery-strip"><div><b>${mastery.learning}</b><span>Learning</span></div><div><b>${mastery.strong}</b><span>Strong</span></div><div><b>${mastery.mastered}</b><span>Mastered</span></div></div>
-    ${reviewWords.length ? `<div class="review-callout"><div><small>WORDS TO REVISIT</small><b>${dueCount} due now · ${reviewWords.length} learning</b><p>Short, no-penalty recall sessions strengthen the words you missed.</p></div><button id="start-review-modal" class="button button-primary">Practice now →</button></div>` : ""}
+    <h2>${isZh ? "個人字彙庫 (Lexicon)" : "Lexicon"}</h2>
+    <div class="mastery-strip">
+      <div><b>${mastery.learning}</b><span>${isZh ? "學習中" : "Learning"}</span></div>
+      <div><b>${mastery.strong}</b><span>${isZh ? "已熟練" : "Strong"}</span></div>
+      <div><b>${mastery.mastered}</b><span>${isZh ? "已精通" : "Mastered"}</span></div>
+    </div>
+    ${reviewWords.length ? `<div class="review-callout"><div><small>${isZh ? "待加強單字" : "WORDS TO REVISIT"}</small><b>${isZh ? `今日需複習 ${dueCount} 個 · 累積學習中 ${reviewWords.length} 個` : `${dueCount} due now · ${reviewWords.length} learning`}</b><p>${isZh ? "間隔重複記憶法測驗，無失血懲罰，快速鞏固答錯單字。" : "Short, no-penalty recall sessions strengthen the words you missed."}</p></div><button id="start-review-modal" class="button button-primary">${isZh ? "立即複習 ➔" : "Practice now →"}</button></div>` : ""}
     <div class="lexicon-list">${content}</div>`);
   $("#start-review-modal")?.addEventListener("click", requestPractice);
   $("#open-decks-btn")?.addEventListener("click", showDeckManager);
@@ -1962,14 +2013,15 @@ function showLexicon() {
 }
 
 function showDeckManager() {
+  const isZh = loadMeta().bilingual;
   const meta = loadMeta();
   meta.activeDecks = meta.activeDecks || ["toeic", "toefl", "gre"];
   meta.customWords = meta.customWords || [];
   
   openModal(`
-    <span class="modal-kicker">CUSTOM DECKS & IMPORTER</span>
-    <h2>Curated Decks</h2>
-    <p class="section-copy">Enable targeted exam presets or import your own vocabulary lists.</p>
+    <span class="modal-kicker">${isZh ? "主題詞庫與自訂匯入" : "CUSTOM DECKS & IMPORTER"}</span>
+    <h2>${isZh ? "主題詞庫管理" : "Curated Decks"}</h2>
+    <p class="section-copy">${isZh ? "自由啟用各類升學與檢定單字庫（多益、托福、GRE），或貼上自己的單字清單。" : "Enable targeted exam presets or import your own vocabulary lists."}</p>
     
     <div class="deck-list">
       ${Object.entries(EXAM_DECKS).map(([key, deck]) => {
@@ -1982,7 +2034,7 @@ function showDeckManager() {
               <p>${deck.desc} (${deck.words.length} words)</p>
             </div>
             <button class="button ${isActive ? "button-primary" : "button-ghost"} toggle-deck-btn" data-deck="${key}">
-              ${isActive ? "ACTIVE" : "INACTIVE"}
+              ${isActive ? (isZh ? "啟用中" : "ACTIVE") : (isZh ? "未啟用" : "INACTIVE")}
             </button>
           </div>
         `;
@@ -1990,12 +2042,12 @@ function showDeckManager() {
     </div>
 
     <div class="import-section" style="margin-top: 18px;">
-      <span class="modal-kicker">CUSTOM VOCABULARY IMPORTER</span>
-      <p class="section-copy" style="margin-bottom: 8px;">Paste words (format: <code>word, definition, synonym, root, zh</code> or <code>word - definition</code>):</p>
+      <span class="modal-kicker">${isZh ? "自訂單字匯入器" : "CUSTOM VOCABULARY IMPORTER"}</span>
+      <p class="section-copy" style="margin-bottom: 8px;">${isZh ? "貼上單字清單 (格式: <code>單字, 英文釋義, 同義詞, 語源, 繁中釋義</code> 或 <code>單字 - 英文釋義</code>):" : "Paste words (format: <code>word, definition, synonym, root, zh</code> or <code>word - definition</code>):"}</p>
       <textarea id="import-textarea" class="import-textarea" placeholder="ephemeral, lasting a short time, fleeting, Greek ephemeros, 短暫的&#10;serendipity, finding good things by chance, luck, English, 機緣湊巧" rows="4"></textarea>
       <div style="display: flex; gap: 8px; margin-top: 8px;">
-        <button id="submit-import-btn" class="button button-primary" style="font-size: 10px;">Import Words</button>
-        <button id="back-to-lexicon" class="button button-ghost" style="font-size: 10px;">Back to Lexicon</button>
+        <button id="submit-import-btn" class="button button-primary" style="font-size: 10px;">${isZh ? "確認匯入單字" : "Import Words"}</button>
+        <button id="back-to-lexicon" class="button button-ghost" style="font-size: 10px;">${isZh ? "返回字彙庫" : "Back to Lexicon"}</button>
       </div>
     </div>
   `);
@@ -2031,7 +2083,7 @@ function showDeckManager() {
       }
     });
     localStorage.setItem(META_KEY, JSON.stringify(meta));
-    toast(`Successfully imported <b>${count} custom words</b>!`);
+    toast(isZh ? `成功匯入 <b>${count} 個自訂單字</b>！` : `Successfully imported <b>${count} custom words</b>!`);
     playChestFanfare();
     showLexicon();
   });
@@ -2237,9 +2289,24 @@ function bindAnchorEditor(word) {
 }
 
 function showPracticeSummary() {
+  const isZh = loadMeta().bilingual;
   const score = practice.remembered.size;
   const total = practice.initialCount;
-  $("#stage").innerHTML = `<div class="reward-stage practice-summary"><span class="section-kicker">RECALL SESSION COMPLETE</span><h1>Your memory grows roots.</h1><p class="section-copy">You practiced recognition, context, and active production. The words you found difficult will return sooner; confident recalls can rest longer.</p><div class="summary-stats"><div><b>${score}/${total}</b><span>Remembered</span></div><div><b>${getReviewWords().length}</b><span>Due now</span></div><div><b>${practice.words.length - total}</b><span>Smart retries</span></div></div><div class="hero-actions"><button id="practice-again" class="button button-primary">Practice again →</button><button id="practice-done" class="button button-ghost">Return to journey</button></div></div>`;
+  $("#stage").innerHTML = `
+    <div class="reward-stage practice-summary">
+      <span class="section-kicker">${isZh ? "單字複習測驗完成" : "RECALL SESSION COMPLETE"}</span>
+      <h1>${isZh ? "字彙記憶深深扎根" : "Your memory grows roots."}</h1>
+      <p class="section-copy">${isZh ? "你已完成認字、語境克漏字與主動默寫練習。答錯或不熟悉的單字將很快再次複習；熟記的單字則會拉長間隔。" : "You practiced recognition, context, and active production. The words you found difficult will return sooner; confident recalls can rest longer."}</p>
+      <div class="summary-stats">
+        <div><b>${score}/${total}</b><span>${isZh ? "成功記住" : "Remembered"}</span></div>
+        <div><b>${getReviewWords().length}</b><span>${isZh ? "待複習總數" : "Due now"}</span></div>
+        <div><b>${practice.words.length - total}</b><span>${isZh ? "智慧重試" : "Smart retries"}</span></div>
+      </div>
+      <div class="hero-actions">
+        <button id="practice-again" class="button button-primary">${isZh ? "再次複習 ➔" : "Practice again →"}</button>
+        <button id="practice-done" class="button button-ghost">${isZh ? "返回冒險旅途" : "Return to journey"}</button>
+      </div>
+    </div>`;
   $("#practice-again").addEventListener("click", startPractice);
   $("#practice-done").addEventListener("click", resumeAfterPractice);
   updateHUD();
@@ -2267,20 +2334,22 @@ function speakWord(word) {
 }
 
 function showSettings() {
+  const isZh = loadMeta().bilingual;
   const meta = loadMeta();
-  openModal(`<span class="modal-kicker">JOURNEY OPTIONS</span><h2>Settings</h2><div class="settings-list">
-    <button id="modal-sound">Sound effects <b>${soundEnabled ? "ON" : "OFF"}</b></button>
-    <button id="modal-bilingual">Bilingual Hints (EN + 中文) <b>${meta.bilingual ? "ON" : "OFF"}</b></button>
-    <button id="modal-speech-rate">Pronunciation Speed <b>${meta.speechRate === 0.65 ? "0.65x (Slow)" : meta.speechRate === 1.0 ? "1.0x (Fast)" : "0.85x (Normal)"}</b></button>
-    <button id="modal-autospeak">Auto-Pronounce Words <b>${meta.autoSpeak ? "ON" : "OFF"}</b></button>
-    <button id="modal-home">Save & return to title <b>→</b></button>
-    <button id="modal-reset" class="danger-button">Erase saved journey <b>×</b></button>
-  </div>`);
+  openModal(`
+    <span class="modal-kicker">${isZh ? "遊戲與學習偏好" : "JOURNEY OPTIONS"}</span>
+    <h2>${isZh ? "設定" : "Settings"}</h2>
+    <div class="settings-list">
+      <button id="modal-sound">${isZh ? "遊戲音效" : "Sound effects"} <b>${soundEnabled ? (isZh ? "開啟 (ON)" : "ON") : (isZh ? "關閉 (OFF)" : "OFF")}</b></button>
+      <button id="modal-bilingual">${isZh ? "介面與題目語言" : "Interface & Hints"} <b>${meta.bilingual ? "🇹🇼 繁體中文" : "🇬🇧 English"}</b></button>
+      <button id="modal-speech-rate">${isZh ? "發音語速" : "Pronunciation Speed"} <b>${meta.speechRate === 0.65 ? (isZh ? "0.65x (慢速)" : "0.65x (Slow)") : meta.speechRate === 1.0 ? (isZh ? "1.0x (快速)" : "1.0x (Fast)") : (isZh ? "0.85x (標準)" : "0.85x (Normal)")}</b></button>
+      <button id="modal-autospeak">${isZh ? "題目前自動朗讀發音" : "Auto-Pronounce Words"} <b>${meta.autoSpeak ? (isZh ? "開啟 (ON)" : "ON") : (isZh ? "關閉 (OFF)" : "OFF")}</b></button>
+      <button id="modal-home">${isZh ? "儲存並返回主畫面" : "Save & return to title"} <b>→</b></button>
+      <button id="modal-reset" class="danger-button">${isZh ? "重置本次冒險進度" : "Erase saved journey"} <b>×</b></button>
+    </div>`);
   $("#modal-sound").addEventListener("click", () => { toggleSound(); showSettings(); });
   $("#modal-bilingual").addEventListener("click", () => {
-    meta.bilingual = !meta.bilingual;
-    localStorage.setItem(META_KEY, JSON.stringify(meta));
-    toast(meta.bilingual ? "Bilingual hints enabled (EN + 中文)" : "English-only mode enabled");
+    toggleBilingual();
     showSettings();
   });
   $("#modal-speech-rate").addEventListener("click", () => {
@@ -2294,12 +2363,13 @@ function showSettings() {
   $("#modal-autospeak").addEventListener("click", () => {
     meta.autoSpeak = !meta.autoSpeak;
     localStorage.setItem(META_KEY, JSON.stringify(meta));
-    toast(meta.autoSpeak ? "Auto-pronounce enabled" : "Auto-pronounce disabled");
+    toast(meta.autoSpeak ? (isZh ? "已開啟自動單字朗讀" : "Auto-pronounce enabled") : (isZh ? "已關閉自動單字朗讀" : "Auto-pronounce disabled"));
     showSettings();
   });
   $("#modal-home").addEventListener("click", () => { $("#modal").close(); returnHome(); });
   $("#modal-reset").addEventListener("click", () => {
-    if (confirm("Erase this saved journey? Your run progress will be lost.")) {
+    const promptMsg = isZh ? "確定要刪除當前進行中的遠征嗎？進度將會遺失。" : "Erase this saved journey? Your run progress will be lost.";
+    if (confirm(promptMsg)) {
       localStorage.removeItem(SAVE_KEY); $("#modal").close(); state = null; returnHome();
     }
   });
@@ -2395,28 +2465,110 @@ document.addEventListener("keydown", event => {
   if (index >= 0 && index < buttons.length) buttons[index].click();
 });
 
+function applyLanguageToUI() {
+  const meta = loadMeta();
+  const isZh = Boolean(meta.bilingual);
+  
+  // 1. Language Toggle Buttons
+  if ($("#lang-toggle-title")) $("#lang-toggle-title").textContent = isZh ? "🇹🇼 繁中 / EN" : "🇬🇧 EN / 繁中";
+  if ($("#lang-toggle")) $("#lang-toggle").textContent = isZh ? "🇹🇼 繁中 / EN" : "🇬🇧 EN / 繁中";
+  
+  // 2. Title Screen
+  const eyebrow = $(".hero .eyebrow");
+  if (eyebrow) eyebrow.innerHTML = `<span></span> ${isZh ? "單字冒險 Roguelike" : "A vocabulary roguelike"}`;
+  
+  const heroH1 = $(".hero h1");
+  if (heroH1) heroH1.innerHTML = isZh ? "字字皆為<br /><em>鋒利兵刃。</em>" : "Every word is<br /><em>a weapon.</em>";
+  
+  const heroCopy = $(".hero-copy");
+  if (heroCopy) heroCopy.textContent = isZh ? "在不斷變化的語言世界中啟程冒險。學習新單字、構築遺物連擊，看看你的字彙力量能帶你走多遠。" : "Journey through a shifting world of language. Learn new words, build clever combos, and see how far your vocabulary can carry you.";
+  
+  if ($("#new-run-button")) $("#new-run-button").innerHTML = isZh ? "開啟全新冒險 <span>→</span>" : "Begin a new journey <span>→</span>";
+  if ($("#daily-run-button")) $("#daily-run-button").textContent = isZh ? "⭐ 每日隨機遠征" : "⭐ Daily Expedition";
+  if ($("#continue-button")) $("#continue-button").textContent = isZh ? "繼續當前冒險" : "Continue journey";
+  
+  const revCount = getReviewWords(true).length;
+  if ($("#practice-title-button")) $("#practice-title-button").innerHTML = isZh ? `複習待加強單字 <span id="title-review-count">${revCount}</span>` : `Practice learning words <span id="title-review-count">${revCount}</span>`;
+  
+  const strip = $(".feature-strip");
+  if (strip) {
+    strip.innerHTML = isZh
+      ? `<div><b>∞</b><span>無盡遠征<br />Expeditions</span></div><div><b>6</b><span>主題領域<br />Realms</span></div><div><b>180+</b><span>待掌握單字<br />Words</span></div>`
+      : `<div><b>∞</b><span>Endless<br />expeditions</span></div><div><b>6</b><span>Word<br />realms</span></div><div><b>180+</b><span>Words to<br />master</span></div>`;
+  }
+  
+  const heroCardSpan = $(".hero-word-card span");
+  if (heroCardSpan) heroCardSpan.textContent = isZh ? "解鎖新單字" : "WORD DISCOVERED";
+  
+  const footer = $(".landing-footer");
+  if (footer) footer.textContent = isZh ? "為熱愛探索的心靈打造 · 進度自動於本機儲存" : "Designed for curious minds · Progress saves locally";
+  
+  if ($("#sanctuary-title-button")) $("#sanctuary-title-button").textContent = isZh ? "🏛️ 聖殿天賦" : "🏛️ Sanctuary";
+  if ($("#achievements-title-button")) $("#achievements-title-button").title = isZh ? "成就勳章" : "Achievements";
+
+  // 3. Game Header
+  const revQueue = $("#review-queue-button");
+  if (revQueue) revQueue.innerHTML = isZh ? `單字複習 <span id="review-count">${revCount}</span>` : `Practice <span id="review-count">${revCount}</span>`;
+  
+  const collBtn = $("#collection-button");
+  if (collBtn) collBtn.innerHTML = isZh ? `字彙庫 <span id="learned-count">${Object.keys(state?.learned || meta.learned || {}).length}</span>` : `Lexicon <span id="learned-count">${Object.keys(state?.learned || meta.learned || {}).length}</span>`;
+  
+  if ($("#sanctuary-button")) $("#sanctuary-button").textContent = isZh ? "萬字聖殿 🏛️" : "Sanctuary 🏛️";
+  
+  const achBtn = $("#achievements-button");
+  if (achBtn) achBtn.innerHTML = isZh ? `成就 <span id="badge-count">${(meta.achievements || []).length}</span>` : `Badges <span id="badge-count">${(meta.achievements || []).length}</span>`;
+
+  // 4. Adventurer Left Panel
+  const resolveLabel = $(".health-block .stat-row span");
+  if (resolveLabel) resolveLabel.textContent = isZh ? "意志生命" : "Resolve";
+  
+  const insightLabel = $(".xp-block .stat-row span");
+  if (insightLabel) insightLabel.textContent = isZh ? "頓悟經驗" : "Insight";
+  
+  const resourceSmalls = document.querySelectorAll(".resource-row small");
+  if (resourceSmalls.length >= 2) {
+    resourceSmalls[0].textContent = isZh ? "火花" : "Sparks";
+    resourceSmalls[1].textContent = isZh ? "墨水" : "Ink";
+  }
+  
+  const relicsLabel = $(".relics-block .stat-row span");
+  if (relicsLabel) relicsLabel.textContent = isZh ? "攜帶遺物" : "Relics";
+  
+  const emptyRelic = $(".empty-relic");
+  if (emptyRelic) emptyRelic.textContent = isZh ? "行囊目前空空如也" : "Your satchel is empty";
+
+  // 5. Journey Right Panel
+  const journeyKicker = $(".journey-heading small");
+  if (journeyKicker) journeyKicker.textContent = isZh ? "當前進度" : "CURRENT PATH";
+  
+  const journeyH2 = $(".journey-heading h2");
+  if (journeyH2) journeyH2.textContent = isZh ? "冒險旅程" : "Journey";
+  
+  const streakKicker = $(".streak-card small");
+  if (streakKicker) streakKicker.textContent = isZh ? "當前連擊" : "CURRENT STREAK";
+  
+  const habitKicker = $(".habit-header small");
+  if (habitKicker) habitKicker.textContent = isZh ? "7日連續學習打卡" : "7-DAY HABIT";
+  
+  const dailyKicker = $(".daily-kicker");
+  if (dailyKicker) dailyKicker.textContent = isZh ? "每日任務" : "DAILY QUEST";
+}
+
 function toggleBilingual() {
   const meta = loadMeta();
   meta.bilingual = !meta.bilingual;
   localStorage.setItem(META_KEY, JSON.stringify(meta));
-  updateLangButtonText();
-  toast(meta.bilingual ? "🇹🇼 <b>已開啟繁體中文對照</b>（單字與選項附帶繁中釋義）" : "🇬🇧 <b>Switched to English Only Mode</b>");
+  applyLanguageToUI();
+  toast(meta.bilingual ? "🇹🇼 <b>已切換為繁體中文介面模式</b>" : "🇬🇧 <b>Switched to English Interface Mode</b>");
   if (state?.screen === "battle") renderQuestion();
   else if (state?.screen === "choice") showPathChoice();
   updateHUD();
 }
 
-function updateLangButtonText() {
-  const meta = loadMeta();
-  const label = meta.bilingual ? "🇹🇼 繁中" : "🇬🇧 EN";
-  if ($("#lang-toggle-title")) $("#lang-toggle-title").textContent = label;
-  if ($("#lang-toggle")) $("#lang-toggle").textContent = label;
-}
-
 $("#lang-toggle")?.addEventListener("click", toggleBilingual);
 $("#lang-toggle-title")?.addEventListener("click", toggleBilingual);
-updateLangButtonText();
 
+applyLanguageToUI();
 updateContinueButton();
 
 if ("serviceWorker" in navigator) {
