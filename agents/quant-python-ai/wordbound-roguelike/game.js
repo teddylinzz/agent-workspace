@@ -1949,6 +1949,33 @@ const EVENTS = [
       { label: "Complete it carefully", zhLabel: "謹慎補齊詩句", detail: "Gain 18 ink", zhDetail: "獲得 18 點墨水", effect: "ink" },
       { label: "Rewrite it boldly", zhLabel: "大膽改寫全篇", detail: "Lose 5 resolve · gain 4 insight", zhDetail: "消耗 5 點生命 · 獲得 4 點頓悟經驗", effect: "bold" }
     ]
+  },
+  {
+    icon: "🔮", title: "The Oracle's Wagering Den", zhTitle: "神諭者的博弈密室",
+    copy: "A hooded seer spins an obsidian wheel inscribed with Latin and Greek roots, offering forbidden linguistic power.",
+    zhCopy: "一位披著深色斗篷的先知轉動刻滿拉丁與希臘詞根的黑曜石輪盤，提供強大的語言密約。",
+    options: [
+      { label: "Wager for Legendary Relic", zhLabel: "豪賭傳奇遺物", detail: "Pay 18 Ink (or 6 HP) · Gain Polychrome Relic", zhDetail: "支付 18 墨水 (或 6 生命) · 獲取傳彩頂級遺物", effect: "oracle_relic" },
+      { label: "Consult the Oracle", zhLabel: "靜心請求神諭指引", detail: "Heal 14 Resolve · Gain +2 Sparks", zhDetail: "恢復 14 點意志生命 · 獲得 2 點火花", effect: "oracle_heal" }
+    ]
+  },
+  {
+    icon: "📖", title: "The Cursed Grimoire of Babel", zhTitle: "巴別詛咒魔典",
+    copy: "An ancient grimoire pulsates with dark arcane ink. Signing your name will forge raw power at a painful price.",
+    zhCopy: "一本古老魔典散發著漆黑的秘術墨香。簽下你的名字將能獲取力量，但代價是永久的創傷。",
+    options: [
+      { label: "Sign the Blood-Ink Pact", zhLabel: "簽署血墨契約", detail: "Lose 5 Max HP · Gain +38 Ink & 1 Gilded Word", zhDetail: "永久損失 5 點最大生命 · 獲得 38 墨水與 1 鍍金銘刻", effect: "grimoire_pact" },
+      { label: "Recite the Cleansing Charm", zhLabel: "吟誦淨化之詩", detail: "Gain +6 temporary Shield & 1 Spark", zhDetail: "獲得 6 點護盾與 1 點火花", effect: "grimoire_cleanse" }
+    ]
+  },
+  {
+    icon: "🪞", title: "The Mirror of Etymology", zhTitle: "語源幻象古鏡",
+    copy: "Peering into the glass, words dissolve into their ancient ancestors and forge their meaning anew.",
+    zhCopy: "凝視古鏡深處，文字緩緩溶解為古老的語源詞根，並以全新的姿態重新誕生。",
+    options: [
+      { label: "Gild a Realm Word", zhLabel: "汲取古鏡精華鍍金", detail: "Gild 1 random word for +80% combat damage", zhDetail: "隨機鍍金銘刻 1 個單字 (+80% 戰鬥傷害加成)", effect: "mirror_gild" },
+      { label: "Banish a simple word", zhLabel: "淨化已掌握之詞", detail: "Purge 1 word from run · Gain +2 Sparks", zhDetail: "從本次遠征中淨化 1 個已知單字 · 獲得 2 火花", effect: "mirror_banish" }
+    ]
   }
 ];
 
@@ -3503,16 +3530,80 @@ function completeNode(advanceScreen = true) {
     state.region += 1;
     state.day += 1;
     if (state.region >= REGIONS.length) {
-      state.region = 0;
-      state.cycle += 1;
+      // Completed all 6 realms! Trigger Grand Victory Choice
+      showGrandVictory();
+      return;
     }
     state.hp = Math.min(state.maxHp, state.hp + Math.ceil(state.maxHp * .3));
-    toast(state.cycle ? `<b>Cycle ${state.cycle + 1}</b> begins. Enemies grow stronger.` : "A new word realm has opened.");
+    toast(state.cycle ? `<b>Abyssal Depth ${state.cycle + 1}</b> begins. Enemies grow fiercer!` : "A new word realm has opened.");
   }
   if (hasRelic("crown")) state.sparks = Math.min(9, state.sparks + 1);
   updateHUD();
   updateJourneyMap();
   if (advanceScreen) showPathChoice();
+}
+
+function showGrandVictory() {
+  state.screen = "grand_victory";
+  playVictoryFanfare();
+  const meta = loadMeta();
+  const isZh = meta.bilingual;
+  const { score, grade, ascMult } = calculateRunScore();
+  const rankClass = grade === "S+" ? "rank-splus" : grade === "S" ? "rank-s" : grade === "A" ? "rank-a" : grade === "B" ? "rank-b" : "rank-c";
+  
+  // Unlock next ascension
+  const currAsc = state.ascension || 0;
+  if (currAsc === (meta.maxAscension || 0) && currAsc < 20) {
+    meta.maxAscension = currAsc + 1;
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+  }
+  
+  checkAchievement("ascension_5");
+  if (currAsc >= 10) checkAchievement("ascension_10");
+  if (currAsc >= 20) checkAchievement("ascension_20");
+
+  $("#stage").innerHTML = `
+    <div class="reward-stage gameover-stage" style="text-align:center;">
+      <span class="section-kicker" style="color:var(--gold);">👑 ${isZh ? "巴別之巔 · 遠征大獲全勝" : "GRAND EXPEDITION VICTORY"} 👑</span>
+      <h1 style="color:var(--ink);">${isZh ? "至高詞境探索者" : "Master of All Realms"}</h1>
+      <p class="section-copy" style="margin:0 auto 24px;">${isZh ? "你已成功征服全 6 大詞彙領域！你可以帶著榮譽凱旋登入名人堂，或是踏入深不可測的「無盡深淵」，挑戰極限分數與傳奇評級！" : "You have conquered all 6 vocabulary realms! Claim your glorious victory in the Hall of Fame, or descend into the infinite Abyssal Gauntlet for astronomical scores."}</p>
+      
+      <div class="score-tally-box" style="margin: 0 auto 24px; max-width: 440px;">
+        <div class="rank-badge ${rankClass}">${grade}</div>
+        <div class="score-line"><span>${isZh ? "遠征總榮譽分" : "Total Run Score"}</span><b style="color:var(--gold);font-size:18px;">${score.toLocaleString()} PTS</b></div>
+        <div class="score-line"><span>${isZh ? "已精通單字量" : "Words Mastered"}</span><b>${state.correct} / ${state.wordsAnswered}</b></div>
+        <div class="score-line"><span>${isZh ? "已解鎖攀升難度" : "Highest Ascension"}</span><b style="color:var(--coral-dark);">A${meta.maxAscension || 0}</b></div>
+      </div>
+      
+      <div class="hero-actions" style="justify-content:center; gap:12px; margin-bottom:20px;">
+        <button id="claim-victory-btn" class="button button-primary" style="padding:12px 22px; font-size:12px;">
+          ${isZh ? "🏆 凱旋登榜並結算 (Claim Victory)" : "🏆 Claim Victory & Submit"}
+        </button>
+        <button id="abyssal-enter-btn" class="button button-ghost" style="border-color:var(--purple); color:var(--purple); padding:12px 22px; font-size:12px;">
+          ${isZh ? `🌌 踏入無盡深淵 (Depth ${state.cycle + 2}) ➔` : `🌌 Enter Abyssal Depth ${state.cycle + 2} ➔`}
+        </button>
+      </div>
+    </div>
+  `;
+
+  $("#claim-victory-btn")?.addEventListener("click", () => {
+    saveHighScoreRecord(true);
+    localStorage.removeItem(SAVE_KEY);
+    showHallOfFame();
+  });
+
+  $("#abyssal-enter-btn")?.addEventListener("click", () => {
+    state.region = 0;
+    state.cycle += 1;
+    state.hp = Math.min(state.maxHp, state.hp + Math.ceil(state.maxHp * 0.4));
+    state.shield = (state.shield || 0) + 12;
+    state.sparks = Math.min(9, state.sparks + 3);
+    toast(isZh ? `🌌 <b>踏入無盡深淵第 ${state.cycle + 1} 重！</b> 獲得額外護盾與火花。` : `🌌 <b>Entered Abyssal Depth ${state.cycle + 1}!</b> Gained bonus shield & sparks.`);
+    playChestFanfare();
+    updateHUD();
+    updateJourneyMap();
+    showPathChoice();
+  });
 }
 
 function showVictory(ink) {
@@ -3724,6 +3815,64 @@ function resolveEvent(effect) {
   }
   if (effect === "ink") { state.ink += 18; toast(isZh ? "詩句綻放出金色光芒！<b>+18 墨水</b>" : "The sentence shines. <b>+18 ink</b>"); }
   if (effect === "bold") { state.hp = Math.max(1, state.hp - 5); gainXp(4); toast(isZh ? "大膽的語言留下了深刻印記。<b>+4 頓悟經驗</b>" : "Bold language leaves a mark. <b>+4 insight</b>"); }
+  
+  if (effect === "oracle_relic") {
+    if (state.ink >= 18) { state.ink -= 18; }
+    else { state.hp = Math.max(1, state.hp - 6); }
+    const unowned = RELICS.filter(r => !state.relics.includes(r.id));
+    if (unowned.length) {
+      const chosen = random(unowned);
+      state.relics.push({ id: chosen.id, edition: "poly" });
+      toast(isZh ? `🔮 <b>神諭賜福！</b> 獲得傳彩頂級遺物【${chosen.zhName}】！` : `🔮 <b>Oracle's Favor:</b> Acquired Polychrome ${chosen.name}!`);
+      playChestFanfare();
+    } else {
+      state.ink += 40;
+    }
+  }
+  if (effect === "oracle_heal") {
+    heal(14);
+    state.sparks = Math.min(9, state.sparks + 2);
+    toast(isZh ? "神諭的光輝撫慰了心靈。<b>+14 生命 · +2 火花</b>" : "The oracle's glow restores you. <b>+14 HP · +2 sparks</b>");
+  }
+  if (effect === "grimoire_pact") {
+    state.maxHp = Math.max(15, state.maxHp - 5);
+    state.hp = Math.min(state.hp, state.maxHp);
+    state.ink += 38;
+    const rWords = REGIONS[state.region % REGIONS.length].words;
+    if (rWords.length) {
+      const gWord = random(rWords).word;
+      state.gildedWords = state.gildedWords || [];
+      if (!state.gildedWords.includes(gWord)) state.gildedWords.push(gWord);
+      toast(isZh ? `📖 <b>魔典血契達成！</b> 獲得 38 墨水，並鍍金銘刻【${gWord}】！` : `📖 <b>Blood Pact Sealed!</b> +38 Ink & Gilded 【${gWord}】!`);
+    }
+    playChestFanfare();
+  }
+  if (effect === "grimoire_cleanse") {
+    state.shield = (state.shield || 0) + 6;
+    state.sparks = Math.min(9, state.sparks + 1);
+    toast(isZh ? "淨化光芒化為堅固護盾！<b>+6 護盾 · +1 火花</b>" : "Cleansing words form an aegis. <b>+6 Shield · +1 Spark</b>");
+  }
+  if (effect === "mirror_gild") {
+    const rWords = REGIONS[state.region % REGIONS.length].words;
+    if (rWords.length) {
+      const gWord = random(rWords).word;
+      state.gildedWords = state.gildedWords || [];
+      if (!state.gildedWords.includes(gWord)) state.gildedWords.push(gWord);
+      toast(isZh ? `🪞 <b>古鏡銘刻：</b> 成功將【${gWord}】鍍金銘刻！` : `🪞 <b>Mirror Forge:</b> Successfully Gilded 【${gWord}】!`);
+      playChestFanfare();
+    }
+  }
+  if (effect === "mirror_banish") {
+    const rWords = REGIONS[state.region % REGIONS.length].words;
+    if (rWords.length) {
+      const bWord = random(rWords).word;
+      state.banishedWords = state.banishedWords || [];
+      if (!state.banishedWords.includes(bWord)) state.banishedWords.push(bWord);
+      state.sparks = Math.min(9, state.sparks + 2);
+      toast(isZh ? `🪞 <b>古鏡淨化：</b> 已排除【${bWord}】，獲得 <b>+2 火花</b>！` : `🪞 <b>Mirror Purge:</b> Banished 【${bWord}】 · <b>+2 sparks</b>!`);
+    }
+  }
+  
   handleQuest();
   completeNode();
 }
@@ -4847,6 +4996,8 @@ $("#review-queue-button").addEventListener("click", requestPractice);
 $("#settings-button").addEventListener("click", showSettings);
 $("#sound-toggle").addEventListener("click", toggleSound);
 $("#sound-toggle-title").addEventListener("click", toggleSound);
+$("#bgm-toggle-title")?.addEventListener("click", toggleAmbientBgm);
+$("#bgm-toggle-hud")?.addEventListener("click", toggleAmbientBgm);
 $("#modal-close").addEventListener("click", () => $("#modal").close());
 $("#relic-help").addEventListener("click", () => openModal(`<span class="modal-kicker">PASSIVE POWERS</span><h2>Relics</h2><p class="section-copy">Relics permanently change a run. Defeat elite enemies and region guardians to discover them, then combine their effects into a powerful build.</p>`));
 $("#modal").addEventListener("click", event => {
@@ -5088,4 +5239,92 @@ function showForgeModal() {
       completeNode();
     });
   });
+}
+
+
+// Generative Ambient Web Audio BGM Engine
+let ambientBgmActive = false;
+let ambientInterval = null;
+let bgmGainNode = null;
+
+function toggleAmbientBgm() {
+  ambientBgmActive = !ambientBgmActive;
+  const meta = loadMeta();
+  meta.bgmEnabled = ambientBgmActive;
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
+  
+  const btn = $("#bgm-toggle-btn") || $("#bgm-toggle-title");
+  if (ambientBgmActive) {
+    startAmbientBgm();
+    if (btn) btn.textContent = "🎵 BGM: ON";
+    toast("🎵 <b>Ambient Soundscape:</b> Enabled");
+  } else {
+    stopAmbientBgm();
+    if (btn) btn.textContent = "🎵 BGM: OFF";
+    toast("🎵 <b>Ambient Soundscape:</b> Disabled");
+  }
+}
+
+function startAmbientBgm() {
+  if (!soundEnabled) return;
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+  stopAmbientBgm();
+  
+  const regionScales = [
+    [130.81, 196.00, 261.63, 329.63, 392.00], // Verdant: C Major pentatonic
+    [146.83, 220.00, 261.63, 293.66, 349.23], // Ember: D Minor
+    [164.81, 220.00, 246.94, 293.66, 329.63], // Moonlit: E Dorian
+    [174.61, 261.63, 329.63, 349.23, 392.00], // Heights: F Lydian
+    [196.00, 246.94, 293.66, 349.23, 392.00], // Clockwork: G Mixolydian
+    [261.63, 329.63, 392.00, 493.88, 523.25]  // Celestial: C Lydian
+  ];
+
+  function playAmbientPulse() {
+    if (!ambientBgmActive || !soundEnabled || !audioContext) return;
+    const rIdx = state ? (state.region % regionScales.length) : 0;
+    const scale = regionScales[rIdx] || regionScales[0];
+    const freq1 = scale[Math.floor(Math.random() * scale.length)];
+    const freq2 = scale[Math.floor(Math.random() * scale.length)];
+    
+    [freq1, freq2].forEach((freq, i) => {
+      try {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const filter = audioContext.createBiquadFilter();
+        
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(650, audioContext.currentTime);
+        
+        osc.type = i === 0 ? "sine" : "triangle";
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        
+        const now = audioContext.currentTime;
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.035, now + 1.2);
+        gain.gain.linearRampToValueAtTime(0.001, now + 3.8);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioContext.destination);
+        
+        osc.start(now);
+        osc.stop(now + 4.0);
+      } catch (e) {}
+    });
+  }
+
+  playAmbientPulse();
+  ambientInterval = setInterval(playAmbientPulse, 3200);
+}
+
+function stopAmbientBgm() {
+  if (ambientInterval) {
+    clearInterval(ambientInterval);
+    ambientInterval = null;
+  }
 }
