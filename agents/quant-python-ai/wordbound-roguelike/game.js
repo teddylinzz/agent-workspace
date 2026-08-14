@@ -2777,15 +2777,33 @@ function answerQuestion(button, correct, mode) {
     $("#enemy-art").classList.add("attack");
     document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
     setTimeout(() => $(".screen-flash")?.remove(), 400);
-    tone(150, .14);
-    
     const correctValue = battle.question.correctValue;
-    showFeedback(false, protectedHit
-      ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
-      : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
+    const isZh = loadMeta().bilingual;
+    const feedbackHtml = `
+      <div class="feedback-wrong-wrapper">
+        <p style="margin:0 0 8px;font-weight:700;color:var(--coral-dark);">
+          ${protectedHit 
+            ? (isZh ? `<b>堅毅石抵擋了攻擊！</b> 正確解答為「${correctValue}」` : `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.”`) 
+            : (isZh ? `<b>答錯了，請仔細複習單字釋義：</b>` : `<b>Not quite. Study the meaning below:</b>`)}
+        </p>
+        ${wordMemoryMap(word)}
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:8px;">
+          <small style="color:var(--ink-soft);">${isZh ? "已收錄至待加強複習清單 · 支援按 Space / Enter 繼續" : "Added to Words to Revisit · Press Space / Enter to continue"}</small>
+          <button id="continue-battle-btn" class="button button-primary" style="padding:7px 16px;font-size:11px;">
+            ${isZh ? "繼續前進 ➔" : "Keep going ➔"}
+          </button>
+        </div>
+      </div>
+    `;
+    showFeedback(false, feedbackHtml);
     battle.first = false;
     updateHUD();
-    setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
+
+    $("#continue-battle-btn")?.addEventListener("click", () => {
+      battle.locked = false;
+      if (state.hp <= 0) showGameOver();
+      else renderQuestion();
+    });
   }
 }
 
@@ -4295,6 +4313,14 @@ document.addEventListener("keydown", event => {
   }
   if (event.shiftKey && (event.key === "@" || event.key === "2")) {
     usePotion(1);
+    return;
+  }
+
+  // If failed feedback continue button is present, Space or Enter proceeds
+  const contBtn = $("#continue-battle-btn");
+  if (contBtn && !contBtn.hidden && (event.code === "Space" || event.key === "Enter")) {
+    event.preventDefault();
+    contBtn.click();
     return;
   }
 
