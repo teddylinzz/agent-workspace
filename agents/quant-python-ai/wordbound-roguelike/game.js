@@ -5469,3 +5469,45 @@ function stopAmbientBgm() {
     ambientInterval = null;
   }
 }
+
+
+// Interactive Hero Word Card on Landing Page
+function setupHeroWordCard() {
+  const card = document.querySelector(".hero-word-card");
+  if (!card) return;
+  card.style.cursor = "pointer";
+  card.setAttribute("title", "點擊切換展示單字並聆聽發音 (Click to cycle & pronounce)");
+  
+  const allWords = REGIONS.flatMap(r => r.words);
+  let currentIndex = 0;
+  
+  function updateHeroCard(wordObj) {
+    const isZh = loadMeta().bilingual;
+    const strong = card.querySelector("strong");
+    const p = card.querySelector("p");
+    const quote = card.querySelector("blockquote");
+    const span = card.querySelector("span");
+    
+    if (span) span.textContent = isZh ? "解鎖新單字" : "WORD DISCOVERED";
+    if (strong) strong.textContent = wordObj.word;
+    if (p) p.textContent = wordObj.phonetic || "";
+    if (quote) quote.textContent = `${wordObj.definition} ${wordObj.zh ? `(${wordObj.zh})` : ""}`;
+    
+    card.style.transform = "scale(0.96) rotate(-2deg)";
+    setTimeout(() => card.style.transform = "", 150);
+  }
+
+  let currentWord = "luminous";
+  card.addEventListener("click", () => {
+    const candidates = allWords.filter(w => w.word !== currentWord);
+    const word = candidates[Math.floor(Math.random() * candidates.length)] || allWords[0];
+    if (word) {
+      currentWord = word.word;
+      updateHeroCard(word);
+      speakWord(word.word);
+      playLevelUpChime();
+    }
+  });
+}
+
+setupHeroWordCard();
