@@ -70,7 +70,7 @@ class FinMindTool:
     def __init__(self):
         self.api_key = os.getenv("FINMIND_API_KEY", "")
         self.api = DataLoader()
-        if self.api_key:
+        if self.api_key and not self.api_key.startswith("your-"):
             self.api.login_by_token(api_token=self.api_key)
 
     def _get_start_date(self, days: int = 30) -> str:
@@ -78,6 +78,7 @@ class FinMindTool:
 
     def get_stock_price(self, stock_id: str, days: int = 30) -> str:
         """取得個股日成交資訊（股價、成交量）。"""
+        stock_id = stock_id.strip().upper()
         df = self.api.taiwan_stock_daily(
             stock_id=stock_id,
             start_date=self._get_start_date(days)
@@ -86,6 +87,7 @@ class FinMindTool:
 
     def get_institutional_investors(self, stock_id: str, days: int = 30) -> str:
         """取得三大法人買賣超資料。"""
+        stock_id = stock_id.strip().upper()
         df = self.api.taiwan_stock_institutional_investors(
             stock_id=stock_id,
             start_date=self._get_start_date(days)
@@ -94,6 +96,7 @@ class FinMindTool:
 
     def get_margin_trading(self, stock_id: str, days: int = 30) -> str:
         """取得融資融券資料。"""
+        stock_id = stock_id.strip().upper()
         df = self.api.taiwan_stock_margin_purchase_short_sale(
             stock_id=stock_id,
             start_date=self._get_start_date(days)
@@ -102,6 +105,7 @@ class FinMindTool:
 
     def get_month_revenue(self, stock_id: str, days: int = 180) -> str:
         """取得月營收資料。"""
+        stock_id = stock_id.strip().upper()
         df = self.api.taiwan_stock_month_revenue(
             stock_id=stock_id,
             start_date=self._get_start_date(days)
@@ -110,6 +114,7 @@ class FinMindTool:
 
     def get_per_pbr(self, stock_id: str, days: int = 30) -> str:
         """取得個股本益比 (PER)、股價淨值比 (PBR) 與殖利率。"""
+        stock_id = stock_id.strip().upper()
         # SDK 方法對應 dataset: TaiwanStockPER
         df = self.api.taiwan_stock_per_pbr(
             stock_id=stock_id,
@@ -119,6 +124,7 @@ class FinMindTool:
 
     def get_dividend_policy(self, stock_id: str) -> str:
         """取得股利政策（配股、配息）。"""
+        stock_id = stock_id.strip().upper()
         # 使用 dataset: TaiwanStockDividend
         df = self.api.taiwan_stock_dividend(
             stock_id=stock_id,
@@ -128,6 +134,7 @@ class FinMindTool:
 
     def get_financial_statements(self, stock_id: str, statement_type: str = "IncomeStatement") -> str:
         """取得財務報表（IncomeStatement, BalanceSheet, CashFlows）。"""
+        stock_id = stock_id.strip().upper()
         start_date = self._get_start_date(365 * 2) # 預設看兩年
         if statement_type == "IncomeStatement":
             df = self.api.taiwan_stock_financial_statement(stock_id=stock_id, start_date=start_date)

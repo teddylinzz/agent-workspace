@@ -1,0 +1,53 @@
+{
+  "skill_name": "fetch-top5-tw-stock",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "請幫我分析今天收盤後的台股信號，並挑選出適合明天買進與關注的前五檔股票清單，包含K線、籌碼、近期新聞等深度分析報告。請以設計精美、便於人類閱讀的 HTML 網頁格式 (watch_list_analysis.html) 輸出。",
+      "expected_output": "A beautiful HTML dashboard report (watch_list_analysis.html) selecting the top 5 stocks (2327, 2344, 2356, 2357, 2408), excluding 3481 (disposition) and 2324 (limit down).",
+      "files": [],
+      "assertions": [
+        {
+          "name": "selects_5_stocks",
+          "description": "Verify that exactly 5 stocks are selected as the top recommended stocks."
+        },
+        {
+          "name": "excludes_3481",
+          "description": "Verify that 3481 (Innolux) is excluded from the top 5 watchlist."
+        },
+        {
+          "name": "excludes_2324",
+          "description": "Verify that 2324 (Compal) is excluded from the top 5 watchlist."
+        },
+        {
+          "name": "includes_suggested_prices",
+          "description": "Verify that entry, TP, and SL prices are provided for the recommended stocks."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "我明天想要操作台股強勢股，可以幫我挑出前五大值得關注的標的嗎？請結合大盤趨勢、三大法人持股變化以及最新的利多/利空新聞來分析，並把處置股或已經大跌跌停的股票排除掉。請使用 HTML 格式 (watch_list_analysis.html) 產生一個美觀的儀表板報告。",
+      "expected_output": "A structured HTML dashboard of the top 5 stocks, excluding high-risk stocks like 3481 and 2324, providing entry/TP/SL prices in a visually clear format.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "selects_5_stocks",
+          "description": "Verify that exactly 5 stocks are selected as the top recommended stocks."
+        },
+        {
+          "name": "excludes_3481_and_2324",
+          "description": "Verify that both 3481 and 2324 are excluded from the top 5 watchlist."
+        },
+        {
+          "name": "contains_chip_analysis",
+          "description": "Verify that the report contains analysis of institutional flows/chips."
+        },
+        {
+          "name": "contains_news_sentiment",
+          "description": "Verify that the report contains analysis of recent news sentiment."
+        }
+      ]
+    }
+  ]
+}

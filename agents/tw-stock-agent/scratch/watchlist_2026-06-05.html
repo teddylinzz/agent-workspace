@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>台股隔日關注與條件式加碼清單｜2026-06-05</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --paper: #f4f7fb;
+      --card: #ffffff;
+      --navy: #102a43;
+      --blue: #2563eb;
+      --green: #087f5b;
+      --green-bg: #e8f7f1;
+      --amber: #9a6700;
+      --amber-bg: #fff6d8;
+      --red: #b42318;
+      --red-bg: #fff0ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, "Noto Sans TC", system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      color: white;
+      background: linear-gradient(135deg, #102a43 0%, #163f68 58%, #1d4ed8 140%);
+      padding: 42px 24px 36px;
+    }
+    header .inner, main { max-width: 1240px; margin: 0 auto; }
+    h1 { margin: 0 0 10px; font-size: clamp(28px, 4vw, 45px); line-height: 1.18; }
+    h2 { margin: 34px 0 14px; color: var(--navy); font-size: 25px; }
+    h3 { margin: 0 0 8px; font-size: 19px; }
+    p { margin: 8px 0; }
+    .subtitle { max-width: 860px; color: #dceaff; font-size: 16px; }
+    .asof { margin-top: 18px; color: #bbd5f3; font-size: 13px; }
+    main { padding: 24px 20px 54px; }
+    .notice, .callout {
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .notice { border-left: 5px solid var(--amber); }
+    .callout.red { border-left: 5px solid var(--red); background: var(--red-bg); }
+    .callout.green { border-left: 5px solid var(--green); background: var(--green-bg); }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 20px 0 8px;
+    }
+    .metric {
+      min-height: 118px;
+      padding: 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 5px 18px rgba(16, 42, 67, .05);
+    }
+    .metric .label { color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+    .metric .value { margin-top: 6px; color: var(--navy); font-size: 24px; font-weight: 750; }
+    .metric .small { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .buy { color: var(--green); background: var(--green-bg); }
+    .wait { color: var(--amber); background: var(--amber-bg); }
+    .avoid { color: var(--red); background: var(--red-bg); }
+    .neutral { color: #475467; background: #eef2f6; }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 5px 18px rgba(16, 42, 67, .04);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      padding: 12px 10px;
+      color: #eef6ff;
+      background: var(--navy);
+      text-align: left;
+      white-space: nowrap;
+    }
+    td { padding: 12px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+    tbody tr:hover { background: #f7faff; }
+    .ticker { color: var(--navy); font-weight: 800; font-size: 15px; }
+    .muted { color: var(--muted); }
+    .pos { color: var(--green); font-weight: 700; }
+    .neg { color: var(--red); font-weight: 700; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 5px 18px rgba(16, 42, 67, .04);
+    }
+    .card-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    .kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 12px 0; }
+    .kv div { padding: 8px; background: #f5f7fa; border-radius: 8px; }
+    .kv span { display: block; color: var(--muted); font-size: 10px; }
+    .kv b { color: var(--navy); font-size: 13px; }
+    ul { margin: 8px 0 0; padding-left: 20px; }
+    li { margin: 5px 0; }
+    .small { font-size: 12px; }
+    .sources li { margin: 8px 0; }
+    footer { margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    @media (max-width: 980px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .metrics { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 1fr 1fr; }
+      header { padding-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="inner">
+    <h1>台股隔日關注與條件式加碼清單</h1>
+    <p class="subtitle">依 TW Stocker v8.5 動能策略重跑，再加入處置股、注意股、技術過熱、法人流向、近期新聞與個股歷史成效覆核。這是研究優先清單，不是無條件買進清單。</p>
+    <div class="asof">資料凍結：2026-06-04 收盤｜報告產生：2026-06-05 05:10 Asia/Taipei｜模型執行日：2026-06-05</div>
+  </div>
+</header>
+
+<main>
+  <div class="notice">
+    <strong>日期提醒：</strong>本報告在 2026-06-05 開盤前產生，因此「隔日」模型執行日是 <strong>2026-06-05</strong>。若在 2026-06-05 收盤後閱讀，請先更新行情，下一個交易日才是 2026-06-08。
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="label">市場狀態</div><div class="value">多頭</div><div class="small">0050：5日 +7.1%、20日 +10.1%</div></div>
+    <div class="metric"><div class="label">市場波動率</div><div class="value">30.5%</div><div class="small">多頭但波動偏高，禁止追價</div></div>
+    <div class="metric"><div class="label">策略回測</div><div class="value">56.4%</div><div class="small">564 筆勝率；Sharpe 2.337</div></div>
+    <div class="metric"><div class="label">策略最大回撤</div><div class="value">-17.2%</div><div class="small">單筆風險仍需限制</div></div>
+    <div class="metric"><div class="label">今日建議</div><div class="value">條件式</div><div class="small">最多開 4 檔；先用預定部位 50%</div></div>
+  </div>
+
+  <h2>先看結論</h2>
+  <div class="callout green">
+    <strong>研究優先順序：</strong>首選觀察 <strong>2344 華邦電、2408 南亞科、6446 藥華藥</strong>；其次為 <strong>2454 聯發科、2357 華碩</strong>。所有標的都必須通過開盤 Gap 規則，且不建議在開盤直接把預定部位一次買滿。
+  </div>
+  <p><strong>資金規則：</strong>單檔初始風險以總資金的 0.5% 為上限；只有價格確認、成交量正常且未出現負面新訊息時，才增加到 1.0% 風險。單日最多建立 4 檔新部位，總新增曝險建議 25%–35%。</p>
+  <p><strong>Gap 規則：</strong>開盤與前收差距小於 0.5 ATR，可使用預定部位 100%；0.5–1.0 ATR 使用 75%；1.0–1.5 ATR 使用 50%；大於等於 1.5 ATR 跳過。這是原 v8.5 策略的重要實盤條件。</p>
+
+  <h2>10 檔風險重排清單</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>股票</th><th>策略分數</th><th>收盤 / 近期表現</th><th>技術線</th><th>法人 20日</th><th>策略歷史成效</th><th>行動</th><th>條件式進場與風控</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><span class="ticker">2344 華邦電</span></td><td>3.72</td><td>179.5<br><span class="pos">5日 +24.7%</span>｜20日 +57.5%</td><td>RSI 71.0<br>MA20 138.5｜MA60 112.1</td><td class="pos">+6.95% 大買</td><td>13 筆｜勝率 <span class="pos">84.6%</span><br>均報酬 +12.7%</td><td><span class="badge buy">A 條件式加碼</span></td><td>開盤與 179.5 差距 &lt; 6.6<br>策略停損 143.1｜停利 228.0</td></tr>
+        <tr><td>2</td><td><span class="ticker">2408 南亞科</span></td><td>3.28</td><td>395.0<br><span class="pos">5日 +21.9%</span>｜20日 +37.6%</td><td>RSI 67.7<br>MA20 325.4｜MA60 261.4</td><td class="pos">+4.21% 大買</td><td>15 筆｜勝率 <span class="pos">73.3%</span><br>均報酬 +11.6%</td><td><span class="badge buy">A 條件式加碼</span></td><td>開盤與 395 差距 &lt; 13.4<br>停損 314.2｜停利 502.7</td></tr>
+        <tr><td>3</td><td><span class="ticker">6446 藥華藥</span></td><td>3.33</td><td>938.0<br><span class="pos">5日 +8.8%</span>｜20日 +42.3%</td><td>RSI 66.3<br>MA20 830.9｜MA60 705.8</td><td class="pos">+1.79% 小買</td><td>9 筆｜勝率 55.6%<br>均報酬 +5.5%</td><td><span class="badge buy">A 條件式加碼</span></td><td>開盤與 938 差距 &lt; 20.5<br>停損 814.8｜停利 1102.3</td></tr>
+        <tr><td>4</td><td><span class="ticker">2454 聯發科</span></td><td>3.18</td><td>4,430<br>5日 +0.5%｜<span class="pos">20日 +29.5%</span></td><td>RSI 72.4<br>MA20 3,924.5｜MA60 2,619.7</td><td class="neg">-0.82% 小賣</td><td>8 筆｜勝率 <span class="pos">75.0%</span><br>均報酬 +6.9%</td><td><span class="badge wait">B 等拉回確認</span></td><td>守住 4,430 且外資止賣再加<br>停損 3,390.7｜停利 5,815.7</td></tr>
+        <tr><td>5</td><td><span class="ticker">2357 華碩</span></td><td>3.37</td><td>892.0<br><span class="pos">5日 +28.9%</span>｜20日 +39.6%</td><td>RSI 82.8 過熱<br>MA20 719.5｜MA60 627.8</td><td>+0.37% 中性</td><td>4 筆｜勝率 50.0%<br>均報酬 -0.8%</td><td><span class="badge wait">B 禁止追價</span></td><td>需先消化過熱並站穩 892<br>停損 777.6｜停利 1,044.6</td></tr>
+        <tr><td>6</td><td><span class="ticker">2356 英業達</span></td><td>3.65</td><td>77.8<br><span class="neg">1日 -8.9%</span>｜20日 +55.8%</td><td>RSI 76.0<br>收盤略低 MA5 78.2</td><td class="pos">+3.53% 大買</td><td>6 筆｜勝率 50.0%<br>均報酬 +3.6%</td><td><span class="badge wait">B 等止跌</span></td><td>不接第一根長黑；重回 80 附近再評估<br>停損 63.8｜停利 96.5</td></tr>
+        <tr><td>7</td><td><span class="ticker">3149 正達</span></td><td>3.82</td><td>91.0<br><span class="pos">5日 +35.6%</span>｜20日 +78.8%</td><td>RSI 87.5 極度過熱<br>注意股；20日新高</td><td class="pos">+3.82% 大買</td><td>3 筆｜勝率 <span class="neg">33.3%</span><br>均報酬 -0.9%</td><td><span class="badge wait">B 僅觀察</span></td><td>不可追高；等待 RSI 降溫或回測 MA5<br>停損 76.2｜停利 110.7</td></tr>
+        <tr><td>8</td><td><span class="ticker">2377 微星</span></td><td>3.23</td><td>140.0<br>5日 +13.4%｜20日 +38.6%</td><td>RSI 73.0<br>收盤低於 MA5 141.6</td><td class="neg">-0.75% 小賣</td><td>僅 1 筆，樣本不足</td><td><span class="badge wait">B 等站回 MA5</span></td><td>站回 142 且法人轉買再建倉<br>停損 116.9｜停利 170.8</td></tr>
+        <tr><td>9</td><td><span class="ticker">6415 矽力*-KY</span></td><td>3.18</td><td>570.0<br><span class="neg">5日 -8.1%</span>｜20日 +34.3%</td><td>RSI 62.4<br>距 20日高點 -14.3%</td><td>+0.78% 小買</td><td>8 筆｜勝率 <span class="neg">37.5%</span><br>均報酬 +2.1%</td><td><span class="badge wait">C 需要證據</span></td><td>成交量僅 20日均量 0.37 倍；先站回 MA5 590.6</td></tr>
+        <tr><td>10</td><td><span class="ticker">2303 聯電</span></td><td>3.15</td><td>125.0<br><span class="neg">5日 -12.0%</span>｜20日 +29.5%</td><td>RSI 60.1<br>低於 MA5 137.5、高於 MA20 119.9</td><td class="neg">-1.24% 小賣</td><td>3 筆｜勝率 66.7%<br>均報酬 +7.0%</td><td><span class="badge wait">C 等止跌</span></td><td>只在 MA20 守穩、法人賣壓改善後評估<br>停損 91.7｜停利 169.4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>個股催化劑與第一個否決條件</h2>
+  <div class="grid">
+    <article class="card"><div class="card-top"><h3>2344 華邦電</h3><span class="badge buy">優先研究</span></div><div class="kv"><div><span>外資</span><b>23.81%</b></div><div><span>投信</span><b>9.05%</b></div><div><span>20日法人變化</span><b>+6.95%</b></div></div><p><strong>Why now：</strong>記憶體供需與獲利改善題材有基本面支撐，且法人持股比重明顯增加。</p><p><strong>第一否決：</strong>跌破前日低點 175 且放量，或開盤 Gap 超過 1.5 ATR。</p></article>
+    <article class="card"><div class="card-top"><h3>2408 南亞科</h3><span class="badge buy">優先研究</span></div><div class="kv"><div><span>外資</span><b>15.11%</b></div><div><span>投信</span><b>3.15%</b></div><div><span>20日法人變化</span><b>+4.21%</b></div></div><p><strong>Why now：</strong>記憶體報價與營收成長預期強，原策略個股歷史成效佳。</p><p><strong>第一否決：</strong>題材已高度反映；若跌破 MA5 388.9 且法人轉賣，停止加碼。</p></article>
+    <article class="card"><div class="card-top"><h3>6446 藥華藥</h3><span class="badge buy">優先研究</span></div><div class="kv"><div><span>外資</span><b>24.08%</b></div><div><span>投信</span><b>1.15%</b></div><div><span>20日法人變化</span><b>+1.79%</b></div></div><p><strong>Why now：</strong>ROPEG 適應症與美國治療指引支持長期成長敘事，技術線相對未過熱。</p><p><strong>第一否決：</strong>跌破 MA20 830.9，或臨床／商業化進度不如預期。</p></article>
+    <article class="card"><div class="card-top"><h3>2454 聯發科</h3><span class="badge wait">等法人止賣</span></div><div class="kv"><div><span>外資</span><b>56.27%</b></div><div><span>投信</span><b>1.48%</b></div><div><span>20日法人變化</span><b>-0.82%</b></div></div><p><strong>Why now：</strong>高階晶片與 AI 題材仍在，但 60 日漲幅已達 166%，預期風險高。</p><p><strong>第一否決：</strong>失守前收與 MA5、外資持續下降；此時不因公司品質好而逆勢加碼。</p></article>
+    <article class="card"><div class="card-top"><h3>2357 華碩</h3><span class="badge wait">禁止追價</span></div><div class="kv"><div><span>外資</span><b>34.54%</b></div><div><span>投信</span><b>6.64%</b></div><div><span>RSI</span><b>82.8</b></div></div><p><strong>Why now：</strong>AI PC、AI 伺服器產品曝光度高，但短線已高度過熱。</p><p><strong>第一否決：</strong>無法站穩 892 或量價背離擴大。</p></article>
+    <article class="card"><div class="card-top"><h3>2356 英業達</h3><span class="badge wait">等止跌</span></div><div class="kv"><div><span>外資</span><b>17.63%</b></div><div><span>投信</span><b>2.14%</b></div><div><span>20日法人變化</span><b>+3.53%</b></div></div><p><strong>Why now：</strong>AI 伺服器與車用合作提供催化劑，但 6 月 4 日長黑代表短線籌碼鬆動。</p><p><strong>第一否決：</strong>開盤續弱且不能重回 MA5；不得直接攤平。</p></article>
+    <article class="card"><div class="card-top"><h3>3149 正達</h3><span class="badge wait">注意股</span></div><div class="kv"><div><span>20日漲幅</span><b>+78.8%</b></div><div><span>RSI</span><b>87.5</b></div><div><span>策略歷史均報酬</span><b>-0.9%</b></div></div><p><strong>Why now：</strong>玻璃加工轉型題材吸引資金，但股價已顯著領先可驗證的營運證據。</p><p><strong>第一否決：</strong>題材尚需營收／訂單證明；過熱與注意股狀態下不可追高。</p></article>
+    <article class="card"><div class="card-top"><h3>2377 微星</h3><span class="badge wait">等待確認</span></div><p><strong>Why now：</strong>AI PC 與伺服器題材仍有催化，但近期營收資料與法人流向偏混合。</p><p><strong>第一否決：</strong>站不回 MA5 141.6，或法人持股比重繼續下降。</p></article>
+    <article class="card"><div class="card-top"><h3>6415 矽力*-KY</h3><span class="badge neutral">證據不足</span></div><p><strong>Why now：</strong>仍在 60MA 上方且 20 日動能正向。</p><p><strong>第一否決：</strong>低量反彈與個股策略歷史勝率偏低；未找到足夠近期硬催化劑前，只能列觀察。</p></article>
+    <article class="card"><div class="card-top"><h3>2303 聯電</h3><span class="badge wait">等待止跌</span></div><p><strong>Why now：</strong>成熟製程利用率與產品組合改善提供基本面支撐，但短線 5 日下跌 12%。</p><p><strong>第一否決：</strong>MA20 119.9 失守、外資／投信賣壓未改善。</p></article>
+  </div>
+
+  <h2>禁止加碼與等待止跌</h2>
+  <div class="callout red">
+    <strong>處置股阻擋：</strong>`6116 彩晶`、`2327 國巨*`、`3481 群創`、`6239 力成` 雖進入原始策略高分區，但截至 2026-06-05 仍在處置期間，撮合頻率與流動性受限。實盤風險覆核後全部降為 <strong>禁止加碼</strong>。
+  </div>
+  <div class="table-wrap" style="margin-top:12px">
+    <table>
+      <thead><tr><th>股票</th><th>原始狀態</th><th>風險覆核</th><th>可重新評估時間／條件</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ticker">6116 彩晶</span></td><td>策略排名 #1；6/4 跌停</td><td><span class="badge avoid">禁止加碼</span> 第二次處置、RSI 82.5、20日 +117.6%</td><td>處置解除後，且不再出現跌停／流動性異常</td></tr>
+        <tr><td><span class="ticker">2327 國巨*</span></td><td>策略排名 #2；歷史勝率 77.8%</td><td><span class="badge avoid">禁止加碼</span> 處置至 6/8、6/4 下跌 9.39%</td><td>6/8 處置期結束後，重新確認價格與法人</td></tr>
+        <tr><td><span class="ticker">3481 群創</span></td><td>策略排名 #3</td><td><span class="badge avoid">禁止加碼</span> 處置至 6/17、歷史勝率僅 41.7%</td><td>處置解除，且成交量與價格恢復正常</td></tr>
+        <tr><td><span class="ticker">6239 力成</span></td><td>策略排名 #7</td><td><span class="badge avoid">禁止加碼</span> 處置至 6/11、法人 20日 -1.27%</td><td>6/11 後且法人轉買</td></tr>
+        <tr><td><span class="ticker">2324 仁寶</span></td><td>候選排名 #8</td><td><span class="badge avoid">等待止跌</span> 6/4 跌停、法人 -2.25%、策略歷史 0% 勝率</td><td>至少出現一日不破低且法人賣壓改善</td></tr>
+        <tr><td><span class="ticker">2353 宏碁</span></td><td>候選排名 #12</td><td><span class="badge avoid">等待止跌</span> 6/4 跌停、爆量、策略歷史均報酬 -6.1%</td><td>不再跌停且重回 MA5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>購買與加碼策略</h2>
+  <div class="grid">
+    <section class="card">
+      <h3>建立新部位</h3>
+      <ul>
+        <li>先計算每股風險：預定進場價減停損價。</li>
+        <li>股數上限 = 總資金 × 0.5% ÷ 每股風險。</li>
+        <li>第一筆只下預定股數 50%；當日收盤仍守住進場條件，再補到 75%。</li>
+        <li>只有隔日未跌破成本、法人與新聞無惡化，才補滿 100%。</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h3>已有持股的加碼規則</h3>
+      <ul>
+        <li>只加碼獲利部位，不攤平虧損部位。</li>
+        <li>股價必須守住 MA5 或突破前高，且成交量不出現異常衰退。</li>
+        <li>加碼後整體部位的最大損失仍不得超過總資金 1%。</li>
+        <li>處置股、跌停股、長黑未止跌標的一律不加碼。</li>
+      </ul>
+    </section>
+  </div>
+  <p class="small"><strong>溢價比說明：</strong>本清單都是普通股，不具 ETF 淨值或可轉債轉換價，因此「折溢價比」不適用。報告改用 20 日漲幅、距 20 日高點、RSI 與法人持股變化判斷預期是否過熱。</p>
+
+  <h2>AI / Codex 整合判斷</h2>
+  <div class="callout">
+    <p><strong>目前不需要讓 LLM 決定買賣。</strong>動能分數、Gap、ATR、停損、處置股阻擋與法人欄位都應維持 deterministic；LLM 最適合做新聞摘要、證據分類、風險否決與報告生成。</p>
+    <p>你的 ChatGPT Pro 訂閱包含 Codex 使用額度，可用 Codex SDK 控制本機 Codex agent；一般 OpenAI API 呼叫則採 Platform API 獨立計費。若要自動化，建議把 Codex SDK 放在報告生成後的「研究覆核層」，不要讓它直接下單。</p>
+  </div>
+
+  <h2>資料來源與限制</h2>
+  <ul class="sources">
+    <li><a href="https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=json&date=20260604">TWSE 2026-06-04 當日成交資訊</a>：股票名稱、收盤價、成交量。</li>
+    <li><a href="https://www.twse.com.tw/announcement/punish?response=html">TWSE 公布處置有價證券資訊</a>：處置期間與措施。</li>
+    <li><a href="https://www.twse.com.tw/rwd/zh/announcement/notice?response=html&querytype=1&startDate=20260604&endDate=20260604&sortKind=STKNO">TWSE 2026-06-04 注意有價證券資訊</a>：3149、6116 注意原因。</li>
+    <li><a href="https://voidful.github.io/tw-institutional-stocker/">tw-institutional-stocker</a>：法人持股比重與 20 日變化，資料截至 2026-06-03。</li>
+    <li><a href="https://finance.yahoo.com/">Yahoo Finance / yfinance</a>：MA、RSI、ATR、近期報酬；截至 2026-06-04。</li>
+    <li>本機 TW Stocker v8.5：`STRATEGY_GUIDE.md`、`artifacts/signals_20260604.csv`、`orders_20260604.json`、`trades_20260604.csv`。</li>
+    <li><a href="https://tw.stock.yahoo.com/news/%E8%8F%AF%E9%82%A6%E9%9B%BB4%E6%9C%88%E6%AF%8F%E8%82%A1%E8%B3%BA1-66%E5%85%83-%E9%81%94%E9%A6%96%E5%AD%A374-%E6%B0%B4%E6%BA%96-004000789.html/">華邦電 4 月獲利與記憶體供需訊息</a>、<a href="https://stockgo.tw/stock/2408/">南亞科營收與近期新聞彙整</a>、<a href="https://scm.sinotrade.com.tw/Article/GetFile/b6690bb5-b7fa-4fa0-9513-f235bba56fc4">聯電營運與製程組合研究</a>。</li>
+    <li><a href="https://www.gtoc.com.tw/upload/cominfo/202605121721370.pdf">正達 2025 年年報</a>、<a href="https://www.sinotrade.com.tw/richclub/news/6a1e4032de5d6e5504d889b3">微星 COMPUTEX 2026 AI 產品訊息</a>、<a href="https://stock.ltn.com.tw/article/stfmtjacdkes">英業達 AI 生態系與股價催化訊息</a>。</li>
+    <li><a href="https://money.udn.com/money/amp/story/5612/9502997">藥華藥 2026 Q1 法說與 Ropeg 銷售訊息</a>、<a href="https://www.ttv.com.tw/finance/view/?from=587&i=0620260212009DC5D6EFF0394D42A7E5E4AEDCF0D8D13F83">華碩 COMPUTEX 2026 AI 生態系訊息</a>、<a href="https://www.ftnn.com.tw/news/550008">聯發科 AI ASIC 題材與市場預期</a>。</li>
+    <li><a href="https://developers.openai.com/codex/sdk">OpenAI Codex SDK</a>、<a href="https://help.openai.com/en/articles/8156019">ChatGPT 與 API 計費分離說明</a>。</li>
+  </ul>
+  <p class="small">限制：新聞搜尋未能為每檔股票找到同等品質、同等時效的硬催化劑；缺乏明確證據者已標為「需要證據」。技術指標會隨下一個交易日價格改變，不能把本報告的價格區間當成長期固定目標。</p>
+
+  <footer>
+    本報告僅供研究與風險管理參考，不構成個人化投資建議、招攬或報酬保證。台股可能出現漲跌停、處置交易、跳空與流動性風險，實際成交價格可能偏離模型價格。
+  </footer>
+</main>
+</body>
+</html>

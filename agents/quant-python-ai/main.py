@@ -33,7 +33,7 @@ def main():
     load_dotenv()
     console.print(Panel(BANNER, style="bold cyan", subtitle="v0.2.0"))
     console.print("[dim]輸入投資研究任務，或輸入 /help 查看指令、/quit 離開[/dim]\n")
-    console.print("[dim]量化回測：/quant backtest <策略描述>　換股清單：/quant positions[/dim]\n")
+    console.print("[dim]量化回測：/quant backtest <策略描述>　推薦清單：/quant recommend[/dim]\n")
 
     agent = QuantPythonAgent(console)
     quant_agent = QuantStrategyAgent(console, llm=agent.llm)
@@ -64,7 +64,8 @@ def main():
                     "── 研究任務（FinMind + Tavily）──\n"
                     '  "整理台積電近期重大事件與財務重點"\n'
                     '  "比較台積電和聯發科的近期新聞情緒差異"\n\n'
-                    "── 量化策略（FinLab）──\n"
+                    "── 量化策略與推薦 ──\n"
+                    "[bold]/quant recommend[/bold]             - 產生隔日看多焦點推薦清單與網頁儀表板\n"
                     "[bold]/quant backtest[/bold] [dim]<描述>[/dim] - 執行量化回測\n"
                     "[bold]/quant positions[/bold]             - 查看最近回測換股清單\n"
                     "[bold]/quant help[/bold]                  - 量化工具說明",
@@ -81,6 +82,8 @@ def main():
             if sub == "help":
                 console.print(
                     Panel(
+                        "[bold]/quant recommend[/bold]\n"
+                        "  綜合分析技術K線、法人籌碼、信用資券變動與近期新聞輿情，推薦前五檔隔日看多關注股與產出網頁圖表儀表板\n\n"
                         "[bold]/quant backtest[/bold] [dim]<策略描述>[/dim]\n"
                         "  執行量化回測，例如：/quant backtest 月營收連續成長的電子股，月度調倉\n\n"
                         "[bold]/quant positions[/bold]\n"
@@ -90,6 +93,9 @@ def main():
                         border_style="cyan",
                     )
                 )
+            elif sub == "recommend":
+                import subprocess
+                subprocess.run(["uv", "run", "python", "recommend_stocks.py"])
             elif sub == "positions":
                 quant_agent.show_positions()
             elif sub.startswith("backtest"):

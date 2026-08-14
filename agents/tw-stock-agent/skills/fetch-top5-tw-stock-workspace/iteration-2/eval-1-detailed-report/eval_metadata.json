@@ -1,0 +1,23 @@
+{
+  "eval_id": 1,
+  "eval_name": "eval-1-detailed-report",
+  "prompt": "請幫我分析今天收盤後的台股信號，並挑選出適合明天買進與關注的前五檔股票清單，包含K線、籌碼、近期新聞等深度分析報告。請以設計精美、便於人類閱讀的 HTML 網頁格式 (watch_list_analysis.html) 輸出。",
+  "assertions": [
+    {
+      "name": "selects_5_stocks",
+      "description": "Verify that exactly 5 stocks are selected as the top recommended stocks."
+    },
+    {
+      "name": "excludes_3481",
+      "description": "Verify that 3481 (Innolux) is excluded from the top 5 watchlist."
+    },
+    {
+      "name": "excludes_2324",
+      "description": "Verify that 2324 (Compal) is excluded from the top 5 watchlist."
+    },
+    {
+      "name": "includes_suggested_prices",
+      "description": "Verify that entry, TP, and SL prices are provided for the recommended stocks."
+    }
+  ]
+}

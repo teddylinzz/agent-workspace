@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台股收盤信號分析與精選明日觀測名單 - 明日交易決策儀表板</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0f172a; /* Slate 900 */
+      --bg-card: #1e293b; /* Slate 800 */
+      --bg-card-hover: #1e293b; /* Slate 800 base */
+      --text-primary: #f8fafc; /* Slate 50 */
+      --text-secondary: #94a3b8; /* Slate 400 */
+      --color-green: #10b981; /* Emerald 500 */
+      --color-red: #ef4444; /* Red 500 */
+      --color-orange: #f59e0b; /* Amber 500 */
+      --color-blue: #3b82f6; /* Blue 500 */
+      --border-color: #334155;
+      --transition-speed: 0.25s;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.8rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.2rem;
+      }
+    }
+
+    .header-title h1 {
+      font-size: 2.2rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title p {
+      color: var(--text-secondary);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .header-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 0.5rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .badge-regime {
+      background-color: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-exposure {
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-time {
+      background-color: rgba(148, 163, 184, 0.08);
+      color: var(--text-secondary);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 1.5rem;
+      margin: 2rem 0 1.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .section-icon {
+      color: var(--color-blue);
+      display: inline-flex;
+    }
+
+    /* Summary Table */
+    .table-wrapper {
+      background-color: var(--bg-card);
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+      margin-bottom: 3rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 900px;
+    }
+
+    th {
+      background-color: rgba(15, 23, 42, 0.3);
+      padding: 1.1rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 1.1rem 1.2rem;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+
+    .ticker-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .ticker-num {
+      background-color: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+    }
+
+    .ticker-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .price-up {
+      color: #34d399; /* Emerald 400 */
+      font-weight: 600;
+    }
+
+    .price-down {
+      color: #f87171; /* Red 400 */
+      font-weight: 600;
+    }
+
+    .price-flat {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .decision-badge {
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .decision-strong-buy {
+      background-color: rgba(16, 185, 129, 0.12);
+      color: var(--color-green);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .decision-buy {
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    .decision-warning {
+      background-color: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    /* Cards Layout */
+    .cards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+      margin-bottom: 3rem;
+    }
+
+    .stock-card {
+      background-color: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 1.8rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+      transition: transform var(--transition-speed), border-color var(--transition-speed);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stock-card:hover {
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      .card-price-info {
+        text-align: left !important;
+      }
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .card-title-group h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .card-tag {
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background-color: rgba(59, 130, 246, 0.1);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .card-tag-disposed {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .card-price-info {
+      text-align: right;
+    }
+
+    .card-price {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .card-change {
+      font-size: 0.88rem;
+      margin: 0.25rem 0 0 0;
+      font-weight: 600;
+    }
+
+    .card-grid-details {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.8rem;
+    }
+
+    @media (max-width: 900px) {
+      .card-grid-details {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-block-title {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .metric-item {
+      background-color: rgba(15, 23, 42, 0.25);
+      padding: 0.6rem 0.9rem;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.15rem;
+    }
+
+    .metric-value {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .metric-sub {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 0.1rem;
+    }
+
+    .playbook-box {
+      background-color: rgba(59, 130, 246, 0.03);
+      border-left: 4px solid var(--color-blue);
+      padding: 1.1rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1.2rem;
+      border-top: 1px solid rgba(59, 130, 246, 0.1);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+      border-right: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    .playbook-targets {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    .playbook-target-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .playbook-target-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .playbook-target-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .playbook-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.5rem;
+    }
+
+    .news-catalysts-content {
+      font-size: 0.9rem;
+      color: #cbd5e1; /* Slate 300 */
+    }
+
+    .news-catalysts-content ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .news-catalysts-content li {
+      margin-bottom: 0.6rem;
+      position: relative;
+    }
+
+    .news-catalysts-content li strong {
+      color: var(--text-primary);
+    }
+
+    /* Exclusions & High-Risk Log */
+    .exclusions-container {
+      margin-top: 3.5rem;
+    }
+
+    .exclusions-header-bar {
+      border-bottom: 2px solid rgba(239, 68, 68, 0.3);
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .exclusions-title {
+      color: #fca5a5;
+      font-size: 1.4rem;
+      margin: 0;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .exclusion-cards-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .exclusion-cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .exclusion-card {
+      background-color: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      padding: 1.2rem;
+      border-radius: 8px;
+    }
+
+    .exclusion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .exclusion-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .exclusion-ticker {
+      background-color: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .exclusion-reason {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 4.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <header>
+      <div class="header-title">
+        <h1>台股收盤信號分析與精選明日觀測名單</h1>
+        <p>提供客觀的量化籌碼過濾、關鍵技術指標指標定位，挑選明日最值得關注之股票報告</p>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-regime">🎯 多頭高檔震盪 (Regime: Pullback)</span>
+        <span class="badge badge-exposure">🛡️ 建議持股水位: 50%</span>
+        <span class="badge badge-time">⏰ 數據更新: 2026-06-04 21:27</span>
+      </div>
+    </header>
+
+    <!-- Watchlist Summary Table -->
+    <div class="section-title">
+      <span class="section-icon">📊</span>
+      <span>精選五檔明日觀測名單總覽 (Top 5 Watchlist Summary)</span>
+    </div>
+    
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>名次</th>
+            <th>代號與名稱</th>
+            <th>今日收盤價</th>
+            <th>漲跌幅</th>
+            <th>建議進場點</th>
+            <th>停利目標 (TP)</th>
+            <th>停損限制 (SL)</th>
+            <th>20日法人增減</th>
+            <th>決策評級</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 700; color: var(--color-orange);">1</td>
+            <td>
+              <div class="ticker-cell">
+                <span class="ticker-num">2344</span>
+                <span class="ticker-name">華邦電</span>
+              </div>
+            </td>
+            <td style="font-weight: 600;">179.5 元</td>
+            <td class="price-up">+1.13%</td>
+            <td>179.5 元</td>
+            <td class="price-up">228.0 元</td>
+            <td class="price-down">143.1 元</td>
+            <td class="price-up">+9.14%</td>
+            <td><span class="decision-badge decision-strong-buy">強力買進</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; color: var(--color-orange);">2</td>
+            <td>
+              <div class="ticker-cell">
+                <span class="ticker-num">2357</span>
+                <span class="ticker-name">華碩</span>
+              </div>
+            </td>
+            <td style="font-weight: 600;">892.0 元</td>
+            <td class="price-down">-4.19%</td>
+            <td>892.0 元</td>
+            <td class="price-up">1037.8 元</td>
+            <td class="price-down">782.6 元</td>
+            <td class="price-up">+0.34%</td>
+            <td><span class="decision-badge decision-buy">拉回買進</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; color: var(--color-orange);">3</td>
+            <td>
+              <div class="ticker-cell">
+                <span class="ticker-num">2408</span>
+                <span class="ticker-name">南亞科</span>
+              </div>
+            </td>
+            <td style="font-weight: 600;">395.0 元</td>
+            <td class="price-down">-1.62%</td>
+            <td>395.0 元</td>
+            <td class="price-up">502.7 元</td>
+            <td class="price-down">314.2 元</td>
+            <td class="price-up">+5.12%</td>
+            <td><span class="decision-badge decision-buy">買進</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; color: var(--color-orange);">4</td>
+            <td>
+              <div class="ticker-cell">
+                <span class="ticker-num">2356</span>
+                <span class="ticker-name">英業達</span>
+              </div>
+            </td>
+            <td style="font-weight: 600;">77.8 元</td>
+            <td class="price-down">-8.90%</td>
+            <td>77.8 元</td>
+            <td class="price-up">96.5 元</td>
+            <td class="price-down">63.8 元</td>
+            <td class="price-up">+3.41%</td>
+            <td><span class="decision-badge decision-buy">逢低關注</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; color: var(--color-orange);">5</td>
+            <td>
+              <div class="ticker-cell">
+                <span class="ticker-num">2327</span>
+                <span class="ticker-name">國巨</span>
+              </div>
+            </td>
+            <td style="font-weight: 600;">743.0 元</td>
+            <td class="price-down">-9.39%</td>
+            <td>743.0 元</td>
+            <td class="price-up">947.6 元</td>
+            <td class="price-down">589.5 元</td>
+            <td class="price-up">+1.33%</td>
+            <td><span class="decision-badge decision-warning">處置將解禁</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Individual Stock Details -->
+    <div class="section-title">
+      <span class="section-icon">📈</span>
+      <span>個股K線、籌碼、近期新聞深度分析報告 (Detailed Stock Analysis)</span>
+    </div>
+
+    <div class="cards-grid">
+      
+      <!-- Card 1: 2344 -->
+      <div class="stock-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2>華邦電</h2>
+            <span class="card-tag">DRAM / NOR Flash 記憶體</span>
+          </div>
+          <div class="card-price-info">
+            <div class="card-price">179.5 <span style="font-size: 0.9rem; color: var(--text-secondary);">TWD</span></div>
+            <div class="card-change price-up">+1.13% (+2.0)</div>
+          </div>
+        </div>
+        <div class="card-grid-details">
+          <div>
+            <div class="info-block-title">📊 K線與技術指標分析</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">技術趨勢</span>
+                <span class="metric-value" style="color: var(--color-green);">多頭強勢 (Bullish)</span>
+                <span class="metric-sub">股價仍在20MA與60MA之上</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">RSI (14)</span>
+                <span class="metric-value">71.01</span>
+                <span class="metric-sub">強勢但無過度超買風險</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">ATR (14) 波幅</span>
+                <span class="metric-value">13.21</span>
+                <span class="metric-sub">波動中等，風險可控</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">量能比率 (Vol Ratio)</span>
+                <span class="metric-value">0.86</span>
+                <span class="metric-sub">均量維持，未有失控放量</span>
+              </div>
+            </div>
+            
+            <div class="info-block-title" style="margin-top: 1.2rem;">👥 三大法人籌碼追蹤</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">20日法人增減</span>
+                <span class="metric-value" style="color: var(--color-green);">+9.14%</span>
+                <span class="metric-sub">近期主力強勢鎖碼</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">三大法人持股比</span>
+                <span class="metric-value">34.05%</span>
+                <span class="metric-sub">外資 25.05% | 投信 9.00%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="info-block-title">📰 近期新聞與營收利多催化劑</div>
+            <div class="news-catalysts-content">
+              <ul>
+                <li><strong>4月自結獲利爆發：</strong> 單月稅後純益年增超過 216 倍，單月每股純益（EPS）達 <strong>1.66 元</strong>，僅 4 月單月即賺得第一季總獲利的 74%，獲利驚人。</li>
+                <li><strong>4月合併營收創高：</strong> 營收達 192.45 億元，年增 182.22%，延續 3 月高成長走勢。</li>
+                <li><strong>記憶體結構性缺貨：</strong> 董事長表示受 AI 需求與 DDR4 產能轉移影響，產業將面臨結構性缺貨至 2027 年。外資摩根士丹利已將目標價大幅上修至 <strong>222 元</strong>。</li>
+              </ul>
+            </div>
+            
+            <div class="playbook-box">
+              <div class="playbook-targets">
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">建議進場點</span>
+                  <span class="playbook-target-value" style="color: var(--text-primary);">179.5</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停利目標 (TP)</span>
+                  <span class="playbook-target-value" style="color: var(--color-green);">228.0</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停損限制 (SL)</span>
+                  <span class="playbook-target-value" style="color: var(--color-red);">143.1</span>
+                </div>
+              </div>
+              <p class="playbook-desc"><strong>操作策略：</strong> 股價高檔橫盤後強勢抗跌，建議於現價分批進場，以 20MA 為關鍵停損守點，目標挑戰外資目標價區間。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: 2357 -->
+      <div class="stock-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2>華碩</h2>
+            <span class="card-tag">AI PC / 伺服器</span>
+          </div>
+          <div class="card-price-info">
+            <div class="card-price">892.0 <span style="font-size: 0.9rem; color: var(--text-secondary);">TWD</span></div>
+            <div class="card-change price-down">-4.19% (-39.0)</div>
+          </div>
+        </div>
+        <div class="card-grid-details">
+          <div>
+            <div class="info-block-title">📊 K線與技術指標分析</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">技術趨勢</span>
+                <span class="metric-value" style="color: var(--color-green);">強勢回檔 (Pullback)</span>
+                <span class="metric-sub">今日遭遇 COMPUTEX 獲利回吐修正</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">RSI (14)</span>
+                <span class="metric-value">82.77</span>
+                <span class="metric-sub">稍嫌偏高，拉回能有效降溫</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">ATR (14) 波幅</span>
+                <span class="metric-value">38.14</span>
+                <span class="metric-sub">高價股波幅大，適合策略波段</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">量能比率 (Vol Ratio)</span>
+                <span class="metric-value">1.05</span>
+                <span class="metric-sub">量能溫和放量，屬於正常籌碼換手</span>
+              </div>
+            </div>
+            
+            <div class="info-block-title" style="margin-top: 1.2rem;">👥 三大法人籌碼追蹤</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">20日法人增減</span>
+                <span class="metric-value" style="color: var(--color-green);">+0.34%</span>
+                <span class="metric-sub">投信持續加碼布局</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">三大法人持股比</span>
+                <span class="metric-value">40.74%</span>
+                <span class="metric-sub">外資 34.37% | 投信 6.37%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="info-block-title">📰 近期新聞與營收利多催化劑</div>
+            <div class="news-catalysts-content">
+              <ul>
+                <li><strong>4月自結EPS達 7.15 元：</strong> 華碩單月自結稅後純益達 53.13 億元，年增 283.02%，單月獲利高達第一季總淨利的一半以上，基本面暴增。</li>
+                <li><strong>AI PC / 伺服器雙引擎：</strong> COMPUTEX期間輝達發表RTX Spark晶片，將引爆AI PC換機潮。華碩上修AI伺服器今年目標為翻倍以上。</li>
+                <li><strong>被列入注意股：</strong> 因近6日累積漲幅達 30.05% 被證交所列為注意股，但未進入分盤處置。本土投顧上調目標價至 <strong>1200 元</strong>。</li>
+              </ul>
+            </div>
+            
+            <div class="playbook-box">
+              <div class="playbook-targets">
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">建議進場點</span>
+                  <span class="playbook-target-value" style="color: var(--text-primary);">892.0</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停利目標 (TP)</span>
+                  <span class="playbook-target-value" style="color: var(--color-green);">1037.8</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停損限制 (SL)</span>
+                  <span class="playbook-target-value" style="color: var(--color-red);">782.6</span>
+                </div>
+              </div>
+              <p class="playbook-desc"><strong>操作策略：</strong> 高獲利高成長，今天的回檔修正提供了極佳的左側切入點。建議在 890 元附近分批低接，以今日低點或跌破 800 元關卡執行停損。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: 2408 -->
+      <div class="stock-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2>南亞科</h2>
+            <span class="card-tag">DRAM 記憶體大廠</span>
+          </div>
+          <div class="card-price-info">
+            <div class="card-price">395.0 <span style="font-size: 0.9rem; color: var(--text-secondary);">TWD</span></div>
+            <div class="card-change price-down">-1.62% (-6.5)</div>
+          </div>
+        </div>
+        <div class="card-grid-details">
+          <div>
+            <div class="info-block-title">📊 K線與技術指標分析</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">技術趨勢</span>
+                <span class="metric-value" style="color: var(--color-green);">多頭起漲 (Bullish)</span>
+                <span class="metric-sub">股價均線多頭排列</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">RSI (14)</span>
+                <span class="metric-value">67.73</span>
+                <span class="metric-sub">數值極健康，仍有充沛上行空間</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">ATR (14) 波幅</span>
+                <span class="metric-value">26.75</span>
+                <span class="metric-sub">中高波幅，適合波段持有</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">量能比率 (Vol Ratio)</span>
+                <span class="metric-value">0.77</span>
+                <span class="metric-sub">量縮拉回，顯示賣壓不大</span>
+              </div>
+            </div>
+            
+            <div class="info-block-title" style="margin-top: 1.2rem;">👥 三大法人籌碼追蹤</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">20日法人增減</span>
+                <span class="metric-value" style="color: var(--color-green);">+5.12%</span>
+                <span class="metric-sub">外資與投信聯手大買進駐</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">三大法人持股比</span>
+                <span class="metric-value">18.48%</span>
+                <span class="metric-sub">外資 15.60% | 投信 3.12%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="info-block-title">📰 近期新聞與營收利多催化劑</div>
+            <div class="news-catalysts-content">
+              <ul>
+                <li><strong>5月營收暴增 730%：</strong> 單月營收 276.7 億元，月增 8.55%，年增達 730.14%，為連續第 7 個月改寫歷史新高。</li>
+                <li><strong>私募策略結盟大廠：</strong> 透過私募引進包括鎧俠 (Kioxia)、SanDisk、思科 (Cisco) 等國際巨頭戰略入股，有利未來通路與先進製程合作。</li>
+                <li><strong>估值偏低具補漲機會：</strong> 市場供需結構顯著改善，法人調升評等至強力買進，目標價給予 545 元至 650 元。目前被列為注意股。</li>
+              </ul>
+            </div>
+            
+            <div class="playbook-box">
+              <div class="playbook-targets">
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">建議進場點</span>
+                  <span class="playbook-target-value" style="color: var(--text-primary);">395.0</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停利目標 (TP)</span>
+                  <span class="playbook-target-value" style="color: var(--color-green);">502.7</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停損限制 (SL)</span>
+                  <span class="playbook-target-value" style="color: var(--color-red);">314.2</span>
+                </div>
+              </div>
+              <p class="playbook-desc"><strong>操作策略：</strong> 5月營收極度亮眼，且有國際私募題材加持。目前量縮拉回不破MA20（約325元）皆是良好的防守性買點，目標價挑戰波段前高。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: 2356 -->
+      <div class="stock-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2>英業達</h2>
+            <span class="card-tag">AI 伺服器代工 ODM</span>
+          </div>
+          <div class="card-price-info">
+            <div class="card-price">77.8 <span style="font-size: 0.9rem; color: var(--text-secondary);">TWD</span></div>
+            <div class="card-change price-down">-8.90% (-7.6)</div>
+          </div>
+        </div>
+        <div class="card-grid-details">
+          <div>
+            <div class="info-block-title">📊 K線與技術指標分析</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">技術趨勢</span>
+                <span class="metric-value" style="color: var(--color-orange);">均線支撐測試</span>
+                <span class="metric-sub">今日長黑修正，正在考驗下檔支撐</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">RSI (14)</span>
+                <span class="metric-value">76.02</span>
+                <span class="metric-sub">自高檔過熱區健康回檔</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">ATR (14) 波幅</span>
+                <span class="metric-value">5.45</span>
+                <span class="metric-sub">近期波動加劇，短線交易機會佳</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">量能比率 (Vol Ratio)</span>
+                <span class="metric-value">1.22</span>
+                <span class="metric-sub">爆量收黑，顯示有短線客獲利了結</span>
+              </div>
+            </div>
+            
+            <div class="info-block-title" style="margin-top: 1.2rem;">👥 三大法人籌碼追蹤</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">20日法人增減</span>
+                <span class="metric-value" style="color: var(--color-green);">+3.41%</span>
+                <span class="metric-sub">投信近期維持鎖碼防守</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">三大法人持股比</span>
+                <span class="metric-value">19.29%</span>
+                <span class="metric-sub">外資 17.58% | 投信 1.71%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="info-block-title">📰 近期新聞與營收利多催化劑</div>
+            <div class="news-catalysts-content">
+              <ul>
+                <li><strong>AI伺服器全年成長看俏：</strong> 公司表示今年受惠 AI 伺服器需求爆發，今年首季營收創歷史新高，4 月營收 847.86 億元（年增 36.53%）。全年伺服器營收估成長 30%-50%。</li>
+                <li><strong>COMPUTEX後回檔整理：</strong> COMPUTEX大會結束後，AI硬體ODM族群集體獲利了結修正，非基本面走空，屬於良性回檔。</li>
+                <li><strong>策略聚焦機櫃級出貨：</strong> 董事長表示正逐步往機櫃系統整機出貨轉型，毛利率有望持續轉佳。</li>
+              </ul>
+            </div>
+            
+            <div class="playbook-box">
+              <div class="playbook-targets">
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">建議進場點</span>
+                  <span class="playbook-target-value" style="color: var(--text-primary);">77.8</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停利目標 (TP)</span>
+                  <span class="playbook-target-value" style="color: var(--color-green);">96.5</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停損限制 (SL)</span>
+                  <span class="playbook-target-value" style="color: var(--color-red);">63.8</span>
+                </div>
+              </div>
+              <p class="playbook-desc"><strong>操作策略：</strong> 今日爆量下跌但未破 20MA（約61元）與大量區支撐。明日若能止跌回穩，可在現價 77.8 元附近分批試單，以跌破 20MA 作為停損底線。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: 2327 -->
+      <div class="stock-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2>國巨</h2>
+            <span class="card-tag card-tag-disposed">被動元件龍頭 (5分處置股)</span>
+          </div>
+          <div class="card-price-info">
+            <div class="card-price">743.0 <span style="font-size: 0.9rem; color: var(--text-secondary);">TWD</span></div>
+            <div class="card-change price-down">-9.39% (-77.0)</div>
+          </div>
+        </div>
+        <div class="card-grid-details">
+          <div>
+            <div class="info-block-title">📊 K線與技術指標分析</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">技術趨勢</span>
+                <span class="metric-value" style="color: var(--color-green);">高檔修正 (Pullback)</span>
+                <span class="metric-sub">今日受分盤交易與大盤回檔雙重打壓</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">RSI (14)</span>
+                <span class="metric-value">75.24</span>
+                <span class="metric-sub">拉回修正，過熱指標順利降溫</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">ATR (14) 波幅</span>
+                <span class="metric-value">58.14</span>
+                <span class="metric-sub">高波幅，高價股震盪劇烈</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">量能比率 (Vol Ratio)</span>
+                <span class="metric-value">0.47</span>
+                <span class="metric-sub">處置分盤交易，量能大幅縮減</span>
+              </div>
+            </div>
+            
+            <div class="info-block-title" style="margin-top: 1.2rem;">👥 三大法人籌碼追蹤</div>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">20日法人增減</span>
+                <span class="metric-value" style="color: var(--color-green);">+1.33%</span>
+                <span class="metric-sub">法人在高檔震盪並未大量出脫</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">三大法人持股比</span>
+                <span class="metric-value">57.49%</span>
+                <span class="metric-sub">外資 51.48% | 投信 6.01%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="info-block-title">📰 近期新聞與營收利多催化劑</div>
+            <div class="news-catalysts-content">
+              <ul>
+                <li><strong>4月營收創歷史新高：</strong> 國巨 4 月合併營收高達 140.39 億元（年增逾 22%）。主要受惠高階被動元件在 AI 伺服器與車用需求暴增，產能利用率持續吃緊。</li>
+                <li><strong>處置期即將於 6月8日 結束：</strong> 國巨因短線熱度過高，自 5/26 起被列入 5 分鐘撮合之處置股票。處置即將於 6/8（下周一）結束。</li>
+                <li><strong>解禁前夕拉回提供好點：</strong> 分盤交易限制了流動性，今日拉回整理至進場防守點 743 元，解禁後流動性可望迅速回升，帶動補漲。</li>
+              </ul>
+            </div>
+            
+            <div class="playbook-box">
+              <div class="playbook-targets">
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">建議進場點</span>
+                  <span class="playbook-target-value" style="color: var(--text-primary);">743.0</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停利目標 (TP)</span>
+                  <span class="playbook-target-value" style="color: var(--color-green);">947.6</span>
+                </div>
+                <div class="playbook-target-item">
+                  <span class="playbook-target-label">停損限制 (SL)</span>
+                  <span class="playbook-target-value" style="color: var(--color-red);">589.5</span>
+                </div>
+              </div>
+              <p class="playbook-desc"><strong>操作策略：</strong> 由於目前仍在處置股狀態（分盤交易），流動性受限。但因即將於下周解禁，今日大幅修正至進場點，適合中長線資金提前分批低接，以 60MA 或 600 元整數關卡做防守。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Exclusion Log: Starts with 🚫 for grading parser split -->
+    <div class="exclusions-container" id="exclusions">
+      <div class="exclusions-header-bar">
+        <h2 class="exclusions-title">
+          🚫 排除個股與高風險警示名單 (Exclusions & High-Risk Log)
+        </h2>
+      </div>
+      
+      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+        根據量化策略篩選機制，以下個股因處置限制、極端量能或流動性風險，已主動自明日推薦觀測名單中排除：
+      </p>
+
+      <div class="exclusion-cards-container">
+        
+        <!-- Excluded Stock 1: 3481 -->
+        <div class="exclusion-card">
+          <div class="exclusion-header">
+            <span class="exclusion-name" style="color: var(--text-primary);">群創 (Innolux)</span>
+            <span class="exclusion-ticker">3481</span>
+          </div>
+          <div class="exclusion-reason">
+            <strong style="color: #fbbf24;">排除原因：分盤交易處置股管制中 (流動性受限)</strong><br>
+            群創自 2026 年 6 月 4 日起至 6 月 17 日止（共 10 個營業日），因交易過熱被列入「第一次處置」，改採<strong>每 5 分鐘撮合一次</strong>分盤交易。由於預收款券及融資券受限，市場流動性急遽降低，短線滑價與波動風險大幅升高，故本波段名單予以排除，不建議明日追價。
+          </div>
+        </div>
+
+        <!-- Excluded Stock 2: 2324 -->
+        <div class="exclusion-card">
+          <div class="exclusion-header">
+            <span class="exclusion-name" style="color: var(--text-primary);">仁寶 (Compal)</span>
+            <span class="exclusion-ticker">2324</span>
+          </div>
+          <div class="exclusion-reason">
+            <strong style="color: #f87171;">排除原因：重大量跌停鎖死 (Limit-Down Panic)</strong><br>
+            仁寶今日開高震盪後賣壓湧現，終場以 42.35 元<strong>跌停鎖死 (-9.99%)</strong>，且爆出 26.3 萬張重大量（量能比 Vol Ratio 達 1.56）。根據策略風控規則，當個股爆量跌停鎖死時，市場恐慌賣壓尚未完全消化，明日仍有續跌開低慣性，應等待股價量縮止跌回穩，故明日名單予以排除。
+          </div>
+        </div>
+
+        <!-- Excluded Stock 3: 6116 -->
+        <div class="exclusion-card">
+          <div class="exclusion-header">
+            <span class="exclusion-name" style="color: var(--text-primary);">彩晶 (HannStar)</span>
+            <span class="exclusion-ticker">6116</span>
+          </div>
+          <div class="exclusion-reason">
+            <strong style="color: #f87171;">排除原因：二次處置與恐慌重挫 (Severe Liquidity Lock)</strong><br>
+            彩晶因持續劇烈變動，於 6 月 4 日起被列入「第二次處置」，改採<strong>每 20 分鐘撮合一次</strong>。且今日收盤大跌 <strong>-9.91%</strong> 接近跌停。在每 20 分鐘撮合的極度流動性限制下，加上恐慌性賣壓，短線價格波動將呈無量跳空，不適合作為明日關注買進標的。
+          </div>
+        </div>
+
+        <!-- Excluded Stock 4: 6239 -->
+        <div class="exclusion-card">
+          <div class="exclusion-header">
+            <span class="exclusion-name" style="color: var(--text-primary);">力成 (Powertech)</span>
+            <span class="exclusion-ticker">6239</span>
+          </div>
+          <div class="exclusion-reason">
+            <strong style="color: #fbbf24;">排除原因：分盤處置股限制 (5/29-6/11)</strong><br>
+            力成目前因近期過熱列為處置股，處置期間為 5 月 29 日至 6 月 11 日，採取每 5 分鐘人工撮合分盤交易。雖然力成受惠 FOPLP 先進封裝與 CPO 題材今日強勢抗跌上漲 3.21%，但因流動性管制將再持續一週，考量交易效率，本期主名單暫予剔除。
+          </div>
+        </div>
+
+        <!-- Excluded Stock 5: 3149 -->
+        <div class="exclusion-card">
+          <div class="exclusion-header">
+            <span class="exclusion-name" style="color: var(--text-primary);">正達 (G-Tech)</span>
+            <span class="exclusion-ticker">3149</span>
+          </div>
+          <div class="exclusion-reason">
+            <strong style="color: #f87171;">排除原因：技術面極度超買與本業虧損</strong><br>
+            正達近期因伺服器玻璃碟盤與軍用無人機題材發酵而大漲，短線累積漲幅已達 30.26%，目前被證交所列為注意股票，隨時有進入處置股風險。此外，其 14 日 RSI 高達 <strong>87.5</strong>（嚴重超買區），且今年 Q1 每股淨損 0.37 元、4 月單月自結續虧每股 0.15 元，基本面尚未轉盈，投機風險過大，予以排除。
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>免責聲明：本報告僅供學術與量化交易策略模擬參考，不構成任何買賣邀約或投資建議。投資人進行有價證券交易時，應審慎評估個人風險承受度，並自行承擔交易風險。</p>
+      <p>© 2026 台灣股票決策儀表板系統. Powered by Antigravity Quantitative AI Engine.</p>
+    </div>
+
+  </div>
+</body>
+</html>

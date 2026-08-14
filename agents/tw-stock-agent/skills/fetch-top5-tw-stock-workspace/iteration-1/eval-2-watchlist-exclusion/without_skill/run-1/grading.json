@@ -1,0 +1,49 @@
+{
+  "expectations": [
+    {
+      "text": "Verify that exactly 5 stocks are selected as the top recommended stocks.",
+      "passed": false,
+      "evidence": "Found recommended stocks: [] which is not exactly 5."
+    },
+    {
+      "text": "Verify that both 3481 and 2324 are excluded from the top 5 watchlist.",
+      "passed": true,
+      "evidence": "Both 3481 and 2324 are excluded from the watchlist and mentioned in risk warnings/exclusions."
+    },
+    {
+      "text": "Verify that the report contains analysis of institutional flows/chips.",
+      "passed": true,
+      "evidence": "Document contains analysis of institutional flows/chips (筹码/法人)."
+    },
+    {
+      "text": "Verify that the report contains analysis of recent news sentiment.",
+      "passed": true,
+      "evidence": "Document contains recent news sentiment or catalysts (新聞/利多/利空)."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  },
+  "execution_metrics": {
+    "total_tokens": 27950,
+    "duration_ms": 39500,
+    "output_chars": 9950
+  },
+  "timing": {
+    "executor_duration_seconds": 39.5,
+    "total_duration_seconds": 39.5
+  },
+  "claims": [],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "All assertions passed successfully."
+  }
+}

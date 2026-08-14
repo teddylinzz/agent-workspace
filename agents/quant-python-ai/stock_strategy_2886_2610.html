@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>2886 / 2610 / 2892 買進策略紀錄</title>
+  <style>
+    :root {
+      --paper: #f7f4ec;
+      --panel: #fffdf8;
+      --ink: #1d2520;
+      --muted: #66736b;
+      --line: #ded6c8;
+      --line-strong: #bdb09e;
+      --green: #155d4c;
+      --green-soft: #e4f0eb;
+      --red: #a7343c;
+      --red-soft: #f6e7e7;
+      --amber: #b27b29;
+      --amber-soft: #f3e6cf;
+      --blue: #2c5e86;
+      --blue-soft: #e1edf5;
+      --shadow: 0 22px 54px rgba(43, 49, 43, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(21, 93, 76, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 93, 76, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 12% 0%, rgba(178, 123, 41, 0.14), transparent 28rem),
+        var(--paper);
+      background-size: 34px 34px, 34px 34px, auto, auto;
+      font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--green);
+      font-weight: 700;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .masthead {
+      min-height: 220px;
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: end;
+      color: #fffdf8;
+      background:
+        linear-gradient(135deg, rgba(21, 93, 76, 0.98), rgba(32, 68, 88, 0.95)),
+        var(--green);
+      border-radius: 8px 34px 8px 34px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .masthead::after {
+      content: "2886 2610 2892";
+      position: absolute;
+      right: -20px;
+      top: -52px;
+      color: rgba(255, 255, 255, 0.065);
+      font-size: clamp(4rem, 13vw, 9.5rem);
+      font-weight: 900;
+      letter-spacing: 0;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #f0cf93;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .masthead p {
+      margin: 16px 0 0;
+      max-width: 680px;
+      color: rgba(255, 253, 248, 0.82);
+      font-size: 1rem;
+    }
+
+    .snapshot {
+      position: relative;
+      z-index: 1;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .snapshot dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px 16px;
+      font-size: 0.92rem;
+    }
+
+    .snapshot dt {
+      color: rgba(255, 253, 248, 0.66);
+    }
+
+    .snapshot dd {
+      margin: 0;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 248, 0.92);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(44, 51, 46, 0.07);
+    }
+
+    .stock-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stock-head h2 {
+      margin: 0;
+      font-size: 1.7rem;
+      letter-spacing: 0;
+    }
+
+    .stock-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .badge.buy {
+      color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .badge.wait {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .badge.risk {
+      color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .metrics {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      min-height: 88px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: #fbf8f0;
+      border-radius: 8px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .note {
+      margin: 16px 0 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--green);
+      background: var(--green-soft);
+      border-radius: 0 8px 8px 0;
+      color: #24483d;
+      font-weight: 700;
+    }
+
+    .warning {
+      border-left-color: var(--amber);
+      background: var(--amber-soft);
+      color: #644719;
+    }
+
+    .danger {
+      border-left-color: var(--red);
+      background: var(--red-soft);
+      color: #6d252b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: #385048;
+      background: #eee7da;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .price-map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .zone {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .zone span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .zone strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.08rem;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .step {
+      position: relative;
+      padding: 15px;
+      min-height: 124px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .step b {
+      display: block;
+      color: var(--green);
+      font-size: 0.84rem;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .source-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .source-list li + li {
+      margin-top: 6px;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      padding: 18px 20px;
+      color: #31453d;
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 253, 248, 0.78);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .masthead,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics,
+      .price-map,
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .shell {
+        width: min(100% - 22px, 1180px);
+        padding-top: 12px;
+      }
+
+      .masthead,
+      .card {
+        padding: 20px;
+      }
+
+      .metrics,
+      .price-map,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .stock-head {
+        display: block;
+      }
+
+      .badge {
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">TAIWAN EQUITY ACTION NOTE</p>
+        <h1>2886 / 2610 / 2892 買進策略紀錄</h1>
+        <p>以盤中行情、日線技術面、法人買賣超、月營收與股利題材整理。此頁用來記錄操作計畫，不代表保證獲利或正式投資建議。</p>
+      </div>
+      <aside class="snapshot" aria-label="資料截點">
+        <dl>
+          <dt>資料截點</dt>
+          <dd>2026-06-30 09:30 CST</dd>
+          <dt>行情口徑</dt>
+          <dd>盤中 Yahoo 日線</dd>
+          <dt>法人資料</dt>
+          <dd>TWSE 2026-06-29</dd>
+          <dt>月營收資料</dt>
+          <dd>2026 年 5 月</dd>
+        </dl>
+      </aside>
+    </header>
+
+    <section class="section">
+      <h2 class="section-title">總結</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="stock-head">
+            <div>
+              <h2>2886 兆豐金</h2>
+              <p>金融股、配息穩定型。適合分批布局，不適合追高一次買滿。</p>
+            </div>
+            <span class="badge buy">可小買</span>
+          </div>
+          <p class="note">結論：今天可以先買 30% 部位，但只在 45.3-45.8 或守穩 45.8 後執行；47 元以上不追價。</p>
+        </article>
+
+        <article class="card">
+          <div class="stock-head">
+            <div>
+              <h2>2610 華航</h2>
+              <p>航空股、營收動能強但波動大。除息題材接近，短線已偏熱。</p>
+            </div>
+            <span class="badge wait">等回測</span>
+          </div>
+          <p class="note warning">結論：可以觀察，但今天不建議追價。若一定要買，先等 22.6-23.0，或等放量突破 24.75 後再用短線單。</p>
+        </article>
+
+        <article class="card">
+          <div class="stock-head">
+            <div>
+              <h2>2892 第一金</h2>
+              <p>金融股、營收與獲利改善明確，投信買盤強；短線位置偏高。</p>
+            </div>
+            <span class="badge buy">等回測小買</span>
+          </div>
+          <p class="note">結論：可列入金融股分批名單，但 33 元附近不追。第一批等 32.1-32.5，第二批等 31.2-31.7。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">2886 兆豐金策略</h2>
+      <article class="card">
+        <div class="metrics">
+          <div class="metric"><span>盤中價格</span><strong>46.10</strong></div>
+          <div class="metric"><span>前日收盤</span><strong>46.20</strong></div>
+          <div class="metric"><span>RSI 14</span><strong>68.8</strong></div>
+          <div class="metric"><span>20 日漲幅</span><strong>+11.22%</strong></div>
+          <div class="metric"><span>MA5 / MA20</span><strong>45.93 / 44.05</strong></div>
+          <div class="metric"><span>20 日高低</span><strong>47.40 / 40.80</strong></div>
+          <div class="metric"><span>5 月營收年增</span><strong>+25.55%</strong></div>
+          <div class="metric"><span>現金股利</span><strong>1.75 元</strong></div>
+        </div>
+
+        <div class="price-map">
+          <div class="zone">
+            <span>第一批</span>
+            <strong>45.3-45.8</strong>
+            <p>買預計部位 30%。若盤中守住 45.8 且量沒有異常放大，可執行。</p>
+          </div>
+          <div class="zone">
+            <span>第二批</span>
+            <strong>44.5-45.0</strong>
+            <p>回測前波整理區，買 30%-40%。這是比較合理的加碼帶。</p>
+          </div>
+          <div class="zone">
+            <span>第三批</span>
+            <strong>43.8-44.2</strong>
+            <p>靠近 20 日線支撐，若基本面與法人未惡化，補足長線部位。</p>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>觀察</th>
+              <th>操作含義</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>技術面</td>
+              <td>股價高於 MA5、MA20、MA60，RSI 接近 70。</td>
+              <td>趨勢偏多，但高檔不追。用回測買，不用市價買。</td>
+            </tr>
+            <tr>
+              <td>籌碼面</td>
+              <td>2026-06-29 三大法人合計買超約 3,052 張；外資賣超約 1,455 張，投信買超約 3,954 張。</td>
+              <td>投信支撐仍在，但外資沒有同步站買方，追價風險較高。</td>
+            </tr>
+            <tr>
+              <td>基本面</td>
+              <td>2026 年 5 月營收 83.73 億元，年增 25.55%；前 5 月累計年增 24.06%。</td>
+              <td>基本面支撐配息與估值，但短線已先反映一段。</td>
+            </tr>
+            <tr>
+              <td>風控</td>
+              <td>跌破 43.5 且收不回，代表短線結構轉弱。</td>
+              <td>停止加碼，短線單停損；長線單降低加碼速度。</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">2610 華航確認與策略</h2>
+      <article class="card">
+        <div class="metrics">
+          <div class="metric"><span>盤中價格</span><strong>23.35</strong></div>
+          <div class="metric"><span>前日收盤</span><strong>23.10</strong></div>
+          <div class="metric"><span>RSI 14</span><strong>69.9</strong></div>
+          <div class="metric"><span>20 日漲幅</span><strong>+19.44%</strong></div>
+          <div class="metric"><span>MA5 / MA20</span><strong>23.42 / 21.24</strong></div>
+          <div class="metric"><span>20 日高低</span><strong>24.75 / 18.90</strong></div>
+          <div class="metric"><span>5 月營收年增</span><strong>+27.73%</strong></div>
+          <div class="metric"><span>2026 除息</span><strong>7/10</strong></div>
+        </div>
+
+        <p class="note warning">2610 的重點不是「可不可以買」，而是「不要在短線過熱時買太大」。營收與除息題材偏多，但股價離月線與季線已拉開，回測再買的勝率較合理。</p>
+
+        <div class="price-map">
+          <div class="zone">
+            <span>保守第一批</span>
+            <strong>22.6-23.0</strong>
+            <p>靠近 10 日線與前日低點區，買預計部位 25%-30%。</p>
+          </div>
+          <div class="zone">
+            <span>較佳第二批</span>
+            <strong>21.6-22.1</strong>
+            <p>回測漲幅中段，買 30%-40%。這區比 23 元上方更合理。</p>
+          </div>
+          <div class="zone">
+            <span>深回測第三批</span>
+            <strong>20.8-21.3</strong>
+            <p>靠近 20 日線。若營收與油價、匯率條件未轉差，可補足。</p>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>情境</th>
+              <th>條件</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>追蹤買進</td>
+              <td>10:00 後仍守住 23.0，且不爆大量長黑。</td>
+              <td>只買小部位，避免除息前題材退潮造成回落。</td>
+            </tr>
+            <tr>
+              <td>回測買進</td>
+              <td>回到 22.6-23.0 或 21.6-22.1。</td>
+              <td>用限價單分批買，這是主策略。</td>
+            </tr>
+            <tr>
+              <td>突破買進</td>
+              <td>放量站上 24.75 且隔日不跌回。</td>
+              <td>可做短線突破單，但停損要抓緊，跌回 23.8 就撤。</td>
+            </tr>
+            <tr>
+              <td>停損線</td>
+              <td>跌破 21.6 且收不回，或跌破 20.8。</td>
+              <td>短線單停損；中線單等 20 日線重新站回再評估。</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="note danger">風險：航空股受油價、匯率、客運票價、貨運景氣、地緣政治與除息前後資金變化影響，波動通常高於金融股。不建議把 2610 當成 2886 一樣的低波動存股部位。</p>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">2892 第一金策略</h2>
+      <article class="card">
+        <div class="metrics">
+          <div class="metric"><span>盤中價格</span><strong>32.80</strong></div>
+          <div class="metric"><span>前日收盤</span><strong>33.00</strong></div>
+          <div class="metric"><span>RSI 14</span><strong>70.2</strong></div>
+          <div class="metric"><span>20 日漲幅</span><strong>+18.20%</strong></div>
+          <div class="metric"><span>MA5 / MA20</span><strong>32.67 / 31.21</strong></div>
+          <div class="metric"><span>20 日高低</span><strong>33.25 / 27.70</strong></div>
+          <div class="metric"><span>5 月營收年增</span><strong>+36.70%</strong></div>
+          <div class="metric"><span>2026 現金股利</span><strong>1.30 元</strong></div>
+        </div>
+
+        <p class="note">第一金與兆豐金同屬金融股，但 2892 近期漲幅更大，RSI 已到 70 附近。基本面可以支撐中線觀察，短線買點要更嚴格。</p>
+
+        <div class="price-map">
+          <div class="zone">
+            <span>第一批</span>
+            <strong>32.1-32.5</strong>
+            <p>靠近 10 日線與近期整理帶，買預計部位 25%-30%。</p>
+          </div>
+          <div class="zone">
+            <span>第二批</span>
+            <strong>31.2-31.7</strong>
+            <p>靠近 20 日線支撐，若投信未轉賣，可買 30%-40%。</p>
+          </div>
+          <div class="zone">
+            <span>第三批</span>
+            <strong>30.2-30.8</strong>
+            <p>深回測區，只在大盤與金融股未轉弱時承接。</p>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>觀察</th>
+              <th>操作含義</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>技術面</td>
+              <td>股價高於 MA5、MA20、MA60，20 日漲幅約 18.2%，RSI 約 70.2。</td>
+              <td>趨勢偏多但短線偏熱。33.2 以上不追，回測才分批。</td>
+            </tr>
+            <tr>
+              <td>籌碼面</td>
+              <td>2026-06-29 三大法人合計買超約 8,786 張；外資賣超約 6,827 張，投信買超約 15,257 張。</td>
+              <td>投信支撐很強，但外資反向賣超，若投信買盤降溫會有回測壓力。</td>
+            </tr>
+            <tr>
+              <td>基本面</td>
+              <td>2026 年 5 月營收 73.05 億元，年增 36.70%；前 5 月累計年增 25.38%。2026 Q1 EPS 0.57 元。</td>
+              <td>營運動能優於一般金融股，但股價已提前反映一段，估值安全邊際要靠買點控制。</td>
+            </tr>
+            <tr>
+              <td>風控</td>
+              <td>跌破 31.0 且收不回，代表 20 日線支撐失守。</td>
+              <td>停止加碼；短線單可先出場，等重新站回 31.7 再評估。</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">今日執行時間點</h2>
+      <div class="card">
+        <div class="timeline">
+          <div class="step">
+            <b>09:00-09:30</b>
+            <p>不急著下單，先看開盤跳空與第一波量價。</p>
+          </div>
+          <div class="step">
+            <b>10:00-11:00</b>
+            <p>2886 若守 45.8 可買小批；2610 若未回到 23 以下仍先等。</p>
+          </div>
+          <div class="step">
+            <b>12:30-13:10</b>
+            <p>確認是否有尾盤拉抬或倒貨。金融股看法人延續，航空股看長上影。</p>
+          </div>
+          <div class="step">
+            <b>13:20-13:30</b>
+            <p>若接近支撐且未破，才用限價單補小批；不要用市價單追尾盤。</p>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>時間點</th>
+              <th>2886 兆豐金</th>
+              <th>2610 華航</th>
+              <th>2892 第一金</th>
+              <th>下單方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>09:00-09:30<br>開盤觀察</td>
+              <td>若開在 46.5 以上不追；若壓回 45.8 附近且未破，可先掛低接單。</td>
+              <td>若開高在 23.6 以上不追；若跌回 23.0 以下才開始觀察是否承接。</td>
+              <td>若在 33.2 附近不追；若壓回 32.5 附近且未破，可列入第一批候選。</td>
+              <td>只觀察或掛低於市價的限價單，不用市價單。</td>
+            </tr>
+            <tr>
+              <td>09:30-10:30<br>第一個決策窗</td>
+              <td>守住 45.8 且成交量沒有放大下殺，買第一批 30%；若跌破 45.5，等 44.8-45.0。</td>
+              <td>回到 22.6-23.0 且不再破低，買第一批 25%-30%；若仍在 23.3 以上，繼續等。</td>
+              <td>回到 32.1-32.5 且不再破低，買第一批 25%-30%；若仍在 33.0 附近，繼續等。</td>
+              <td>分批限價。成交後不要立刻加碼，至少等下一個時間窗。</td>
+            </tr>
+            <tr>
+              <td>10:30-11:30<br>確認承接</td>
+              <td>若買進後站回 46.2，持有；若跌向 44.5-45.0，才考慮第二批。</td>
+              <td>若站回 23.3 但量縮，先不追；若拉回 22.6-23.0 後轉強，可補小批。</td>
+              <td>若站回 32.8 但量縮，先不追；若回測 31.7-32.1 後轉強，可補小批。</td>
+              <td>只在支撐帶買，不因盤中紅 K 追價。</td>
+            </tr>
+            <tr>
+              <td>12:30-13:10<br>午盤後檢查</td>
+              <td>若仍在 45.8-46.2 之間整理，維持第一批；若跌破 45.5，等尾盤確認。</td>
+              <td>若出現長上影或跌破 22.6，暫停買進；若守 23.0 且量能穩定，可保留觀察。</td>
+              <td>若跌破 32.1，暫停買進；若守 32.5 且量能穩定，可保留第一批。</td>
+              <td>避免午盤流動性較薄時追價，改用掛單。</td>
+            </tr>
+            <tr>
+              <td>13:10-13:30<br>尾盤執行</td>
+              <td>收盤前站上 46.2 可留倉；若收在 45.5 以下，不加碼，隔日等 44.5-45.0。</td>
+              <td>收盤前站不上 23.3 不追；若收破 22.6，取消今日買進計畫。</td>
+              <td>收盤前站上 32.8 可留倉；若收破 32.1，不加碼，隔日等 31.2-31.7。</td>
+              <td>尾盤只做確認單。若價格離支撐太遠，寧可不成交。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">資料來源</h2>
+      <div class="card">
+        <ul class="source-list">
+          <li>Yahoo Finance chart API：盤中日線價格、均線、RSI 與 ATR 計算基礎。</li>
+          <li><a href="https://www.twse.com.tw/rwd/zh/fund/T86" target="_blank" rel="noopener">臺灣證券交易所 T86 三大法人買賣超</a>：2026-06-29 法人資料。</li>
+          <li><a href="https://openapi.twse.com.tw/v1/opendata/t187ap05_L" target="_blank" rel="noopener">臺灣證券交易所公開資訊 OpenAPI 月營收</a>：2026 年 5 月營收資料。</li>
+          <li><a href="https://www.megaholdings.com.tw/tc/stock.aspx" target="_blank" rel="noopener">兆豐金控股務年度行事曆</a>：2886 股利資料。</li>
+          <li><a href="https://www.wantgoo.com/stock/2610/dividend-policy/ex-dividend" target="_blank" rel="noopener">玩股網華航股利政策</a>：2610 現金股利、除息日與發放日。</li>
+          <li><a href="https://news.cnyes.com/news/id/6494146" target="_blank" rel="noopener">鉅亨網華航 2026 年 5 月營收速報</a>：2610 營收動能與近月營收描述。</li>
+          <li><a href="https://news.cnyes.com/news/id/6497369" target="_blank" rel="noopener">鉅亨網第一金 2026 年 5 月營收速報</a>：2892 營收動能與近 5 日籌碼描述。</li>
+          <li><a href="https://statementdog.com/analysis/2892/dividend-policy" target="_blank" rel="noopener">財報狗第一金股利政策</a>：2892 2026 公告現金股利資料。</li>
+          <li><a href="https://superpy.kgieworld.com.tw/kgipythonapi/stockInfo/finance/eps?stockCode=2892" target="_blank" rel="noopener">凱基證券第一金 EPS</a>：2892 2026 Q1 EPS 與歷史 EPS。</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footer-note">紀錄說明：本頁為 2026-06-30 盤中策略紀錄。台股行情與法人資料會更新，若要下單，請以券商即時報價、當日收盤資訊與自身風險承受度為準。</p>
+  </main>
+</body>
+</html>

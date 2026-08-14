@@ -243,70 +243,82 @@ const CLASSES = [
   {
     id: "scholar",
     name: "The Scholar",
+    zhName: "學者 (The Scholar)",
     subtitle: "Seeker of Etymology",
+    zhSubtitle: "詞源探索者",
     icon: "🎓",
     hp: 38,
     sparks: 5,
     ink: 10,
     relic: "prism",
     desc: "Starts with +2 Sparks and the Meaning Prism. Clues remove 2 wrong answers.",
+    zhDesc: "初始火花 +2，自帶「詞義稜鏡」。提示功能額外排除 2 個錯誤選項。",
     quote: "Every word is an open book."
   },
   {
     id: "bard",
     name: "The Bard",
+    zhName: "詩人 (The Bard)",
     subtitle: "Rhythmic Master",
+    zhSubtitle: "節奏大師",
     icon: "🪕",
     hp: 42,
     sparks: 3,
     ink: 15,
     relic: "ember",
     desc: "Streaks heal resolve and deal +40% combo power. Starts with Ember Vial.",
+    zhDesc: "連擊持續恢復意志生命，並獲得 +40% 連擊傷害加成。自帶「餘溫小瓶」。",
     quote: "Language is music in disguise."
   },
   {
     id: "duelist",
     name: "The Duelist",
+    zhName: "決鬥者 (The Duelist)",
     subtitle: "Blade of Wit",
+    zhSubtitle: "直覺之刃",
     icon: "⚔️",
     hp: 40,
     sparks: 3,
     ink: 0,
     relic: "needle",
     desc: "Longer Quick Wit window (+1.5s) and deals massive opening burst damage.",
+    zhDesc: "急速直覺判定時間延長 (+1.5s)，戰鬥首回合造成額外爆擊傷害。自帶「指針」。",
     quote: "Cut through confusion with razor wit."
   },
   {
     id: "cartographer",
     name: "The Cartographer",
+    zhName: "製圖師 (The Cartographer)",
     subtitle: "Uncharted Explorer",
+    zhSubtitle: "荒野探索者",
     icon: "🧭",
     hp: 50,
     sparks: 3,
     ink: 30,
     relic: "bookmark",
     desc: "High starting Resolve (+10 HP), extra starting Ink (+30), and Golden Bookmark.",
+    zhDesc: "初始意志提高 (+10 HP)，戰鬥額外獲得 30% 墨水。自帶「鍍金書籤」。",
     quote: "Every uncharted phrase is a new horizon."
   }
 ];
 
 const RELICS = [
-  { id: "echo", icon: "❞", name: "Echo Quill", text: "+3 damage for every correct answer." },
-  { id: "shield", icon: "◉", name: "Patient Stone", text: "Ignore the first wrong answer in each battle." },
-  { id: "ember", icon: "♨", name: "Ember Vial", text: "Heal 2 resolve every third answer in a streak." },
-  { id: "bookmark", icon: "▰", name: "Golden Bookmark", text: "Gain 30% more ink after encounters." },
-  { id: "boots", icon: "⌁", name: "Wayfarer Boots", text: "+8 maximum resolve immediately." },
-  { id: "prism", icon: "◇", name: "Meaning Prism", text: "Clues remove two wrong answers." },
-  { id: "crown", icon: "♛", name: "Scholar's Crown", text: "Start each battle with +1 spark." },
-  { id: "needle", icon: "↟", name: "Compass Needle", text: "Deal +5 damage on your first answer." },
-  { id: "hourglass", icon: "⌛", name: "Chronos Hourglass", text: "Quick Wit reflex deals +6 extra damage and timer is 1.5s longer." },
-  { id: "alembic", icon: "⚗️", name: "Alchemist's Crucible", text: "Gain +1 Ink for every letter in correct answers." },
-  { id: "mirror", icon: "🪞", name: "Oracle's Mirror", text: "Gain +1 Insight whenever you take damage." },
-  { id: "feather", icon: "🪶", name: "Phoenix Feather", text: "Revive with 20 Resolve once upon fatal damage." },
-  { id: "magnifier", icon: "🔍", name: "Etymology Glass", text: "Always shows root/origin hint during battles." },
-  { id: "ring", icon: "💍", name: "Ring of Fluency", text: "Streaks of 4+ restore 1 spark." },
-  { id: "horn", icon: "📯", name: "Resonance Horn", text: "Deal +30% bonus damage to Elite and Boss guardians." },
-  { id: "candle", icon: "🕯️", name: "Scholar's Candle", text: "Rest sites restore an extra 20% Resolve." }
+  { id: "echo", icon: "❞", name: "Echo Quill", zhName: "餘音羽毛筆", text: "+3 damage for every correct answer.", zhText: "每次答對額外造成 +3 點傷害。" },
+  { id: "shield", icon: "◉", name: "Patient Stone", zhName: "耐心之石", text: "Ignore the first wrong answer in each battle.", zhText: "每場戰鬥免疫第一次答錯的傷害。" },
+  { id: "ember", icon: "♨", name: "Ember Vial", zhName: "餘溫小瓶", text: "Heal 2 resolve every third answer in a streak.", zhText: "連擊中每答對 3 題恢復 2 點生命。" },
+  { id: "bookmark", icon: "▰", name: "Golden Bookmark", zhName: "鍍金書籤", text: "Gain 30% more ink after encounters.", zhText: "戰鬥結算獲得的墨水提高 30%。" },
+  { id: "boots", icon: "⌁", name: "Wayfarer Boots", zhName: "旅者之靴", text: "+8 maximum resolve immediately.", zhText: "立即提升 8 點最大生命值。" },
+  { id: "prism", icon: "◇", name: "Meaning Prism", zhName: "詞義稜鏡", text: "Clues remove two wrong answers.", zhText: "使用提示功能時額外排除 2 個錯誤選項。" },
+  { id: "crown", icon: "♛", name: "Scholar's Crown", zhName: "學者之冠", text: "Start each battle with +1 spark.", zhText: "每場戰鬥開始時額外獲得 1 點火花。" },
+  { id: "needle", icon: "↟", name: "Compass Needle", zhName: "羅盤指針", text: "Deal +5 damage on your first answer.", zhText: "戰鬥首回合答對造成 +5 點爆發傷害。" },
+  { id: "hourglass", icon: "⌛", name: "Chronos Hourglass", zhName: "時光沙漏", text: "Quick Wit reflex deals +6 extra damage and timer is 1.5s longer.", zhText: "急速直覺判定時間延長 1.5 秒，並額外造成 +6 傷害。" },
+  { id: "alembic", icon: "⚗️", name: "Alchemist's Crucible", zhName: "煉金坩堝", text: "Gain +1 Ink for every letter in correct answers.", zhText: "答對時，單字的每個英文字母都轉化為 1 點墨水。" },
+  { id: "mirror", icon: "🪞", name: "Oracle's Mirror", zhName: "神諭之鏡", text: "Gain +1 Insight whenever you take damage.", zhText: "受到傷害時獲得 +1 點頓悟經驗。" },
+  { id: "feather", icon: "🪶", name: "Phoenix Feather", zhName: "鳳凰之羽", text: "Revive with 20 Resolve once upon fatal damage.", zhText: "遭受致命傷害時免死並恢復 20 點生命（限一次）。" },
+  { id: "magnifier", icon: "🔍", name: "Etymology Glass", zhName: "語源放大鏡", text: "Always shows root/origin hint during battles.", zhText: "戰鬥中永遠顯示該單字的語源與字根線索。" },
+  { id: "ring", icon: "💍", name: "Ring of Fluency", zhName: "流利之戒", text: "Streaks of 4+ restore 1 spark.", zhText: "達成 4 連擊時立即恢復 1 點火花。" },
+  { id: "horn", icon: "📯", name: "Resonance Horn", zhName: "共鳴號角", text: "Deal +30% bonus damage to Elite and Boss guardians.", zhText: "對精英怪與區域守護者領主造成 +30% 額外傷害。" },
+  { id: "candle", icon: "🕯️", name: "Scholar's Candle", zhName: "學者之燭", text: "Rest sites restore an extra 20% Resolve.", zhText: "在營火休息處恢復生命效果提升 20%。" }
 ];
 
 const EXAM_DECKS = {
@@ -346,22 +358,22 @@ const EXAM_DECKS = {
 };
 
 const ACHIEVEMENTS = [
-  { id: "first_step", name: "First Steps", icon: "🌱", desc: "Complete your first journey node." },
-  { id: "scholar_25", name: "Lexical Seeker", icon: "📖", desc: "Discover 25 unique words in your lexicon." },
-  { id: "master_10", name: "Memory Weaver", icon: "🧠", desc: "Master 10 words in the spaced repetition system." },
-  { id: "streak_7", name: "Unbroken Chain", icon: "🔥", desc: "Reach a 7x word streak in battle." },
-  { id: "streak_15", name: "Flawless Rhythm", icon: "⚡", desc: "Reach a 15x word streak in battle." },
-  { id: "quick_wit_10", name: "Lightning Recall", icon: "⏱️", desc: "Trigger Quick Wit reflex 10 times." },
-  { id: "relic_satchel", name: "Curio Collector", icon: "🎒", desc: "Carry 5 or more relics simultaneously." },
-  { id: "daily_devotee", name: "Daily Habit", icon: "⭐", desc: "Complete a Daily Seeded Expedition." },
-  { id: "riddle_solver", name: "Riddlemaster", icon: "🧩", desc: "Successfully unlock an Anagram Chest." },
-  { id: "alchemy_adept", name: "Etymology Sage", icon: "🔮", desc: "Receive a blessing from the Word Alchemy Shrine." },
-  { id: "bazaar_patron", name: "Bazaar Patron", icon: "◈", desc: "Purchase 3 items from the Wandering Merchant." },
-  { id: "cycle_conqueror", name: "Endless Wanderer", icon: "👑", desc: "Complete Cycle 0 and enter the Endless Cycle." },
-  { id: "guardian_slayer", name: "Guardian Bane", icon: "⚔️", desc: "Defeat 3 region guardians." },
-  { id: "active_recall", name: "Active Producer", icon: "✍️", desc: "Complete a typed recall practice session." },
-  { id: "all_realms", name: "Cosmic Polyglot", icon: "🌌", desc: "Discover at least one word from all 6 realms." },
-  { id: "habit_7day", name: "7-Day Dedication", icon: "📅", desc: "Study 7 consecutive days in a row." }
+  { id: "first_step", name: "First Steps", zhName: "啟程第一步", icon: "🌱", desc: "Complete your first journey node.", zhDesc: "完成你的第一個路線節點。" },
+  { id: "scholar_25", name: "Lexical Seeker", zhName: "字彙探索者", icon: "📖", desc: "Discover 25 unique words in your lexicon.", zhDesc: "在字彙庫中解鎖 25 個獨立單字。" },
+  { id: "master_10", name: "Memory Weaver", zhName: "記憶編織者", icon: "🧠", desc: "Master 10 words in the spaced repetition system.", zhDesc: "在間隔重複記憶庫中完全精通 10 個單字。" },
+  { id: "streak_7", name: "Unbroken Chain", zhName: "連擊之火", icon: "🔥", desc: "Reach a 7x word streak in battle.", zhDesc: "在戰鬥中達成 7 連擊。" },
+  { id: "streak_15", name: "Flawless Rhythm", zhName: "完美節奏", icon: "⚡", desc: "Reach a 15x word streak in battle.", zhDesc: "在戰鬥中達成 15 連擊。" },
+  { id: "quick_wit_10", name: "Lightning Recall", zhName: "迅捷反應", icon: "⏱️", desc: "Trigger Quick Wit reflex 10 times.", zhDesc: "觸發 10 次急速直覺答題獎勵。" },
+  { id: "relic_satchel", name: "Curio Collector", zhName: "遺物收藏家", icon: "🎒", desc: "Carry 5 or more relics simultaneously.", zhDesc: "單場遠征同時攜帶 5 個以上遺物。" },
+  { id: "daily_devotee", name: "Daily Habit", zhName: "每日習慣", icon: "⭐", desc: "Complete a Daily Seeded Expedition.", zhDesc: "完成一場每日種子遠征。" },
+  { id: "riddle_solver", name: "Riddlemaster", zhName: "字謎大師", icon: "🧩", desc: "Successfully unlock an Anagram Chest.", zhDesc: "成功解開重組字謎寶箱。" },
+  { id: "alchemy_adept", name: "Etymology Sage", zhName: "語源賢者", icon: "🔮", desc: "Receive a blessing from the Word Alchemy Shrine.", zhDesc: "在字根煉金祭壇獲得古語祝福。" },
+  { id: "bazaar_patron", name: "Bazaar Patron", zhName: "黑市貴賓", icon: "◈", desc: "Purchase 3 items from the Wandering Merchant.", zhDesc: "在流浪黑市購買 3 件以上商品。" },
+  { id: "cycle_conqueror", name: "Endless Wanderer", zhName: "無盡行者", icon: "👑", desc: "Complete Cycle 0 and enter the Endless Cycle.", zhDesc: "通關第一輪並進入無盡循環模式。" },
+  { id: "guardian_slayer", name: "Guardian Bane", zhName: "領主剋星", icon: "⚔️", desc: "Defeat 3 region guardians.", zhDesc: "擊敗 3 位區域守護者領主。" },
+  { id: "active_recall", name: "Active Producer", zhName: "主動默寫者", icon: "✍️", desc: "Complete a typed recall practice session.", zhDesc: "完成一次拼寫填空複習測驗。" },
+  { id: "all_realms", name: "Cosmic Polyglot", zhName: "全域通曉", icon: "🌌", desc: "Discover at least one word from all 6 realms.", zhDesc: "在 6 大領域中各解鎖至少 1 個單字。" },
+  { id: "habit_7day", name: "7-Day Dedication", zhName: "七日堅持", icon: "📅", desc: "Study 7 consecutive days in a row.", zhDesc: "連續 7 天進行英文學習冒險。" }
 ];
 
 const DAILY_QUESTS = [
@@ -485,7 +497,7 @@ function showAchievements() {
               <b>${ach.name}</b>
               <p>${ach.desc}</p>
             </div>
-            <span class="achieve-status">${isUnlocked ? "UNLOCKED" : "LOCKED"}</span>
+            <span class="achieve-status">${isUnlocked ? (meta.bilingual ? "已解鎖" : "UNLOCKED") : (meta.bilingual ? "未達成" : "LOCKED")}</span>
           </div>
         `;
       }).join("")}
@@ -495,33 +507,39 @@ function showAchievements() {
 
 const SANCTUARY_TALENTS = [
   {
-    id: "vitality", name: "Heart of Wisdom", icon: "💖",
+    id: "vitality", name: "Heart of Wisdom", zhName: "智慧之心", icon: "💖",
     desc: "+3 Max Resolve per rank at start of all expeditions.",
+    zhDesc: "每級提升所有遠征初始最大生命值 +3 HP。",
     maxRank: 5, baseCost: 30, costMult: 1.5
   },
   {
-    id: "sparks", name: "Spark Crucible", icon: "⚡",
+    id: "sparks", name: "Spark Crucible", zhName: "專注火花槽", icon: "⚡",
     desc: "+1 Starting Spark slot per rank.",
+    zhDesc: "每級提升初始火花槽 +1 (可用於線索提示與換題)。",
     maxRank: 3, baseCost: 40, costMult: 1.8
   },
   {
-    id: "inkwell", name: "Gilded Quill", icon: "◈",
+    id: "inkwell", name: "Gilded Quill", zhName: "鍍金羽毛筆", icon: "◈",
     desc: "+10% extra Ink gained across all battles and events per rank.",
+    zhDesc: "每級使所有戰鬥與事件獲得的墨水增加 +10%。",
     maxRank: 4, baseCost: 35, costMult: 1.6
   },
   {
-    id: "reflex", name: "Chronos Focus", icon: "⏱️",
+    id: "reflex", name: "Chronos Focus", zhName: "時光專注", icon: "⏱️",
     desc: "+0.4s extended Quick Wit speed reflex window per rank.",
+    zhDesc: "每級延長急速作答判定時間 +0.4 秒。",
     maxRank: 3, baseCost: 45, costMult: 1.7
   },
   {
-    id: "merchant", name: "Bazaar Favor", icon: "🤝",
+    id: "merchant", name: "Bazaar Favor", zhName: "黑市恩惠", icon: "🤝",
     desc: "6% discount on all Merchant prices per rank.",
+    zhDesc: "每級使流浪黑市所有商品售價降低 6%。",
     maxRank: 4, baseCost: 30, costMult: 1.5
   },
   {
-    id: "phoenix", name: "Phoenix Aegis", icon: "🪶",
+    id: "phoenix", name: "Phoenix Aegis", zhName: "鳳凰庇護", icon: "🪶",
     desc: "Survive a lethal blow once per run, recovering 20 Resolve.",
+    zhDesc: "每場遠征享有一次免死機會，瀕死時恢復 20 點生命。",
     maxRank: 1, baseCost: 80, costMult: 1.0
   }
 ];
@@ -530,11 +548,12 @@ function showSanctuary() {
   const meta = loadMeta();
   meta.talents = meta.talents || {};
   meta.totalInk = meta.totalInk !== undefined ? meta.totalInk : 0;
+  const isZh = meta.bilingual;
   
   openModal(`
-    <span class="modal-kicker">ANCIENT METAPROGRESSION</span>
-    <h2>The Word Sanctuary</h2>
-    <p class="section-copy">Channel your accumulated Ink into permanent blessings that empower all future expeditions. Permanent Ink Stash: <b>${meta.totalInk} ◈</b></p>
+    <span class="modal-kicker">${isZh ? "古代永恆天賦傳承" : "ANCIENT METAPROGRESSION"}</span>
+    <h2>${isZh ? "萬字聖殿 (The Sanctuary)" : "The Word Sanctuary"}</h2>
+    <p class="section-copy">${isZh ? `將累積的永久墨水注入古老天賦，永久強化未來的所有遠征。目前墨水庫存：<b>${meta.totalInk} ◈</b>` : `Channel your accumulated Ink into permanent blessings that empower all future expeditions. Permanent Ink Stash: <b>${meta.totalInk} ◈</b>`}</p>
     
     <div class="sanctuary-grid">
       ${SANCTUARY_TALENTS.map(t => {
@@ -547,13 +566,13 @@ function showSanctuary() {
             <span class="sanctuary-icon">${t.icon}</span>
             <div class="sanctuary-info">
               <div class="sanctuary-top">
-                <b>${t.name}</b>
+                <b>${isZh ? t.zhName : t.name}</b>
                 <span class="sanctuary-rank">Rank ${currRank} / ${t.maxRank}</span>
               </div>
-              <p>${t.desc}</p>
+              <p>${isZh ? t.zhDesc : t.desc}</p>
             </div>
             <button class="button button-primary buy-talent-btn" data-talent="${t.id}" ${isMax || !canAfford ? "disabled" : ""}>
-              ${isMax ? "MAX RANK" : `Upgrade · ${cost} ◈`}
+              ${isMax ? (isZh ? "已達滿級" : "MAX RANK") : (isZh ? `升級 · ${cost} ◈` : `Upgrade · ${cost} ◈`)}
             </button>
           </div>
         `;
@@ -571,7 +590,7 @@ function showSanctuary() {
         meta.totalInk -= cost;
         meta.talents[talentId] = currRank + 1;
         localStorage.setItem(META_KEY, JSON.stringify(meta));
-        toast(`Upgraded <b>${talent.name}</b> to Rank ${meta.talents[talentId]}!`);
+        toast(isZh ? `成功升級 <b>${talent.zhName}</b> 至第 ${meta.talents[talentId]} 級！` : `Upgraded <b>${talent.name}</b> to Rank ${meta.talents[talentId]}!`);
         playLevelUpChime();
         showSanctuary();
         if (state) updateHUD();
@@ -647,22 +666,23 @@ function updateContinueButton() {
 }
 
 function showClassSelection() {
+  const isZh = loadMeta().bilingual;
   openModal(`
-    <span class="modal-kicker">CHOOSE YOUR PATHFINDER</span>
-    <h2>Select Archetype</h2>
-    <p class="section-copy">Each archetype shapes your expedition with unique starting stats, resources, and passive relics.</p>
+    <span class="modal-kicker">${isZh ? "選擇你的探索者原型" : "CHOOSE YOUR PATHFINDER"}</span>
+    <h2>${isZh ? "選擇職業原型" : "Select Archetype"}</h2>
+    <p class="section-copy">${isZh ? "每個職業擁有不同的初始屬性、資源配置與專屬被動遺物。" : "Each archetype shapes your expedition with unique starting stats, resources, and passive relics."}</p>
     <div class="class-grid">
       ${CLASSES.map(cls => `
         <button class="class-card" data-class="${cls.id}">
           <span class="class-icon">${cls.icon}</span>
           <div class="class-info">
-            <small>${cls.subtitle}</small>
-            <h3>${cls.name}</h3>
-            <p>${cls.desc}</p>
+            <small>${isZh ? cls.zhSubtitle : cls.subtitle}</small>
+            <h3>${isZh ? cls.zhName : cls.name}</h3>
+            <p>${isZh ? cls.zhDesc : cls.desc}</p>
             <div class="class-stats">
               <span><b>${cls.hp}</b> HP</span>
-              <span><b>${cls.sparks}</b> Sparks</span>
-              <span><b>${cls.ink}</b> Ink</span>
+              <span><b>${cls.sparks}</b> ${isZh ? "火花" : "Sparks"}</span>
+              <span><b>${cls.ink}</b> ${isZh ? "墨水" : "Ink"}</span>
             </div>
             <span class="class-quote">“${cls.quote}”</span>
           </div>
@@ -821,17 +841,19 @@ function showPathChoice() {
   state.screen = "choice";
   updateHUD();
   updateJourneyMap();
+  const isZh = loadMeta().bilingual;
+
   if (state.node >= 4) {
     $("#stage").innerHTML = `
       <div class="choice-stage">
-        <span class="section-kicker">THE PATH NARROWS</span>
-        <h1>A guardian waits.</h1>
-        <p class="section-copy">The words here have teeth. Defeat the guardian to cross into the next realm.</p>
+        <span class="section-kicker">${isZh ? "守護領主阻擋前路" : "THE PATH NARROWS"}</span>
+        <h1>${isZh ? "區域守護領主現身！" : "A guardian waits."}</h1>
+        <p class="section-copy">${isZh ? "此處的詞彙擁有強大的守護力量。擊敗領主以跨入下一個詞彙領域。" : "The words here have teeth. Defeat the guardian to cross into the next realm."}</p>
         <div class="path-choices">
           <button class="path-card elite" data-path="boss">
-            <span class="risk">BOSS</span><span class="path-icon">♜</span><small>REGION FINALE</small>
+            <span class="risk">${isZh ? "領主戰" : "BOSS"}</span><span class="path-icon">♜</span><small>${isZh ? "區域決戰" : "REGION FINALE"}</small>
             <h3>${ENEMIES.boss[state.region % ENEMIES.boss.length][0]}</h3>
-            <p>A longer battle with rare rewards and harder vocabulary.</p>
+            <p>${isZh ? "高血量與強力意圖戰鬥，提供高階稀有遺物與大量墨水獎勵。" : "A longer battle with rare rewards and harder vocabulary."}</p>
           </button>
         </div>
       </div>`;
@@ -845,7 +867,15 @@ function showPathChoice() {
           : ["normal", "elite", "rest", "mystery"];
     let types = shuffle(pool).slice(0, 3);
     while (types.length < 3) types.push("normal");
-    const details = {
+    const details = isZh ? {
+      normal: ["✦", "遭遇野怪 (Wandering Words)", "進行常規單字對決，磨練字彙直覺。", "遭遇 ENCOUNTER"],
+      elite: ["♞", "精英挑戰 (Elite Road)", "強敵遭遇 · 更高機率掉落稀有遺物。", "精英 ELITE"],
+      rest: ["♨", "靜謐營火 (Quiet Clearing)", "休息恢復意志生命，或獲取額外火花。", "營火 REST"],
+      mystery: ["?", "未知的岔路 (Unwritten Turn)", "充滿驚喜或考驗的隨機事件。", "未知 UNKNOWN"],
+      shop: ["◈", "字彙黑市 (Lexicon Bazaar)", "消耗墨水購買遺物、藥劑與火花水晶。", "商人 MERCHANT"],
+      riddle: ["🧩", "字謎寶箱 (Riddler's Chest)", "重組字母古文，直接解鎖寶箱遺物。", "小遊戲 PUZZLE"],
+      alchemy: ["🔮", "字根煉金祭壇 (Alchemy Shrine)", "辨識古老字根，獲取永久屬性祝福。", "祭壇 SHRINE"]
+    } : {
       normal: ["✦", "Wandering Words", "A balanced vocabulary battle.", "ENCOUNTER"],
       elite: ["♞", "The Difficult Road", "Harder foe · stronger relic chance.", "ELITE"],
       rest: ["♨", "A Quiet Clearing", "Restore resolve or sharpen your mind.", "REST"],
@@ -856,14 +886,14 @@ function showPathChoice() {
     };
     $("#stage").innerHTML = `
       <div class="choice-stage">
-        <span class="section-kicker">CHOOSE YOUR NEXT PAGE</span>
-        <h1>The road divides.</h1>
-        <p class="section-copy">Each route changes your expedition. Build for survival, trade ink with merchants, solve ancient riddles, or face dangerous guardians.</p>
+        <span class="section-kicker">${isZh ? "選擇你的前進方向" : "CHOOSE YOUR NEXT PAGE"}</span>
+        <h1>${isZh ? "道路分岔" : "The road divides."}</h1>
+        <p class="section-copy">${isZh ? "每一條路線都將改變你的冒險。構築遺物、黑市交易、解開古代字謎或迎戰強敵。" : "Each route changes your expedition. Build for survival, trade ink with merchants, solve ancient riddles, or face dangerous guardians."}</p>
         <div class="path-choices">
           ${types.map(type => {
             const d = details[type];
             return `<button class="path-card ${type}" data-path="${type}">
-              ${type === "elite" ? '<span class="risk">RISKY</span>' : type === "shop" ? '<span class="risk safe">SHOP</span>' : ""}
+              ${type === "elite" ? `<span class="risk">${isZh ? "危險" : "RISKY"}</span>` : type === "shop" ? `<span class="risk safe">${isZh ? "商店" : "SHOP"}</span>` : ""}
               <span class="path-icon">${d[0]}</span><small>${d[3]}</small><h3>${d[1]}</h3><p>${d[2]}</p>
             </button>`;
           }).join("")}
@@ -993,8 +1023,9 @@ function startBattle(type) {
     const roll = Math.random();
     const mode = battle.turn > 1 && roll < .25 ? "synonym" : battle.turn > 1 && roll < .5 ? "cloze" : "definition";
     const property = mode === "synonym" ? "synonym" : mode === "cloze" ? "word" : "definition";
-    const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
-    const answers = shuffle([word[property], ...distractors]);
+    const isZh = loadMeta().bilingual;
+    const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3);
+    const answerItems = shuffle([word, ...distractors]);
     battle.question = { mode, property, correctValue: word[property] };
 
     // Calculate Enemy Intent for this turn
@@ -1015,13 +1046,22 @@ function startBattle(type) {
 
     $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
     $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
-    $("#challenge-word").textContent = mode === "cloze" ? "A word is missing" : word.word;
-    $("#pronunciation").textContent = mode === "cloze" ? "Use the sentence to find it" : word.phonetic;
-    $("#challenge-prompt").textContent = mode === "synonym"
-      ? "Choose the closest synonym"
-      : mode === "cloze"
-        ? makeCloze(word)
-        : "Choose the closest meaning";
+    $("#challenge-word").textContent = mode === "cloze" ? (isZh ? "句中缺少一個關鍵單字" : "A word is missing") : word.word;
+    $("#pronunciation").textContent = mode === "cloze" ? (isZh ? `提示：${word.zh || ""} · ${word.pos || ""}` : "Use the sentence to find it") : `${word.phonetic} ${isZh && word.zh ? `· ${word.zh}` : ""}`;
+    
+    if (isZh) {
+      $("#challenge-prompt").textContent = mode === "synonym"
+        ? "選擇最相近的英文同義詞 (Choose the closest synonym)"
+        : mode === "cloze"
+          ? makeCloze(word)
+          : "選擇最符合的英文釋義 (Choose the closest meaning)";
+    } else {
+      $("#challenge-prompt").textContent = mode === "synonym"
+        ? "Choose the closest synonym"
+        : mode === "cloze"
+          ? makeCloze(word)
+          : "Choose the closest meaning";
+    }
 
     const intentEl = $("#enemy-intent");
     if (intentEl) {
@@ -1040,10 +1080,21 @@ function startBattle(type) {
     $("#feedback-panel").hidden = true;
     $("#combo-display").hidden = state.streak < 2;
     if (state.streak >= 2) $("#combo-display b").textContent = `×${Math.min(5, 1 + Math.floor(state.streak / 2))}`;
-    $("#answer-grid").innerHTML = answers.map((answer, index) => `
-      <button class="answer-button" data-answer="${escapeAttribute(answer)}">
-        <span>${String.fromCharCode(65 + index)}</span>${answer}
-      </button>`).join("");
+    
+    $("#answer-grid").innerHTML = answerItems.map((item, index) => {
+      const val = item[property];
+      const zh = (isZh && item.zh) ? `<span class="answer-zh">（${item.zh}）</span>` : "";
+      return `
+        <button class="answer-button" data-answer="${escapeAttribute(val)}">
+          <span class="answer-key">${String.fromCharCode(65 + index)}</span>
+          <div class="answer-content">
+            <span class="answer-main">${val}</span>
+            ${zh}
+          </div>
+        </button>
+      `;
+    }).join("");
+
     document.querySelectorAll(".answer-button").forEach(button => {
       button.addEventListener("click", () => answerQuestion(button, button.dataset.answer === battle.question.correctValue, mode));
     });
@@ -2300,6 +2351,28 @@ document.addEventListener("keydown", event => {
   const buttons = [...document.querySelectorAll(".answer-button:not(:disabled)")];
   if (index >= 0 && index < buttons.length) buttons[index].click();
 });
+
+function toggleBilingual() {
+  const meta = loadMeta();
+  meta.bilingual = !meta.bilingual;
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
+  updateLangButtonText();
+  toast(meta.bilingual ? "🇹🇼 <b>已開啟繁體中文對照</b>（單字與選項附帶繁中釋義）" : "🇬🇧 <b>Switched to English Only Mode</b>");
+  if (state?.screen === "battle") renderQuestion();
+  else if (state?.screen === "choice") showPathChoice();
+  updateHUD();
+}
+
+function updateLangButtonText() {
+  const meta = loadMeta();
+  const label = meta.bilingual ? "🇹🇼 繁中" : "🇬🇧 EN";
+  if ($("#lang-toggle-title")) $("#lang-toggle-title").textContent = label;
+  if ($("#lang-toggle")) $("#lang-toggle").textContent = label;
+}
+
+$("#lang-toggle")?.addEventListener("click", toggleBilingual);
+$("#lang-toggle-title")?.addEventListener("click", toggleBilingual);
+updateLangButtonText();
 
 updateContinueButton();
 

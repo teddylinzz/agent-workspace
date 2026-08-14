@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>臺灣金融股即時量化與策略評估儀表板 (2026-06-18)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #070d0b;
+      --panel-dark: rgba(18, 30, 26, 0.75);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --panel-border-hover: rgba(212, 175, 55, 0.4);
+      --gold: #d4af37;
+      --gold-dark: #aa8416;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-faint: #6b7280;
+      
+      --taiwan-rise: #ef4444;       /* 紅漲 */
+      --taiwan-fall: #10b981;       /* 綠跌 */
+      
+      --forest-green: #0d2720;
+      --glass-glow: radial-gradient(circle at top left, rgba(212, 175, 55, 0.15), transparent 60%);
+      --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      
+      --btn-gold: linear-gradient(135deg, #e5c158 0%, #aa8416 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(13, 39, 32, 0.8) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(20, 30, 25, 0.9) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      backdrop-filter: blur(12px);
+      background: rgba(8, 15, 12, 0.85);
+      border-bottom: 1px solid var(--panel-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 40px;
+    }
+
+    .header-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--btn-gold);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #070d0b;
+      font-size: 1.4rem;
+      font-weight: 900;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .logo-text h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .logo-text p {
+      font-size: 0.72rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    .market-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 16px;
+      border: 1px solid var(--panel-border);
+      border-radius: 30px;
+      font-size: 0.8rem;
+    }
+
+    .market-status span.pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--taiwan-rise);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--taiwan-rise);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+
+    main {
+      max-width: 1600px;
+      width: 100%;
+      margin: 30px auto;
+      padding: 0 40px;
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 30px;
+    }
+
+    /* Left panel: List */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .panel-header h2 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .panel-header .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .stock-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: calc(100vh - 220px);
+      padding-right: 5px;
+    }
+
+    /* Scrollbar */
+    .stock-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .stock-list::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.1);
+    }
+    .stock-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+    }
+    .stock-list::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
+    .stock-card {
+      background: var(--panel-dark);
+      border: 1px solid var(--panel-border);
+      border-left: 4px solid var(--text-faint);
+      border-radius: 6px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stock-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--glass-glow);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .stock-card:hover {
+      border-color: var(--panel-border-hover);
+      transform: translateX(5px);
+      box-shadow: var(--card-shadow);
+    }
+
+    .stock-card:hover::after {
+      opacity: 1;
+    }
+
+    .stock-card.active {
+      background: rgba(25, 45, 38, 0.85);
+      border-color: var(--gold);
+      border-left-color: var(--gold);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+    }
+
+    .stock-card.active::after {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .stock-info {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .stock-info .name {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stock-info .code {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .action-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+
+    .action-tag.gold {
+      color: #fff7e6; background: rgba(212, 175, 55, 0.25); border-color: var(--gold);
+    }
+    .action-tag.silver {
+      color: #f5f5f5; background: rgba(255, 255, 255, 0.12); border-color: #d1d5db;
+    }
+    .action-tag.bronze {
+      color: #e6f7ff; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6;
+    }
+    .action-tag.blue {
+      color: #e8f9f5; background: rgba(16, 185, 129, 0.2); border-color: #10b981;
+    }
+
+    .card-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .card-change {
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .card-change.up {
+      color: var(--taiwan-rise);
+    }
+    .card-change.down {
+      color: var(--taiwan-fall);
+    }
+    .card-change.flat {
+      color: var(--text-muted);
+    }
+
+    /* Right panel: Details */
+    .details-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .glass-panel {
+      background: var(--panel-dark);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+    }
+
+    .glass-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--btn-gold);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .detail-header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 20px;
+    }
+
+    .detail-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .detail-title-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .detail-title-row h2 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .detail-title-row .code-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--panel-border);
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .category-label {
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    .detail-price-box {
+      text-align: right;
+    }
+
+    .detail-price {
+      font-size: 2.6rem;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.1;
+    }
+
+    .detail-change {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .detail-change.up { color: var(--taiwan-rise); }
+    .detail-change.down { color: var(--taiwan-fall); }
+
+    .summary-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 18px;
+      margin-top: 20px;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+
+    /* Key metrics grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .metric-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .metric-value.gold-text {
+      color: var(--gold);
+    }
+
+    .metric-sub {
+      font-size: 0.68rem;
+      color: var(--text-faint);
+      margin-top: 4px;
+    }
+
+    /* Chart section */
+    .charts-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .chart-box {
+      background: var(--panel-dark);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .chart-header h3 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 0.95rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-header h3 i {
+      color: var(--gold);
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    /* Two columns: news & strategy */
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+
+    /* Strategy box */
+    .strategy-box {
+      background: var(--panel-dark);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .strategy-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.05rem;
+      color: #fff;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .strategy-title i {
+      color: var(--gold);
+    }
+
+    .strategy-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .strategy-table td {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .strategy-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .strategy-table td.label {
+      color: var(--text-muted);
+      width: 35%;
+    }
+
+    .strategy-table td.val {
+      font-weight: 700;
+      color: #fff;
+      text-align: right;
+    }
+
+    .strategy-table td.val.entry {
+      color: var(--gold);
+    }
+
+    .strategy-table td.val.target {
+      color: var(--taiwan-rise);
+    }
+
+    .strategy-table td.val.stop {
+      color: var(--taiwan-fall);
+    }
+
+    .warning-panel {
+      background: rgba(239, 68, 68, 0.08);
+      border-left: 3px solid var(--taiwan-rise);
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 5px;
+    }
+
+    .warning-panel strong {
+      color: var(--taiwan-rise);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* News list */
+    .news-box {
+      background: var(--panel-dark);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .news-header {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.05rem;
+      color: #fff;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .news-header i {
+      color: var(--gold);
+    }
+
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .news-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      transition: all 0.2s;
+    }
+
+    .news-item:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(212, 175, 55, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .news-item-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .news-item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+    }
+
+    footer {
+      border-top: 1px solid var(--panel-border);
+      padding: 30px 40px;
+      text-align: center;
+      color: var(--text-faint);
+      font-size: 0.75rem;
+      margin-top: 60px;
+      background: rgba(5, 10, 8, 0.9);
+    }
+
+    footer p {
+      max-width: 800px;
+      margin: 8px auto 0;
+      line-height: 1.6;
+    }
+
+    /* Responsive design */
+    @media (max-width: 1200px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+      }
+      .stock-list {
+        flex-direction: row;
+        overflow-x: auto;
+        max-height: none;
+        padding-bottom: 10px;
+      }
+      .stock-card {
+        min-width: 250px;
+      }
+      .charts-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .split-grid {
+        grid-template-columns: 1fr;
+      }
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      header {
+        padding: 16px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-chart-line-up"></i>
+        </div>
+        <div class="logo-text">
+          <h1>臺灣金融股即時量化與策略評估儀表板</h1>
+          <p>QUANT PYTHON AI PORTAL</p>
+        </div>
+      </div>
+      <div class="market-status">
+        <span class="pulse"></span>
+        <span style="font-weight:700; color: #fff;">2026-06-18 即時數據分析</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left panel: list -->
+    <div class="sidebar">
+      <div class="panel-header">
+        <h2>指標金融股 (10檔)</h2>
+        <span class="subtitle">點選進行深度分析</span>
+      </div>
+      <div class="stock-list" id="stockList">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Right panel: detailed view -->
+    <div class="details-container" id="detailsContainer">
+      <!-- Rendered via JS -->
+    </div>
+  </main>
+
+  <footer>
+    <p>📊 系統版本: v0.2.5 | 開發團隊: Antigravity AI Team | 資料來源: FinMind API & Google News</p>
+    <p>⚠️ 免責聲明：本儀表板所載之數據、圖表及分析意見，僅供量化投資學術研究與參考，不構成任何買賣點位、停損停利或交易指令之投資建議。投資人需自主判斷市場風險，並對其自身投資決策及盈虧負完全責任。</p>
+  </footer>
+
+  <script>
+    // Raw Data injected by Python script
+    const STOCK_DATA = {
+  "2892": {
+    "name": "第一金",
+    "price_info": {
+      "latest_close": 32.6,
+      "latest_volume": 3974000,
+      "ma5": 31.84,
+      "ma20": 29.44,
+      "vol_ratio": 0.07905786924225508,
+      "ret_5": 0.06362148365811078,
+      "ret_1": 0.0030768761268028847,
+      "closes_recent": [
+        31.0,
+        31.3,
+        31.8,
+        32.5,
+        32.6
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": 19414423,
+        "trust_net": 418254,
+        "dealer_net": 1700650
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 28858853,
+        "trust_net": -29267,
+        "dealer_net": 21964
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 17529632,
+        "trust_net": -2000,
+        "dealer_net": 280378
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 5557516,
+        "trust_net": 18825721,
+        "dealer_net": 200814
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": 13375843,
+        "trust_net": 18791470,
+        "dealer_net": -135237
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 16.67,
+      "pb": 1.57,
+      "yield": 4.0
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 7305350000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "第一金遭傳「公民併」嚇壞股價挫低5％ 公司急澄清「無此規劃」 - CMoney",
+        "date": "Mon, 15 Jun 2026 15:32:50 GMT"
+      },
+      {
+        "title": "第一金衝18年新高！最大買家是「他們」 45萬股東吃香喝辣 - 自由財經",
+        "date": "Tue, 16 Jun 2026 08:16:13 GMT"
+      },
+      {
+        "title": "第一金21年來首度未配股！網喊「失望想蛋雕」...熱議一次看 - Yahoo股市",
+        "date": "Wed, 29 Apr 2026 07:00:00 GMT"
+      },
+      {
+        "title": "今年來外資賣超台股突破7000億元 近期最愛這兩檔金融股 - UDN",
+        "date": "Mon, 15 Jun 2026 08:50:07 GMT"
+      },
+      {
+        "title": "三大法人買賣超 – 外資買超(2313)華通、(2892)第一金，投信買超(2330)台積電、(2382)廣達，法人合計賣超778.57億元 - sinotrade.com.tw",
+        "date": "Tue, 09 Jun 2026 08:42:51 GMT"
+      }
+    ],
+    "category": "穩健金控",
+    "action": "買進",
+    "color": "gold",
+    "range": "31.8 - 32.2",
+    "target": "36.0",
+    "stop": "29.0",
+    "desc": "法人大買，均線多頭排列，股價強勢。"
+  },
+  "2884": {
+    "name": "玉山金",
+    "price_info": {
+      "latest_close": 35.9,
+      "latest_volume": 3147000,
+      "ma5": 35.12,
+      "ma20": 32.99,
+      "vol_ratio": 0.06121164107935135,
+      "ret_5": 0.060561344929952875,
+      "ret_1": 0.011267648616307219,
+      "closes_recent": [
+        34.35,
+        34.65,
+        35.2,
+        35.5,
+        35.9
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": 2859256,
+        "trust_net": 1747188,
+        "dealer_net": 1709783
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 23618082,
+        "trust_net": -254348,
+        "dealer_net": -798427
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 2784718,
+        "trust_net": -265821,
+        "dealer_net": 586289
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 32521362,
+        "trust_net": 701531,
+        "dealer_net": 279689
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": -2301555,
+        "trust_net": 2183903,
+        "dealer_net": -172260
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 16.14,
+      "pb": 2.02,
+      "yield": 3.94
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 9259083000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "永豐金股價超越玉山金 朱士廷讚對方「可敬對手」 - Yahoo股市",
+        "date": "Wed, 17 Jun 2026 06:25:14 GMT"
+      },
+      {
+        "title": "永豐金法說會／股價超車玉山金 朱士廷稱「可敬的對手」 - UDN",
+        "date": "Wed, 17 Jun 2026 08:16:40 GMT"
+      },
+      {
+        "title": "永豐金股價刷新高　總座：反映市場認同度、經營團隊聚焦策略發展 - ETtoday財經雲",
+        "date": "Wed, 17 Jun 2026 09:13:00 GMT"
+      },
+      {
+        "title": "2884 玉山金- 迎戰金控2.0！從數位銀行到AI 原生銀行，玉山走在金融轉型最前線- 股市爆料同學會 - CMoney",
+        "date": "Tue, 16 Jun 2026 10:00:38 GMT"
+      },
+      {
+        "title": "【06/16 申報轉讓】玉山金(2884)子公司經理人玉山商業銀行股份有限公司劉宏榮之配偶於16日申報轉讓玉山金股票70張 - CMoney投資網誌",
+        "date": "Tue, 16 Jun 2026 13:10:07 GMT"
+      }
+    ],
+    "category": "穩健金控",
+    "action": "買進",
+    "color": "gold",
+    "range": "35.2 - 35.7",
+    "target": "37.5",
+    "stop": "32.5",
+    "desc": "法人強勢買超，股價站穩均線，多頭趨勢明確。"
+  },
+  "5880": {
+    "name": "合庫金",
+    "price_info": {
+      "latest_close": 24.95,
+      "latest_volume": 486000,
+      "ma5": 24.5,
+      "ma20": 23.49,
+      "vol_ratio": 0.017184249180268882,
+      "ret_5": 0.04612162528048015,
+      "ret_1": 0.00808083890664457,
+      "closes_recent": [
+        24.05,
+        24.15,
+        24.6,
+        24.75,
+        24.95
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -1433232,
+        "trust_net": 101174,
+        "dealer_net": 1544451
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 9098345,
+        "trust_net": -59243,
+        "dealer_net": -97142
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 4605151,
+        "trust_net": -60028,
+        "dealer_net": 249028
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 30094869,
+        "trust_net": 990197,
+        "dealer_net": 207449
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": 9857738,
+        "trust_net": -53395,
+        "dealer_net": -39872
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 17.68,
+      "pb": 1.37,
+      "yield": 4.24
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 6305060000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "合庫金集團獲利成長，放款動能持續 - CMoney",
+        "date": "Tue, 16 Jun 2026 03:33:14 GMT"
+      },
+      {
+        "title": "合庫金(5880)配1.05元三年新高，為何存股族笑不出來？達人3刀拆解背後關鍵：連3年未填息，現在還能買？ - 今周刊",
+        "date": "Fri, 27 Mar 2026 07:00:00 GMT"
+      },
+      {
+        "title": "合庫金集團獲利成長，放款動能持續 - 台視全球資訊網",
+        "date": "Tue, 16 Jun 2026 04:50:13 GMT"
+      },
+      {
+        "title": "營收速報 - 合庫金(5880)4月營收60.94億元年增率高達65.45％｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "date": "Thu, 14 May 2026 07:00:00 GMT"
+      },
+      {
+        "title": "合庫金法說1》42萬股東關注！總座蘇佐政談股利「優於去年、現金為主、發放率約8成」 - Yahoo股市",
+        "date": "Thu, 19 Mar 2026 07:00:00 GMT"
+      }
+    ],
+    "category": "穩健金控",
+    "action": "分批低接",
+    "color": "gold",
+    "range": "24.50 - 24.80",
+    "target": "26.50",
+    "stop": "23.90",
+    "desc": "法人大買，趨勢向上，穩健金控可分批低接。"
+  },
+  "2883": {
+    "name": "凱基金",
+    "price_info": {
+      "latest_close": 30.9,
+      "latest_volume": 3984000,
+      "ma5": 29.41,
+      "ma20": 25.87,
+      "vol_ratio": 0.03176358696441653,
+      "ret_5": 0.11351349976685671,
+      "ret_1": 0.02317879531557199,
+      "closes_recent": [
+        27.45,
+        28.8,
+        29.7,
+        30.2,
+        30.9
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -81419997,
+        "trust_net": 81727276,
+        "dealer_net": 2562219
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": -25786495,
+        "trust_net": -4041295,
+        "dealer_net": 201459
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 30979634,
+        "trust_net": 2641000,
+        "dealer_net": 1218341
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 18823839,
+        "trust_net": 8044674,
+        "dealer_net": 1455444
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": 3070561,
+        "trust_net": -913205,
+        "dealer_net": 201553
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 16.97,
+      "pb": 1.51,
+      "yield": 3.31
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 11583656000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "營收速報 - 凱基金(2883)5月營收115.84億元年增率高達126.09％｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "date": "Sun, 14 Jun 2026 17:22:00 GMT"
+      },
+      {
+        "title": "凱基金子公司獲利齊揚，續攻多元化資產管理 - 台視全球資訊網",
+        "date": "Wed, 17 Jun 2026 04:36:30 GMT"
+      },
+      {
+        "title": "凱基金、元大金...今年飆贏大盤！專家點「這檔EPS更成長1100%」：5家金控股大暴賺| 股市要聞| 股市 - UDN",
+        "date": "Mon, 15 Jun 2026 01:38:00 GMT"
+      },
+      {
+        "title": "25分鐘直衝漲停！凱基金（2883）為何創下24年股價新高？ 拆解三大獲利關鍵與股利政策 - Storm.mg",
+        "date": "Wed, 03 Jun 2026 03:15:11 GMT"
+      },
+      {
+        "title": "2883 凱基金- 每天堅持當沖凱基金，用庫存先賣後買的代價就是少賺了整個波段，... - 股市爆料同學會 - CMoney",
+        "date": "Tue, 16 Jun 2026 21:26:28 GMT"
+      }
+    ],
+    "category": "強勢領頭羊",
+    "action": "買進",
+    "color": "gold",
+    "range": "30.50 - 30.90",
+    "target": "34.00",
+    "stop": "29.50",
+    "desc": "法人籌碼強勁，均線多頭排列，短線動能佳。"
+  },
+  "2891": {
+    "name": "中信金",
+    "price_info": {
+      "latest_close": 72.2,
+      "latest_volume": 2213000,
+      "ma5": 70.34,
+      "ma20": 65.24,
+      "vol_ratio": 0.04133544686410491,
+      "ret_5": 0.06962958441840278,
+      "ret_1": 0.016901365468199824,
+      "closes_recent": [
+        67.6,
+        70.1,
+        70.8,
+        71.0,
+        72.2
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": 6185364,
+        "trust_net": -8885332,
+        "dealer_net": 3309908
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 40901104,
+        "trust_net": -29617082,
+        "dealer_net": 872496
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 26697673,
+        "trust_net": -10852963,
+        "dealer_net": -119615
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 3764746,
+        "trust_net": 2182845,
+        "dealer_net": -343065
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": -258407,
+        "trust_net": 2612233,
+        "dealer_net": -755751
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 17.11,
+      "pb": 2.54,
+      "yield": 3.52
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 19217919000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "中信金（2891）衝60元！不敗教主陳重銘：10幾年來領息賺價差皆超千萬| 台股雜談| 股市 - UDN",
+        "date": "Thu, 28 May 2026 07:00:00 GMT"
+      },
+      {
+        "title": "營收速報 - 中信金(2891)5月營收192.18億元年增率高達341.32％ - news.cnyes.com",
+        "date": "Fri, 12 Jun 2026 07:20:14 GMT"
+      },
+      {
+        "title": "【營收快訊】中信金(2891)公告05月營收 - CMoney",
+        "date": "Fri, 12 Jun 2026 06:28:48 GMT"
+      },
+      {
+        "title": "營收速報 - 中信金(2891)5月營收192.18億元年增率高達341.32％｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "date": "Thu, 11 Jun 2026 16:20:00 GMT"
+      },
+      {
+        "title": "富邦金(2881)、中信金(2891)、元大金(2885)全賣了！存股達人只留「這2檔」賺最強現金流...金融股10年不敗心法 - 今周刊",
+        "date": "Thu, 11 Jun 2026 04:59:00 GMT"
+      }
+    ],
+    "category": "強勢領頭羊",
+    "action": "分批低接",
+    "color": "gold",
+    "range": "70.5 - 71.5",
+    "target": "76.0",
+    "stop": "68.0",
+    "desc": "法人買超強勁，股價站穩均線，逢低分批佈局。"
+  },
+  "2880": {
+    "name": "華南金",
+    "price_info": {
+      "latest_close": 39.0,
+      "latest_volume": 1095000,
+      "ma5": 37.45,
+      "ma20": 34.29,
+      "vol_ratio": 0.03737022243206882,
+      "ret_5": 0.09396914446002809,
+      "ret_1": 0.02362204724409445,
+      "closes_recent": [
+        36.0,
+        36.7,
+        37.45,
+        38.1,
+        39.0
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -4529336,
+        "trust_net": 5931933,
+        "dealer_net": 1718148
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 15171633,
+        "trust_net": -10329944,
+        "dealer_net": 86655
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 10182354,
+        "trust_net": -5305000,
+        "dealer_net": 185947
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 10929904,
+        "trust_net": -1958,
+        "dealer_net": 7990034
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": 615519,
+        "trust_net": 4935093,
+        "dealer_net": -239617
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 18.41,
+      "pb": 2.18,
+      "yield": 3.81
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 7272247000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "2880 華南金- 幫大家拉紅了- 股市爆料同學會 - CMoney",
+        "date": "Wed, 17 Jun 2026 05:00:11 GMT"
+      },
+      {
+        "title": "公股四金二銀前5月合賺735億元年增近4成 華南金增幅居冠 - Yahoo股市",
+        "date": "Fri, 12 Jun 2026 09:22:55 GMT"
+      },
+      {
+        "title": "第一金、華南金誰更強？ 獲利、EPS 一路拚到股價 - UDN",
+        "date": "Mon, 15 Jun 2026 00:09:36 GMT"
+      },
+      {
+        "title": "營收速報 - 華南金(2880)4月營收72.33億元年增率高達59.58％｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "date": "Fri, 15 May 2026 07:00:00 GMT"
+      },
+      {
+        "title": "華南金(2880)銀行本業穩健成長，財管與海外布局成下一波動能！-小資女艾蜜莉 - CMoney投資網誌",
+        "date": "Wed, 27 May 2026 07:00:00 GMT"
+      }
+    ],
+    "category": "穩健金控",
+    "action": "買進",
+    "color": "gold",
+    "range": "38.0 - 38.5",
+    "target": "41.5",
+    "stop": "37.0",
+    "desc": "法人大買，股價強勢突破，穩健上攻。"
+  },
+  "2882": {
+    "name": "國泰金",
+    "price_info": {
+      "latest_close": 117.5,
+      "latest_volume": 1140000,
+      "ma5": 109.0,
+      "ma20": 95.41,
+      "vol_ratio": 0.02884653063206256,
+      "ret_5": 0.1691542288557214,
+      "ret_1": 0.03524229074889868,
+      "closes_recent": [
+        100.5,
+        104.0,
+        109.5,
+        113.5,
+        117.5
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -152250,
+        "trust_net": 785702,
+        "dealer_net": 318099
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 10927741,
+        "trust_net": -9667900,
+        "dealer_net": -110604
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 12274093,
+        "trust_net": -6401000,
+        "dealer_net": 816250
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": -147329,
+        "trust_net": 7719686,
+        "dealer_net": 1138526
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": -5810605,
+        "trust_net": 2452547,
+        "dealer_net": -1259582
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 17.22,
+      "pb": 2.27,
+      "yield": 3.08
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 25059074000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "金融股可以買嗎？國泰金、富邦金、凱基金…補漲行情能走多遠？原來背後有這「隱形獲利」可望引爆 - 今周刊",
+        "date": "Wed, 17 Jun 2026 01:53:00 GMT"
+      },
+      {
+        "title": "Factset 最新調查：國泰金(2882-TW)EPS預估上修至8.13元，預估目標價為93.7元｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "date": "Wed, 17 Jun 2026 00:10:00 GMT"
+      },
+      {
+        "title": "【06/17券商評等報告彙整】國泰金(2882) 今日僅1家券商發布績效評等報告，評價為看多，目標價為126元。 - CMoney",
+        "date": "Wed, 17 Jun 2026 10:50:03 GMT"
+      },
+      {
+        "title": "〈焦點股〉「隱形獲利」引爆價值補漲 國泰、凱基壽險型金控集體大翻身 - Yahoo股市",
+        "date": "Tue, 16 Jun 2026 05:01:56 GMT"
+      },
+      {
+        "title": "富邦金、國泰金帶頭衝！6金控飆新高　狂催除息行情 - ETtoday財經雲",
+        "date": "Tue, 16 Jun 2026 03:52:00 GMT"
+      }
+    ],
+    "category": "強勢領頭羊",
+    "action": "分批低接",
+    "color": "gold",
+    "range": "112.0 - 115.0",
+    "target": "128.0",
+    "stop": "108.0",
+    "desc": "法人大買，股價強勢突破，回檔分批低接。"
+  },
+  "2886": {
+    "name": "兆豐金",
+    "price_info": {
+      "latest_close": 45.55,
+      "latest_volume": 2063000,
+      "ma5": 44.51,
+      "ma20": 42.05,
+      "vol_ratio": 0.06804859655393596,
+      "ret_5": 0.04953915292766241,
+      "ret_1": 0.009977810134380165,
+      "closes_recent": [
+        43.4,
+        44.0,
+        44.5,
+        45.1,
+        45.55
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -4893557,
+        "trust_net": 587454,
+        "dealer_net": 1783666
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": -1561030,
+        "trust_net": -76215,
+        "dealer_net": 160143
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": -5873618,
+        "trust_net": 8578398,
+        "dealer_net": 178672
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 4077818,
+        "trust_net": 697160,
+        "dealer_net": 270128
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": -7931654,
+        "trust_net": 17353069,
+        "dealer_net": -551265
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 18.33,
+      "pb": 1.66,
+      "yield": 3.88
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 8373125000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "兆豐金(2886) 個股概覽 | 個股 - 股市 - CMoney",
+        "date": "Wed, 17 Jun 2026 15:34:28 GMT"
+      },
+      {
+        "title": "營收速報 - 兆豐金(2886)5月營收83.73億元年增率高達25.55％｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "date": "Thu, 11 Jun 2026 17:20:00 GMT"
+      },
+      {
+        "title": "【即時新聞】兆豐金(2886) 短多買盤進駐點火 同步拉出中紅K - CMoney投資網誌",
+        "date": "Tue, 02 Jun 2026 07:00:00 GMT"
+      },
+      {
+        "title": "49萬股民開心！兆豐金擬配1.75元「歷年最高現金股利」 殖利率破4％ - Yahoo股市",
+        "date": "Tue, 21 Apr 2026 07:00:00 GMT"
+      },
+      {
+        "title": "〈兆豐金法說〉高資產AUM年增17%！跟緊台商揮軍供應鏈重組3大「熱區」 - news.cnyes.com",
+        "date": "Wed, 27 May 2026 07:00:00 GMT"
+      }
+    ],
+    "category": "強勢領頭羊",
+    "action": "分批低接",
+    "color": "gold",
+    "range": "44.0 - 44.8",
+    "target": "47.5",
+    "stop": "42.0",
+    "desc": "法人買超強勁，股價多頭排列，回檔分批低接。"
+  },
+  "2881": {
+    "name": "富邦金",
+    "price_info": {
+      "latest_close": 139.5,
+      "latest_volume": 2662000,
+      "ma5": 131.3,
+      "ma20": 117.04,
+      "vol_ratio": 0.06276467411555556,
+      "ret_5": 0.11155378486055777,
+      "ret_1": 0.02952029520295203,
+      "closes_recent": [
+        122.0,
+        127.5,
+        132.0,
+        135.5,
+        139.5
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -14398452,
+        "trust_net": 19229233,
+        "dealer_net": 1494275
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": -13606187,
+        "trust_net": 2826981,
+        "dealer_net": -90773
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 7170353,
+        "trust_net": 2532280,
+        "dealer_net": 572850
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 4720379,
+        "trust_net": -167439,
+        "dealer_net": 8809249
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": -2816321,
+        "trust_net": 4671247,
+        "dealer_net": -1164234
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 18.64,
+      "pb": 2.08,
+      "yield": 3.14
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 30407516000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "富邦金、國泰金帶頭衝！6金控飆新高　狂催除息行情 - ETtoday財經雲",
+        "date": "Tue, 16 Jun 2026 03:52:00 GMT"
+      },
+      {
+        "title": "2881 富邦金 - 🌟再次記錄🌟 🔰富邦金盤中創新高139元 🔰國泰金盤... - 股市爆料同學會 - CMoney",
+        "date": "Wed, 17 Jun 2026 15:08:32 GMT"
+      },
+      {
+        "title": "【即時新聞】富邦金(2881)隱形獲利曝光飆新高，這「3檔概念股」爆量接棒上攻？ - CMoney投資網誌",
+        "date": "Wed, 17 Jun 2026 03:29:48 GMT"
+      },
+      {
+        "title": "富邦金股東會》蔡明興為股價抱屈「現在蠻低的」 明年股利有望比今年更高 - Yahoo股市",
+        "date": "Fri, 12 Jun 2026 03:40:08 GMT"
+      },
+      {
+        "title": "高殖利率金控股超人氣 國泰、凱基、中信、富邦有望衝破4.5% - 經濟日報",
+        "date": "Tue, 16 Jun 2026 09:00:00 GMT"
+      }
+    ],
+    "category": "強勢領頭羊",
+    "action": "買進",
+    "color": "gold",
+    "range": "138.5 - 139.5",
+    "target": "148.0",
+    "stop": "132.0",
+    "desc": "法人大買，動能強勁，波段續攻。"
+  },
+  "2885": {
+    "name": "元大金",
+    "price_info": {
+      "latest_close": 68.1,
+      "latest_volume": 1927000,
+      "ma5": 65.82,
+      "ma20": 61.91,
+      "vol_ratio": 0.07778948302498247,
+      "ret_5": 0.10551945574871903,
+      "ret_1": 0.020989482370631047,
+      "closes_recent": [
+        63.9,
+        65.0,
+        65.4,
+        66.7,
+        68.1
+      ],
+      "dates_recent": [
+        "2026-06-12",
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ]
+    },
+    "institutional": [
+      {
+        "date": "2026-06-11",
+        "foreign_net": -3166491,
+        "trust_net": -3371736,
+        "dealer_net": 1431178
+      },
+      {
+        "date": "2026-06-12",
+        "foreign_net": 2135370,
+        "trust_net": -814199,
+        "dealer_net": -47100
+      },
+      {
+        "date": "2026-06-15",
+        "foreign_net": 3001930,
+        "trust_net": -923670,
+        "dealer_net": -26019
+      },
+      {
+        "date": "2026-06-16",
+        "foreign_net": 4277173,
+        "trust_net": -2950291,
+        "dealer_net": 66290
+      },
+      {
+        "date": "2026-06-17",
+        "foreign_net": 9123897,
+        "trust_net": -5663047,
+        "dealer_net": -508366
+      }
+    ],
+    "pe_pb": {
+      "date": "2026-06-17",
+      "pe": 20.52,
+      "pb": 2.48,
+      "yield": 3.3
+    },
+    "revenue": [
+      {
+        "year": 2026,
+        "month": 5,
+        "revenue": 21261028000.0,
+        "yoy": 0.0
+      }
+    ],
+    "news": [
+      {
+        "title": "台股天量爆不停！元大金5月營收「年增928％」豪配2.2元股利 這些金融股也起舞 - Yahoo股市",
+        "date": "Mon, 15 Jun 2026 08:10:00 GMT"
+      },
+      {
+        "title": "13家金控元月賺747億元 法人看好五檔股息成長有助除息行情 - 經濟日報",
+        "date": "Mon, 15 Jun 2026 09:00:00 GMT"
+      },
+      {
+        "title": "元大金：元大證擬發行115年度第二次無擔保普通公司債，合計70億元(補充) - 台視全球資訊網",
+        "date": "Wed, 17 Jun 2026 10:06:35 GMT"
+      },
+      {
+        "title": "富邦金(2881)、中信金(2891)、元大金(2885)全賣了！存股達人只留「這2檔」賺最強現金流...金融股10年不敗心法 - 今周刊",
+        "date": "Thu, 11 Jun 2026 04:59:00 GMT"
+      },
+      {
+        "title": "2885 元大金- 🚨 主力加碼卡位？昨日主動式ETF 加碼這檔！ - 股市爆料同學會 - CMoney",
+        "date": "Tue, 16 Jun 2026 17:36:44 GMT"
+      }
+    ],
+    "category": "證券龍頭指標",
+    "action": "買進",
+    "color": "gold",
+    "range": "67.0 - 67.8",
+    "target": "73.0",
+    "stop": "63.5",
+    "desc": "證券龍頭，法人大買，多頭排列，動能強勁。"
+  }
+};
+
+    let activeStockId = "2881"; // Default to Fubon Financial
+    let priceChart = null;
+    let flowChart = null;
+
+    // Helper to format currency
+    function fmtPrice(val) {
+      return val ? val.toFixed(2) : '--';
+    }
+
+    function fmtVol(val) {
+      if (!val) return '--';
+      return (val / 1000).toLocaleString('zh-TW', {maximumFractionDigits: 0}) + ' 張';
+    }
+
+    function fmtChange(val) {
+      if (val === undefined || val === null) return '--';
+      const pct = (val * 100).toFixed(2);
+      return (val > 0 ? '+' : '') + pct + '%';
+    }
+
+    // Render stock cards on the sidebar
+    function renderStockList() {
+      const listEl = document.getElementById('stockList');
+      listEl.innerHTML = '';
+      
+      Object.keys(STOCK_DATA).forEach(id => {
+        const stock = STOCK_DATA[id];
+        const pInfo = stock.price_info;
+        
+        const card = document.createElement('div');
+        card.className = `stock-card ${id === activeStockId ? 'active' : ''}`;
+        card.onclick = () => selectStock(id);
+        
+        const changeClass = pInfo.ret_1 > 0 ? 'up' : (pInfo.ret_1 < 0 ? 'down' : 'flat');
+        const changeIcon = pInfo.ret_1 > 0 ? '▲' : (pInfo.ret_1 < 0 ? '▼' : '▬');
+        
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="stock-info">
+              <span class="name">${stock.name}</span>
+              <span class="code">${id}</span>
+            </div>
+            <span class="action-tag ${stock.color}">${stock.action}</span>
+          </div>
+          <div class="card-body">
+            <span class="card-price" style="color: ${pInfo.ret_1 > 0 ? 'var(--taiwan-rise)' : (pInfo.ret_1 < 0 ? 'var(--taiwan-fall)' : '#fff')}">${fmtPrice(pInfo.latest_close)}</span>
+            <span class="card-change ${changeClass}">${changeIcon} ${fmtChange(pInfo.ret_1)}</span>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    // Switch active stock
+    function selectStock(id) {
+      if (id === activeStockId) return;
+      activeStockId = id;
+      
+      // Update sidebar active states
+      document.querySelectorAll('.stock-card').forEach((card, idx) => {
+        const cardId = Object.keys(STOCK_DATA)[idx];
+        if (cardId === id) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+      
+      renderDetails();
+    }
+
+    // Render detailed stock view
+    function renderDetails() {
+      const stock = STOCK_DATA[activeStockId];
+      const pInfo = stock.price_info;
+      const pePb = stock.pe_pb || {pe: '--', pb: '--', yield: '--'};
+      const rev = stock.revenue && stock.revenue.length > 0 ? stock.revenue[0] : {yoy: 0, month: '--'};
+      
+      const container = document.getElementById('detailsContainer');
+      container.innerHTML = `
+        <!-- Top Summary Panel -->
+        <div class="glass-panel">
+          <div class="detail-header-section">
+            <div class="detail-title-wrap">
+              <div class="category-label"><i class="fa-solid fa-gem"></i> ${stock.category}</div>
+              <div class="detail-title-row">
+                <h2>${stock.name}</h2>
+                <span class="code-badge">${activeStockId}</span>
+                <span class="action-tag ${stock.color}" style="font-size: 0.85rem; padding: 4px 12px;">今日策略: ${stock.action}</span>
+              </div>
+            </div>
+            <div class="detail-price-box">
+              <div class="detail-price" style="color: ${pInfo.ret_1 > 0 ? 'var(--taiwan-rise)' : (pInfo.ret_1 < 0 ? 'var(--taiwan-fall)' : '#fff')}">${fmtPrice(pInfo.latest_close)}</div>
+              <div class="detail-change ${pInfo.ret_1 > 0 ? 'up' : 'down'}">
+                ${pInfo.ret_1 > 0 ? '▲' : '▼'} ${fmtChange(pInfo.ret_1)} (昨日收盤)
+              </div>
+            </div>
+          </div>
+          
+          <div class="summary-card">
+            <strong>📊 量化評估簡評：</strong>${stock.desc}
+          </div>
+          
+          <!-- Metrics Row -->
+          <div class="metrics-grid" style="margin-top: 24px;">
+            <div class="metric-card">
+              <div class="metric-title">本益比 (PE)</div>
+              <div class="metric-value">${pePb.pe}</div>
+              <div class="metric-sub">同業平均約 16.5 倍</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">股價淨值比 (PB)</div>
+              <div class="metric-value gold-text">${pePb.pb}</div>
+              <div class="metric-sub">低於 1.5 具估值優勢</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">預估殖利率</div>
+              <div class="metric-value" style="color: #10b981;">${pePb.yield}%</div>
+              <div class="metric-sub">以 2026 最新配息推算</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">最新月營收年增率</div>
+              <div class="metric-value" style="color: ${rev.yoy > 0 ? 'var(--taiwan-rise)' : 'var(--taiwan-fall)'};">${rev.yoy.toFixed(1)}%</div>
+              <div class="metric-sub">營收月份: ${rev.month} 月</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-container">
+          <div class="chart-box">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-chart-line"></i> 近期價格走勢與乖離率</h3>
+              <span class="section-note">近5日收盤K線資料</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="priceChartCanvas"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-box">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-users-rays"></i> 三大法人籌碼流向</h3>
+              <span class="section-note">近5日買賣超口數 (張)</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="flowChartCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- News and Strategy split -->
+        <div class="split-grid">
+          <!-- Left: News list -->
+          <div class="news-box">
+            <div class="news-header">
+              <h3><i class="fa-regular fa-newspaper"></i> 近期相關新聞輿情</h3>
+            </div>
+            <div class="news-list" id="newsList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+          
+          <!-- Right: Strategy and limits -->
+          <div class="strategy-box">
+            <div class="strategy-title">
+              <h3><i class="fa-solid fa-shield-halved"></i> 交易策略與風控指引</h3>
+            </div>
+            <table class="strategy-table">
+              <tr>
+                <td class="label">建議佈局區間</td>
+                <td class="val entry">${stock.range} 元</td>
+              </tr>
+              <tr>
+                <td class="label">波段目標價</td>
+                <td class="val target">${stock.target} 元</td>
+              </tr>
+              <tr>
+                <td class="label">風控停損價</td>
+                <td class="val stop">${stock.stop} 元</td>
+              </tr>
+              <tr>
+                <td class="label">5日漲跌幅</td>
+                <td class="val" style="color: ${pInfo.ret_5 > 0 ? 'var(--taiwan-rise)' : 'var(--taiwan-fall)'};">${fmtChange(pInfo.ret_5)}</td>
+              </tr>
+              <tr>
+                <td class="label">量能擴張比</td>
+                <td class="val">${pInfo.vol_ratio.toFixed(2)} 倍</td>
+              </tr>
+            </table>
+            
+            <div class="warning-panel">
+              <strong>⚠️ 風險管理提醒：</strong>
+              金融指數創歷史新高，短線正乖離偏大，交易上務必遵循「分批不追高」原則，嚴格執行風控停損。
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Render News
+      const newsListEl = document.getElementById('newsList');
+      if (stock.news && stock.news.length > 0 && stock.news[0].title !== "") {
+        stock.news.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'news-item';
+          
+          // Determine sentiment based on title keywords
+          let sentiment = 'neutral';
+          let sentimentLabel = '中性';
+          
+          if (/買超|大漲|大增|飆|創新高|創同期新高|強勁/i.test(item.title)) {
+            sentiment = 'positive';
+            sentimentLabel = '偏多';
+          } else if (/賣超|跌|大賣|下挫|衰退|大減|失望/i.test(item.title)) {
+            sentiment = 'negative';
+            sentimentLabel = '偏空';
+          }
+          
+          div.innerHTML = `
+            <div class="news-item-title">${item.title}</div>
+            <div class="news-item-meta">
+              <span>${item.date ? item.date.replace(' GMT', '') : '即時新聞'}</span>
+              <span class="sentiment-tag ${sentiment}">${sentimentLabel}</span>
+            </div>
+          `;
+          newsListEl.appendChild(div);
+        });
+      } else {
+        newsListEl.innerHTML = '<div class="news-item" style="color: var(--text-faint); text-align:center;">無近期相關新聞</div>';
+      }
+
+      // Render Charts
+      initCharts(stock);
+    }
+
+    // Initialize Chart.js charts
+    function initCharts(stock) {
+      if (priceChart) priceChart.destroy();
+      if (flowChart) flowChart.destroy();
+
+      const pInfo = stock.price_info;
+      const prices = pInfo.closes_recent;
+      const dates = pInfo.dates_recent;
+      
+      const priceCtx = document.getElementById('priceChartCanvas').getContext('2d');
+      priceChart = new Chart(priceCtx, {
+        type: 'line',
+        data: {
+          labels: dates,
+          datasets: [
+            {
+              label: '收盤價 (元)',
+              data: prices,
+              borderColor: '#d4af37',
+              backgroundColor: 'rgba(212, 175, 55, 0.1)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.15,
+              pointBackgroundColor: '#ffffff',
+              pointBorderColor: '#d4af37',
+              pointRadius: 5,
+              pointHoverRadius: 7
+            },
+            {
+              label: '5日均線 (MA5)',
+              data: Array(dates.length).fill(pInfo.ma5),
+              borderColor: 'rgba(239, 68, 68, 0.5)',
+              borderWidth: 1.5,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0
+            },
+            {
+              label: '20日均線 (MA20)',
+              data: Array(dates.length).fill(pInfo.ma20),
+              borderColor: 'rgba(59, 130, 246, 0.5)',
+              borderWidth: 1.5,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#9ca3af', font: { family: 'Noto Sans TC' } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#9ca3af' }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#9ca3af' }
+            }
+          }
+        }
+      });
+
+      // Flow Chart (institutional net buying)
+      const instData = stock.institutional || [];
+      const instDates = instData.map(d => d.date);
+      const foreign = instData.map(d => d.foreign_net / 1000); // in thousands
+      const trust = instData.map(d => d.trust_net / 1000);
+
+      const flowCtx = document.getElementById('flowChartCanvas').getContext('2d');
+      flowChart = new Chart(flowCtx, {
+        type: 'bar',
+        data: {
+          labels: instDates,
+          datasets: [
+            {
+              label: '外資 (張)',
+              data: foreign,
+              backgroundColor: 'rgba(239, 68, 68, 0.85)',
+              borderColor: 'rgba(239, 68, 68, 1)',
+              borderWidth: 1
+            },
+            {
+              label: '投信 (張)',
+              data: trust,
+              backgroundColor: 'rgba(59, 130, 246, 0.85)',
+              borderColor: 'rgba(59, 130, 246, 1)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#9ca3af', font: { family: 'Noto Sans TC' } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#9ca3af' }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#9ca3af' }
+            }
+          }
+        }
+      });
+    }
+
+    // Init onload
+    window.onload = () => {
+      renderStockList();
+      renderDetails();
+    };
+  </script>
+</body>
+</html>

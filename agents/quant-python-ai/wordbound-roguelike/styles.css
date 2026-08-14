@@ -176,9 +176,16 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .answer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .answer-button { min-height: 48px; display: flex; gap: 10px; align-items: center; padding: 10px 12px; text-align: left; border: 1px solid var(--line); border-radius: 3px 11px 3px 11px; background: var(--cream); cursor: pointer; font-size: 11px; line-height: 1.35; transition: .18s ease; }
 .answer-button:hover:not(:disabled) { border-color: var(--teal); transform: translateY(-2px); box-shadow: 0 7px 13px rgba(30,70,65,.08); }
-.answer-button span { flex: 0 0 auto; width: 23px; height: 23px; display: grid; place-items: center; color: var(--ink-soft); border-radius: 6px; background: rgba(23,60,66,.07); font: 500 9px var(--mono); }
-.answer-button.correct { color: white; border-color: var(--teal); background: var(--teal); }.answer-button.correct span { color: var(--teal); background: white; }
-.answer-button.wrong { color: white; border-color: var(--coral); background: var(--coral); }.answer-button.wrong span { color: var(--coral); background: white; }
+.answer-button .answer-key, .answer-button > span:first-child { flex: 0 0 auto; width: 23px; height: 23px; display: grid; place-items: center; color: var(--ink-soft); border-radius: 6px; background: rgba(23,60,66,.07); font: 500 9px var(--mono); }
+.answer-content { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.answer-main { font-weight: 600; color: var(--ink); line-height: 1.35; }
+.answer-zh { font: 500 10.5px var(--sans); color: var(--teal-dark); line-height: 1.3; opacity: .9; }
+.answer-button.correct { color: white; border-color: var(--teal); background: var(--teal); }
+.answer-button.correct .answer-key, .answer-button.correct > span:first-child { color: var(--teal); background: white; }
+.answer-button.correct .answer-main, .answer-button.correct .answer-zh { color: white; }
+.answer-button.wrong { color: white; border-color: var(--coral); background: var(--coral); }
+.answer-button.wrong .answer-key, .answer-button.wrong > span:first-child { color: var(--coral); background: white; }
+.answer-button.wrong .answer-main, .answer-button.wrong .answer-zh { color: white; }
 .answer-button.faded { opacity: .35; }
 .power-row { display: flex; gap: 9px; margin-top: 13px; }
 .power-button { padding: 7px 10px; border: 0; background: transparent; cursor: pointer; color: var(--ink-soft); font-size: 9px; }.power-button:hover { color: var(--ink); }.power-button span { color: var(--gold); }.power-button small { margin-left: 4px; font: 400 8px var(--mono); opacity: .7; }

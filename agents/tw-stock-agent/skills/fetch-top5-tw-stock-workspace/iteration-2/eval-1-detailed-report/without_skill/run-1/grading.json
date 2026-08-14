@@ -1,0 +1,49 @@
+{
+  "expectations": [
+    {
+      "text": "Verify that exactly 5 stocks are selected as the top recommended stocks.",
+      "passed": true,
+      "evidence": "Found recommended stocks in table: ['2344', '2357', '2408', '2356', '2327']"
+    },
+    {
+      "text": "Verify that 3481 (Innolux) is excluded from the top 5 watchlist.",
+      "passed": true,
+      "evidence": "3481 is not in the top 5 watchlist and is mentioned in the exclusion list."
+    },
+    {
+      "text": "Verify that 2324 (Compal) is excluded from the top 5 watchlist.",
+      "passed": true,
+      "evidence": "2324 is not in the top 5 watchlist and is mentioned in the exclusion list."
+    },
+    {
+      "text": "Verify that entry, TP, and SL prices are provided for the recommended stocks.",
+      "passed": true,
+      "evidence": "Found TP/SL or 停利/停損 targets in the HTML report."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tokens": 44373,
+    "duration_ms": 246000,
+    "output_chars": 45008
+  },
+  "timing": {
+    "executor_duration_seconds": 246.0,
+    "total_duration_seconds": 246.0
+  },
+  "claims": [],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "All assertions evaluated against HTML output."
+  }
+}

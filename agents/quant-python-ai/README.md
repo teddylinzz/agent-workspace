@@ -92,14 +92,32 @@ uv run python main.py
 >> 比較 台積電 和 聯發科 的近期新聞情緒與財務指標差異
 ```
 
-### CLI 指令
+### CLI 指令與快速操作範例
 
-| 指令 | 說明 |
-|------|------|
-| `/models` | 列出可用模型（範例清單） |
-| `/model <provider:model>` | 切換 LLM 模型（例如 `/model openai:gpt-4o-mini` 或 `/model openrouter:anthropic/claude-3.5-sonnet`） |
-| `/help` | 顯示幫助資訊 |
-| `/quit` | 離開程式 |
+進入互動介面後，您可以使用以下指令與查詢：
+
+| 指令 | 說明 | 範例 |
+|------|------|------|
+| **輸入查詢任務** | 直接輸入中文或英文，對個股或市場進行研究 | `00937b的外資購買狀況` 或 `整理 2330 近期重大財務事件` *(代碼已支援自動大小寫與空白校正)* |
+| `/quant backtest <描述>` | 調用量化回測引擎執行指定邏輯 | `/quant backtest 月營收連續成長的電子股，月度調倉` |
+| `/quant positions` | 直接印出最近一次策略回測所產生的最新換股持倉建議 | `/quant positions` |
+| `/quant help` | 顯示量化策略子指令詳細說明 | `/quant help` |
+| `/models` | 列出系統支援的所有 LLM 供應商與可用模型範例 | `/models` |
+| `/model <id>` | 線上即時切換背後使用的 LLM 模型 | `/model gemini:gemini-1.5-pro` 或 `/model openai:gpt-4o-mini` |
+| `/help` | 顯示系統基礎幫助資訊 | `/help` |
+| `/quit` | 安全離開程式 | `/quit` |
+
+---
+
+### 🔌 MCP 伺服器啟動與整合
+
+本專案同時內建 FastMCP 服務，可將 FinLab 與 FinMind 的量化工具包裝成 MCP Tool 提供給外部 Client（如 Claude Desktop）呼叫。
+
+* **啟動 MCP 服務：**
+  ```bash
+  uv run mcp_server.py
+  ```
+  詳細的 `claude_desktop_config.json` 整合設定請參見 [mcp_server.py](file:///Users/apple/quant-python-ai-main/mcp_server.py) 檔案標頭說明。
 
 ## 引用（Citations）與安全
 

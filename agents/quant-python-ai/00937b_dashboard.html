@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="00937B 群益ESG投等債20+ ETF 買賣超狀況與交易策略分析儀表板。提供最新籌碼動向、三大法人買賣超統計及折溢價風險計算。">
+  <title>00937B 籌碼與交易策略分析儀表板</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Design Tokens */
+    :root {
+      --bg-base: #090d16;
+      --bg-surface: rgba(22, 30, 49, 0.7);
+      --bg-surface-hover: rgba(30, 41, 67, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(16, 185, 129, 0.3);
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --brand-emerald: #10b981;
+      --brand-emerald-glow: rgba(16, 185, 129, 0.15);
+      --brand-gold: #fbbf24;
+      
+      /* Taiwan market colors: Red = Rise, Green = Fall */
+      --tw-up: #f43f5e;     /* Vibrant Red */
+      --tw-up-soft: rgba(244, 63, 94, 0.15);
+      --tw-down: #10b981;   /* Vibrant Green */
+      --tw-down-soft: rgba(16, 185, 129, 0.15);
+      
+      --safe-color: #10b981;
+      --fair-color: #fbbf24;
+      --warn-color: #f97316;
+      --danger-color: #ef4444;
+      
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(251, 191, 36, 0.06) 0%, transparent 40%);
+      color: var(--text-primary);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 60px;
+    }
+
+    /* Header styling */
+    header {
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(9, 13, 22, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--brand-emerald), var(--brand-gold));
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: #000;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-text h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(to right, #ffffff, #dcdcdc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .last-update {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1400px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+    }
+
+    /* Hero Section */
+    .hero-card {
+      background: linear-gradient(135deg, rgba(22, 30, 49, 0.8) 0%, rgba(11, 17, 32, 0.9) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-premium);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .hero-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .etf-tag {
+      background: var(--brand-emerald-glow);
+      color: var(--brand-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+
+    .hero-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .hero-metrics {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .metric-item {
+      text-align: right;
+    }
+    @media (max-width: 768px) {
+      .metric-item {
+        text-align: left;
+      }
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+
+    .metric-value.up {
+      color: var(--tw-up);
+    }
+
+    /* Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .glass-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-premium);
+      backdrop-filter: blur(10px);
+      transition: var(--transition-smooth);
+    }
+
+    .glass-card:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      border-left: 4px solid var(--brand-emerald);
+      padding-left: 10px;
+    }
+
+    /* Calculator Styling */
+    .calc-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .calc-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .calc-group label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .calc-input-wrapper {
+      position: relative;
+    }
+
+    .calc-input-wrapper span {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .calc-control {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 36px 12px 12px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .calc-control:focus {
+      border-color: var(--brand-emerald);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
+    }
+
+    .calc-result-box {
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      margin-top: 15px;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-safe {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe-color);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-fair {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--fair-color);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .badge-warn {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--warn-color);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger-color);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .result-tip {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    /* Tabs Layout */
+    .tab-section {
+      margin-top: 30px;
+    }
+
+    .tabs-header {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition-smooth);
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--brand-emerald);
+      font-weight: 700;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-emerald), var(--brand-gold));
+      border-radius: 99px;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 14px 16px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Numbers styling */
+    .num-positive {
+      color: var(--tw-up);
+      font-weight: 600;
+    }
+
+    .num-negative {
+      color: var(--tw-down);
+      font-weight: 600;
+    }
+
+    .num-neutral {
+      color: var(--text-secondary);
+    }
+
+    /* Strategy Cards */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .strat-card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .strat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(251, 191, 36, 0.25);
+      background: rgba(22, 30, 49, 0.5);
+    }
+
+    .strat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .strat-badge {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--brand-gold);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .strat-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .strat-text {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      margin-bottom: 15px;
+    }
+
+    .strat-bullets {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .strat-bullets li {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .strat-bullets li i {
+      color: var(--brand-emerald);
+      margin-top: 4px;
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      background: rgba(249, 115, 22, 0.08);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .alert-icon {
+      color: var(--warn-color);
+      font-size: 1.5rem;
+    }
+
+    .alert-content h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffedd5;
+      margin-bottom: 4px;
+    }
+
+    .alert-content p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Cumulative flow container */
+    .flow-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .flow-stat-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .flow-stat-info p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flow-stat-info h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .flow-stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .flow-stat-icon.up {
+      background: rgba(244, 63, 94, 0.1);
+      color: var(--tw-up);
+    }
+    
+    .flow-stat-icon.down {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--tw-down);
+    }
+
+    .flow-stat-icon.neutral {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-secondary);
+    }
+
+    /* Basic Info Tab styling */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .profile-section h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--brand-gold);
+    }
+
+    .profile-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .profile-list li {
+      font-size: 0.88rem;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .profile-list li .label {
+      color: var(--text-secondary);
+    }
+
+    .profile-list li .value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    footer {
+      max-width: 1400px;
+      margin: 40px auto 0;
+      padding: 24px;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    footer p {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">債</div>
+        <div class="brand-text">
+          <h1>00937B 籌碼與交易策略分析</h1>
+          <p>Capital ESG 20+ Yrs BBB Bond ETF</p>
+        </div>
+      </div>
+      <div class="last-update">
+        <i class="fa-regular fa-clock"></i>
+        <span>資料更新：2026-06-17</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero metrics -->
+    <section class="hero-card">
+      <div class="hero-info">
+        <span class="etf-tag">群益投信旗艦級商品</span>
+        <h2 class="hero-title">群益ESG 20年期以上BBB級投資等級公司債ETF</h2>
+        <p class="hero-desc">聚焦 ESG 優良表現、票面利率 > 4.5% 之長天期 BBB 投資等級美元公司債，月配息機制。</p>
+      </div>
+      <div class="hero-metrics">
+        <div class="metric-item">
+          <div class="metric-label">收盤市價 (06-17)</div>
+          <div class="metric-value up">14.91 元</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">前日漲跌</div>
+          <div class="metric-value neutral">0.00 (0.00%)</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">基金規模</div>
+          <div class="metric-value">約 2,606 億新台幣</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
+      <!-- Left Panel: Chart -->
+      <section class="glass-card">
+        <h2 class="card-title"><i class="fa-solid fa-chart-column"></i> 籌碼流向與價格趨勢 (近 15 個交易日)</h2>
+        <div style="position: relative; height: 360px; width: 100%;">
+          <canvas id="flowChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Right Panel: Interactive Calculator -->
+      <section class="glass-card">
+        <h2 class="card-title"><i class="fa-solid fa-calculator"></i> 即時折溢價計算器</h2>
+        <p class="result-label" style="margin-bottom: 15px; font-size: 0.8rem; line-height: 1.4;">
+          輸入交易商或投信官網顯示之即時預估淨值與目前盤中市價，即可快速判斷溢價風險。
+        </p>
+        
+        <div class="calc-row">
+          <div class="calc-group">
+            <label for="marketPrice">目前市價 (元)</label>
+            <div class="calc-input-wrapper">
+              <input type="number" id="marketPrice" class="calc-control" value="14.91" step="0.01" min="0" oninput="calculatePremium()">
+              <span>元</span>
+            </div>
+          </div>
+          <div class="calc-group">
+            <label for="navPrice">即時預估淨值 (元)</label>
+            <div class="calc-input-wrapper">
+              <input type="number" id="navPrice" class="calc-control" value="15.02" step="0.01" min="0" oninput="calculatePremium()">
+              <span>元</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-result-box">
+          <p class="result-label">計算折溢價率</p>
+          <div class="result-value" id="premiumResult">+0.13%</div>
+          <span class="result-badge badge-fair" id="riskBadge">合理區 (Fair)</span>
+          <p class="result-tip" id="riskExplanation">溢價率在合理範圍，此區間適合一般買入操作。</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner">
+      <i class="fa-solid fa-triangle-exclamation alert-icon"></i>
+      <div class="alert-content">
+        <h4>注意折溢價修正風險</h4>
+        <p>本商品交易量巨大，若盤中溢價過高，自營商會於初級市場申購進行套利，導致次級市場市價被迫向淨值收斂。買入時請嚴格避開溢價 > 0.5% 的時段。</p>
+      </div>
+    </div>
+
+    <!-- Tabs section -->
+    <section class="tab-section">
+      <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchTab('tab-flows', this)" id="btnTabFlows">籌碼數據明細</button>
+        <button class="tab-btn" onclick="switchTab('tab-strategy', this)" id="btnTabStrategy">交易策略評估框架</button>
+        <button class="tab-btn" onclick="switchTab('tab-profile', this)" id="btnTabProfile">基金基本資料</button>
+      </div>
+
+      <!-- Tab Content 1: Flows -->
+      <div class="tab-content active" id="tab-flows">
+        <!-- Flow summary stats -->
+        <div class="flow-summary-grid">
+          <div class="flow-stat-box">
+            <div class="flow-stat-info">
+              <p>15日累計外資買賣超</p>
+              <h3 class="num-positive">+502,291 張</h3>
+            </div>
+            <div class="flow-stat-icon up"><i class="fa-solid fa-building-columns"></i></div>
+          </div>
+          <div class="flow-stat-box">
+            <div class="flow-stat-info">
+              <p>15日累計自營避險買賣超</p>
+              <h3 class="num-positive">+210,902 張</h3>
+            </div>
+            <div class="flow-stat-icon up"><i class="fa-solid fa-shield-halved"></i></div>
+          </div>
+          <div class="flow-stat-box">
+            <div class="flow-stat-info">
+              <p>15日累計自營自行買賣</p>
+              <h3 class="num-negative">-3,208 張</h3>
+            </div>
+            <div class="flow-stat-icon down"><i class="fa-solid fa-user-tie"></i></div>
+          </div>
+          <div class="flow-stat-box">
+            <div class="flow-stat-info">
+              <p>15日累計法人總計</p>
+              <h3 class="num-positive">+709,985 張</h3>
+            </div>
+            <div class="flow-stat-icon up"><i class="fa-solid fa-square-plus"></i></div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>收盤價 (元)</th>
+                <th>漲跌 (元)</th>
+                <th>成交量 (張)</th>
+                <th>外資淨買超 (張)</th>
+                <th>投信淨買超 (張)</th>
+                <th>自營自行買賣 (張)</th>
+                <th>自營避險買賣 (張)</th>
+                <th>法人合計買賣 (張)</th>
+              </tr>
+            </thead>
+            <tbody id="flowTableBody">
+              <!-- JS will inject table rows here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Strategy -->
+      <div class="tab-content" id="tab-strategy">
+        <div class="strategy-grid">
+          <div class="strat-card">
+            <div class="strat-header">
+              <span class="strat-badge">定期定額</span>
+              <i class="fa-solid fa-arrows-spin" style="color: var(--brand-gold)"></i>
+            </div>
+            <h3 class="strat-title" style="margin-bottom: 8px;">長期存股/領息族</h3>
+            <p class="strat-text">以穩定獲取每月配息為目標，不在意短期利率波動與價格震盪的投資人。</p>
+            <ul class="strat-bullets">
+              <li><i class="fa-solid fa-circle-check"></i> 設置每月自動扣款，分散平均持有成本。</li>
+              <li><i class="fa-solid fa-circle-check"></i> 只要「折溢價合理」（小於0.2%），隨時是可執行日。</li>
+              <li><i class="fa-solid fa-circle-check"></i> 配息可選擇再投入，發揮複利滾存效益。</li>
+            </ul>
+          </div>
+
+          <div class="strat-card">
+            <div class="strat-header">
+              <span class="strat-badge">分批佈局</span>
+              <i class="fa-solid fa-stairs" style="color: var(--brand-gold)"></i>
+            </div>
+            <h3 class="strat-title" style="margin-bottom: 8px;">波段差價與降息獲利者</h3>
+            <p class="strat-text">尋求在利率下行階段同時賺取固定利息與債券價格上行資本利得者。</p>
+            <ul class="strat-bullets">
+              <li><i class="fa-solid fa-circle-check"></i> 密切監控美債10年期殖利率走勢，回彈時分批加碼。</li>
+              <li><i class="fa-solid fa-circle-check"></i> 設定防守區（如 20 日均線拉回時）作為金字塔分批起點。</li>
+              <li><i class="fa-solid fa-circle-check"></i> 控制每筆資金投入比例，預留利率再次飆升的防禦金。</li>
+            </ul>
+          </div>
+
+          <div class="strat-card">
+            <div class="strat-header">
+              <span class="strat-badge">大筆避風港</span>
+              <i class="fa-solid fa-vault" style="color: var(--brand-gold)"></i>
+            </div>
+            <h3 class="strat-title" style="margin-bottom: 8px;">大資金鎖利/避險配置</h3>
+            <p class="strat-text">大額閒置資金期望進入安全資產，鎖定目前將近 6% 水準的高利息收益。</p>
+            <ul class="strat-bullets">
+              <li><i class="fa-solid fa-circle-check"></i> 嚴防高溢價，溢價率高於0.3%時絕不一次買滿。</li>
+              <li><i class="fa-solid fa-circle-check"></i> 配合配息除息日前後的價格變動趨勢進行分次吸納。</li>
+              <li><i class="fa-solid fa-circle-check"></i> 評估新台幣兌美元匯率變動對持有價值之長期影響。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Profile -->
+      <div class="tab-content" id="tab-profile">
+        <div class="glass-card">
+          <div class="profile-grid">
+            <div class="profile-section">
+              <h3>基金概要</h3>
+              <ul class="profile-list">
+                <li><span class="label">基金簡稱</span><span class="value">群益ESG投等債20+</span></li>
+                <li><span class="label">證券代碼</span><span class="value">00937B</span></li>
+                <li><span class="label">基金經理公司</span><span class="value">群益證券投資信託股份有限公司</span></li>
+                <li><span class="label">成立日期</span><span class="value">2023 年 11 月 28 日</span></li>
+                <li><span class="label">配息頻率</span><span class="value">月配息 (有收益平準金)</span></li>
+                <li><span class="label">經理費率</span><span class="value">0.20% / 年 (隨規模調整)</span></li>
+                <li><span class="label">保管費率</span><span class="value">0.05% / 年</span></li>
+              </ul>
+            </div>
+            
+            <div class="profile-section">
+              <h3>追蹤指數與投資策略</h3>
+              <ul class="profile-list">
+                <li><span class="label">追蹤指數</span><span class="value">ICE ESG 20年期以上BBB級成熟市場大型美元公司債指數</span></li>
+                <li><span class="label">成分債券篩選標準</span><span class="value">20年期以上、BBB級、票面利率 > 4.5%、ESG評級合格</span></li>
+                <li><span class="label">單一產業曝險上限</span><span class="value">10%</span></li>
+                <li><span class="label">指數成分股調整</span><span class="value">每月調整</span></li>
+                <li><span class="label">收益率特性</span><span class="value">側重成熟市場大型 BBB 級發行人以兼顧票息與風險</span></li>
+                <li><span class="label">主要成分股發行國</span><span class="value">主要為美國 (US Maturity Bonds)</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 量化投資研究 AI 助手 數據分析與展示儀表板</p>
+    <p style="font-size: 0.75rem; color: var(--text-muted);">免責聲明：本儀表板內所列數據皆採自公開數據與API庫，不構成任何證券之投資推薦或買賣邀約。投資人請注意債券發行機構違約風險、信用利差擴大風險以及利率波動之折價損失。</p>
+  </footer>
+
+  <script>
+    // Embedded Data Set
+    const dataset = [
+      { date: "2026-06-17", close: 14.91, spread: 0.00, volume: 37097, foreign: -511, trust: 0, dealerSelf: 800, dealerHedge: 16048, total: 16337 },
+      { date: "2026-06-16", close: 14.91, spread: -0.13, volume: 48946, foreign: -22169, trust: 0, dealerSelf: 1700, dealerHedge: 7601, total: -12868 },
+      { date: "2026-06-15", close: 15.04, spread: 0.04, volume: 56858, foreign: 19487, trust: 0, dealerSelf: 80, dealerHedge: 8938, total: 28504 },
+      { date: "2026-06-12", close: 15.00, spread: 0.11, volume: 93504, foreign: 51530, trust: 0, dealerSelf: -1600, dealerHedge: 22564, total: 72494 },
+      { date: "2026-06-11", close: 14.89, spread: 0.02, volume: 52518, foreign: 4847, trust: 0, dealerSelf: 0, dealerHedge: 30260, total: 35107 },
+      { date: "2026-06-10", close: 14.87, spread: 0.07, volume: 59155, foreign: 23836, trust: 0, dealerSelf: -930, dealerHedge: 24158, total: 47064 },
+      { date: "2026-06-09", close: 14.80, spread: -0.05, volume: 54087, foreign: -30145, trust: 0, dealerSelf: -50, dealerHedge: 28957, total: -1238 },
+      { date: "2026-06-08", close: 14.85, spread: -0.06, volume: 110229, foreign: 73281, trust: 0, dealerSelf: 0, dealerHedge: 14354, total: 87635 },
+      { date: "2026-06-05", close: 14.91, spread: 0.05, volume: 61628, foreign: 34785, trust: 0, dealerSelf: 0, dealerHedge: 9232, total: 44017 },
+      { date: "2026-06-04", close: 14.86, spread: -0.02, volume: 42939, foreign: 14958, trust: 0, dealerSelf: 2992, dealerHedge: 9741, total: 27691 },
+      { date: "2026-06-03", close: 14.88, spread: -0.07, volume: 43627, foreign: 1375, trust: 0, dealerSelf: 0, dealerHedge: 13215, total: 14590 },
+      { date: "2026-06-02", close: 14.95, spread: 0.13, volume: 125441, foreign: 76504, trust: 0, dealerSelf: -1190, dealerHedge: 28695, total: 104008 },
+      { date: "2026-06-01", close: 14.82, spread: -0.03, volume: 77657, foreign: 48976, trust: 0, dealerSelf: -800, dealerHedge: 2880, total: 51056 },
+      { date: "2026-05-29", close: 14.85, spread: 0.13, volume: 111726, foreign: 68579, trust: 0, dealerSelf: -1110, dealerHedge: 16161, total: 83630 },
+      { date: "2026-05-28", close: 14.72, spread: -0.04, volume: 81051, foreign: 51229, trust: 0, dealerSelf: -600, dealerHedge: -16854, total: 33775 }
+    ];
+
+    // Populate Table
+    const tableBody = document.getElementById("flowTableBody");
+    dataset.forEach(row => {
+      const spreadClass = row.spread > 0 ? 'num-positive' : (row.spread < 0 ? 'num-negative' : 'num-neutral');
+      const spreadSign = row.spread > 0 ? '+' : '';
+      
+      const foreignClass = row.foreign > 0 ? 'num-positive' : (row.foreign < 0 ? 'num-negative' : 'num-neutral');
+      const foreignVal = row.foreign > 0 ? `+${row.foreign.toLocaleString()}` : row.foreign.toLocaleString();
+      
+      const dealerSelfClass = row.dealerSelf > 0 ? 'num-positive' : (row.dealerSelf < 0 ? 'num-negative' : 'num-neutral');
+      const dealerSelfVal = row.dealerSelf > 0 ? `+${row.dealerSelf.toLocaleString()}` : row.dealerSelf.toLocaleString();
+      
+      const dealerHedgeClass = row.dealerHedge > 0 ? 'num-positive' : (row.dealerHedge < 0 ? 'num-negative' : 'num-neutral');
+      const dealerHedgeVal = row.dealerHedge > 0 ? `+${row.dealerHedge.toLocaleString()}` : row.dealerHedge.toLocaleString();
+      
+      const totalClass = row.total > 0 ? 'num-positive' : (row.total < 0 ? 'num-negative' : 'num-neutral');
+      const totalVal = row.total > 0 ? `+${row.total.toLocaleString()}` : row.total.toLocaleString();
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.date}</td>
+        <td style="font-weight: 600;">${row.close.toFixed(2)}</td>
+        <td class="${spreadClass}">${spreadSign}${row.spread.toFixed(2)}</td>
+        <td>${row.volume.toLocaleString()}</td>
+        <td class="${foreignClass}">${foreignVal}</td>
+        <td>${row.trust.toLocaleString()}</td>
+        <td class="${dealerSelfClass}">${dealerSelfVal}</td>
+        <td class="${dealerHedgeClass}">${dealerHedgeVal}</td>
+        <td class="${totalClass}" style="font-weight: 700;">${totalVal}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+
+    // Premium Calculator Logic
+    function calculatePremium() {
+      const marketPrice = parseFloat(document.getElementById("marketPrice").value);
+      const navPrice = parseFloat(document.getElementById("navPrice").value);
+      
+      const resultBox = document.getElementById("premiumResult");
+      const badge = document.getElementById("riskBadge");
+      const explanation = document.getElementById("riskExplanation");
+      
+      if (isNaN(marketPrice) || isNaN(navPrice) || navPrice <= 0) {
+        resultBox.innerText = "--";
+        badge.innerText = "輸入錯誤";
+        badge.className = "result-badge badge-danger";
+        explanation.innerText = "請輸入正確的股價與淨值。";
+        return;
+      }
+      
+      const premium = ((marketPrice - navPrice) / navPrice) * 100;
+      const sign = premium >= 0 ? '+' : '';
+      resultBox.innerText = `${sign}${premium.toFixed(2)}%`;
+      
+      if (premium < 0.10) {
+        badge.innerText = "安全區 (Safe)";
+        badge.className = "result-badge badge-safe";
+        explanation.innerText = "溢價率極低或處於折價，目前市價貼近實際淨值，是很好的安全買入窗口。";
+      } else if (premium >= 0.10 && premium < 0.30) {
+        badge.innerText = "合理區 (Fair)";
+        badge.className = "result-badge badge-fair";
+        explanation.innerText = "溢價合理，此區間適合一般定期定額或小額分批購買，注意控管部位。";
+      } else if (premium >= 0.30 && premium < 0.50) {
+        badge.innerText = "警戒區 (Warning)";
+        badge.className = "result-badge badge-warn";
+        explanation.innerText = "溢價偏高！購買相當於買貴，建議等待盤中造市商進行市價收斂或分批購入。";
+      } else {
+        badge.innerText = "風險區 (Danger)";
+        badge.className = "result-badge badge-danger";
+        explanation.innerText = "溢價過高！隨時面臨造市申購拋售套利之收斂風險，請勿在此大額追價。";
+      }
+    }
+    
+    // Initial Calc
+    calculatePremium();
+
+    // Tab switcher
+    function switchTab(tabId, btn) {
+      // Hide all contents
+      const contents = document.querySelectorAll(".tab-content");
+      contents.forEach(c => c.classList.remove("active"));
+      
+      // Deactivate all buttons
+      const buttons = document.querySelectorAll(".tab-btn");
+      buttons.forEach(b => b.classList.remove("active"));
+      
+      // Show target & activate button
+      document.getElementById(tabId).classList.add("active");
+      btn.classList.add("active");
+    }
+
+    // Chart.js initialization (chronological order)
+    const reversedData = [...dataset].reverse();
+    const chartLabels = reversedData.map(d => d.date);
+    const priceData = reversedData.map(d => d.close);
+    const foreignFlows = reversedData.map(d => d.foreign);
+    const hedgeFlows = reversedData.map(d => d.dealerHedge);
+
+    const ctx = document.getElementById('flowChart').getContext('2d');
+    const flowChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartLabels,
+        datasets: [
+          {
+            label: '外資淨買超 (張)',
+            data: foreignFlows,
+            backgroundColor: 'rgba(244, 63, 94, 0.75)', // Rose red
+            borderColor: '#f43f5e',
+            borderWidth: 1,
+            borderRadius: 4,
+            yAxisID: 'yFlow'
+          },
+          {
+            label: '自營避險淨買超 (張)',
+            data: hedgeFlows,
+            backgroundColor: 'rgba(251, 191, 36, 0.75)', // Gold
+            borderColor: '#fbbf24',
+            borderWidth: 1,
+            borderRadius: 4,
+            yAxisID: 'yFlow'
+          },
+          {
+            label: '收盤價 (元)',
+            data: priceData,
+            type: 'line',
+            borderColor: '#10b981', // Emerald
+            borderWidth: 3,
+            fill: false,
+            tension: 0.2,
+            pointBackgroundColor: '#10b981',
+            pointBorderColor: '#ffffff',
+            pointRadius: 4,
+            yAxisID: 'yPrice'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#94a3b8',
+              font: {
+                family: 'Noto Sans TC'
+              }
+            }
+          },
+          tooltip: {
+            titleFont: { family: 'Noto Sans TC' },
+            bodyFont: { family: 'Noto Sans TC' }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.05)'
+            },
+            ticks: {
+              color: '#64748b',
+              font: { family: 'Outfit' }
+            }
+          },
+          yFlow: {
+            type: 'linear',
+            position: 'left',
+            grid: {
+              color: 'rgba(255, 255, 255, 0.05)'
+            },
+            ticks: {
+              color: '#94a3b8',
+              callback: function(value) {
+                return (value / 1000) + 'K';
+              }
+            },
+            title: {
+              display: true,
+              text: '法人買賣超 (張)',
+              color: '#94a3b8',
+              font: { family: 'Noto Sans TC' }
+            }
+          },
+          yPrice: {
+            type: 'linear',
+            position: 'right',
+            grid: {
+              drawOnChartArea: false // prevent grid overlap
+            },
+            ticks: {
+              color: '#10b981',
+              stepSize: 0.1
+            },
+            title: {
+              display: true,
+              text: '收盤市價 (元)',
+              color: '#10b981',
+              font: { family: 'Noto Sans TC' }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

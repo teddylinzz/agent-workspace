@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台股前五檔 Skill Eval — Iteration 2 Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #263348;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --emerald: #10b981;
+      --blue: #3b82f6;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --purple: #8b5cf6;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      margin-bottom: 3rem;
+    }
+
+    .badge-iter {
+      display: inline-block;
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.4);
+      color: var(--blue);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── Benchmark card ── */
+    .benchmark-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+
+    .metric-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .metric-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .metric-val.with { color: var(--blue); }
+    .metric-val.without { color: var(--muted); }
+
+    .delta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .delta.good { background: rgba(16,185,129,0.12); color: var(--emerald); }
+    .delta.neutral { background: rgba(148,163,184,0.12); color: var(--muted); }
+
+    .metric-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    /* ── Eval sections ── */
+    .eval-section {
+      margin-bottom: 2rem;
+    }
+
+    .eval-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .eval-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .eval-num.e1 { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .eval-num.e2 { background: rgba(139,92,246,0.15); color: var(--purple); }
+
+    .prompt-box {
+      background: rgba(148,163,184,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .reports-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .reports-grid { grid-template-columns: 1fr; }
+    }
+
+    .report-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+
+    .report-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    .report-card.with-skill:hover { border-color: var(--emerald); }
+    .report-card.without-skill:hover { border-color: var(--amber); }
+
+    .report-type {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot.emerald { background: var(--emerald); }
+    .dot.amber { background: var(--amber); }
+    .report-type.with-skill { color: var(--emerald); }
+    .report-type.without-skill { color: var(--amber); }
+
+    .report-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .report-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .open-btn {
+      margin-top: 0.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: var(--blue);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.9rem;
+      border-radius: 7px;
+      align-self: flex-start;
+      transition: background 0.15s;
+    }
+
+    .report-card.with-skill .open-btn {
+      background: rgba(16,185,129,0.1);
+      border-color: rgba(16,185,129,0.3);
+      color: var(--emerald);
+    }
+    .report-card.without-skill .open-btn {
+      background: rgba(245,158,11,0.1);
+      border-color: rgba(245,158,11,0.3);
+      color: var(--amber);
+    }
+
+    .report-card:hover .open-btn {
+      background: rgba(59,130,246,0.2);
+    }
+    .report-card.with-skill:hover .open-btn { background: rgba(16,185,129,0.18); }
+    .report-card.without-skill:hover .open-btn { background: rgba(245,158,11,0.18); }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    footer a { color: var(--blue); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .skill-path {
+      font-size: 0.75rem;
+      background: rgba(51,65,85,0.5);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      font-family: monospace;
+      color: var(--muted);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ── Header ── -->
+    <header>
+      <div class="badge-iter">Iteration 2 · HTML Output Format</div>
+      <h1>Skill Eval Review</h1>
+      <p>Skill: <span class="skill-path">fetch-top5-tw-stock</span> &nbsp;·&nbsp; 2026-06-04 &nbsp;·&nbsp; 4 reports across 2 evals</p>
+    </header>
+
+    <!-- ── Benchmark ── -->
+    <div class="benchmark-card">
+      <div class="section-label">Benchmark Results</div>
+      <div class="metrics-grid">
+
+        <div class="metric-item">
+          <div class="metric-label">Pass Rate</div>
+          <div class="metric-row">
+            <span class="metric-val with">100%</span>
+            <span class="metric-val without">100%</span>
+            <span class="delta neutral">±0%</span>
+          </div>
+          <div class="metric-sub">With Skill &nbsp;vs&nbsp; Baseline</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">Avg Time (per run)</div>
+          <div class="metric-row">
+            <span class="metric-val with">192.5s</span>
+            <span class="metric-val without">252.5s</span>
+            <span class="delta good">−60s</span>
+          </div>
+          <div class="metric-sub">±21.9s &nbsp;vs&nbsp; ±9.2s</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">Avg Tokens</div>
+          <div class="metric-row">
+            <span class="metric-val with">48,469</span>
+            <span class="metric-val without">56,438</span>
+            <span class="delta good">−7,970</span>
+          </div>
+          <div class="metric-sub">±10,663 &nbsp;vs&nbsp; ±16,165</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Eval 1 ── -->
+    <div class="eval-section">
+      <div class="eval-title">
+        <span class="eval-num e1">1</span>
+        Eval 1 — 詳細報告型任務
+      </div>
+      <div class="prompt-box">
+        📋 &nbsp;請幫我分析今天收盤後的台股信號，並挑選出適合明天買進與關注的前五檔股票清單，包含K線、籌碼、近期新聞等深度分析報告。請以設計精美、便於人類閱讀的 HTML 網頁格式輸出。
+      </div>
+      <div class="reports-grid">
+        <a class="report-card with-skill" href="eval-1-detailed-report/with_skill/run-1/outputs/watch_list_analysis.html" target="_blank">
+          <div class="report-type with-skill"><span class="dot emerald"></span> With Skill</div>
+          <div class="report-title">有 Skill 提示輔助的報告</div>
+          <div class="report-desc">使用 fetch-top5-tw-stock SKILL.md 作為指引，標準化分析流程後產出的觀察清單。</div>
+          <span class="open-btn">開啟報告 ↗</span>
+        </a>
+        <a class="report-card without-skill" href="eval-1-detailed-report/without_skill/run-1/outputs/watch_list_analysis.html" target="_blank">
+          <div class="report-type without-skill"><span class="dot amber"></span> Baseline (No Skill)</div>
+          <div class="report-title">無 Skill 提示的基線報告</div>
+          <div class="report-desc">不使用 Skill 指引，由模型直接根據 prompt 自由產出的觀察清單，作為對照基準。</div>
+          <span class="open-btn">開啟報告 ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ── Eval 2 ── -->
+    <div class="eval-section">
+      <div class="eval-title">
+        <span class="eval-num e2">2</span>
+        Eval 2 — 強勢股含排除條件
+      </div>
+      <div class="prompt-box">
+        📋 &nbsp;我明天想要操作台股強勢股，可以幫我挑出前五大值得關注的標的嗎？請結合大盤趨勢、三大法人持股變化以及最新的利多/利空新聞來分析，並把處置股或已經大跌跌停的股票排除掉。請使用 HTML 格式產生一個美觀的儀表板報告。
+      </div>
+      <div class="reports-grid">
+        <a class="report-card with-skill" href="eval-2-watchlist-exclusion/with_skill/run-1/outputs/watch_list_analysis.html" target="_blank">
+          <div class="report-type with-skill"><span class="dot emerald"></span> With Skill</div>
+          <div class="report-title">有 Skill 提示輔助的報告</div>
+          <div class="report-desc">使用 Skill 指引分析強勢股，並依規則排除處置股、跌停股後篩選前五名。</div>
+          <span class="open-btn">開啟報告 ↗</span>
+        </a>
+        <a class="report-card without-skill" href="eval-2-watchlist-exclusion/without_skill/run-1/outputs/watch_list_analysis.html" target="_blank">
+          <div class="report-type without-skill"><span class="dot amber"></span> Baseline (No Skill)</div>
+          <div class="report-title">無 Skill 提示的基線報告</div>
+          <div class="report-desc">不使用 Skill 指引，模型自行判斷排除規則與選股邏輯，作為對照基準。</div>
+          <span class="open-btn">開啟報告 ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      <p>Skill evaluation workspace &nbsp;·&nbsp; Iteration 2 &nbsp;·&nbsp; 
+        <a href="benchmark.json">benchmark.json</a> &nbsp;·&nbsp;
+        Model outputs are for reference only and do not constitute financial advice.
+      </p>
+    </footer>
+
+  </div>
+</body>
+</html>
