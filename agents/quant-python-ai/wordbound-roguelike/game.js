@@ -1415,7 +1415,9 @@ function renderQuestion() {
   $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
   $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
   $("#challenge-word").textContent = mode === "cloze" ? (isZh ? "句中缺少一個關鍵單字" : "A word is missing") : word.word;
-  $("#pronunciation").textContent = mode === "cloze" ? (isZh ? `提示：${word.zh || ""} · ${word.pos || ""}` : "Use the sentence to find it") : `${word.phonetic} ${isZh && word.zh ? `· ${word.zh}` : ""}`;
+  $("#pronunciation").textContent = mode === "cloze"
+    ? (isZh ? `依語境選擇最適當的單字 · ${word.pos || ""}` : `Use the sentence to find it · ${word.pos || ""}`)
+    : `${word.phonetic} · ${word.pos || "word"}`;
   $("#challenge-prompt").textContent = promptText;
 
   const intentEl = $("#enemy-intent");
@@ -1438,13 +1440,11 @@ function renderQuestion() {
   
   $("#answer-grid").innerHTML = answerItems.map((item, index) => {
     const val = item.text;
-    const zh = (isZh && item.zh) ? `<span class="answer-zh">（${item.zh}）</span>` : "";
     return `
       <button class="answer-button" data-answer="${escapeAttribute(val)}" data-correct="${item.isCorrect}">
         <span class="answer-key">${String.fromCharCode(65 + index)}</span>
         <div class="answer-content">
           <span class="answer-main">${val}</span>
-          ${zh}
         </div>
       </button>
     `;
@@ -1980,24 +1980,127 @@ function showRelicReward(ink, type) {
 
 function showRest() {
   state.screen = "event";
-  const healPercent = hasRelic("candle") ? 0.50 : 0.35;
+  if (hasRelic("gilded_abacus")) { state.ink += 12; toast("🧮 <b>Gilded Abacus:</b> +12 Ink upon arriving at rest site!"); }
+  const ascRestMod = state.ascension >= 5 ? 0.25 : 0.35;
+  const healPercent = hasRelic("candle") ? (ascRestMod + 0.20) : ascRestMod;
   const isZh = loadMeta().bilingual;
   $("#stage").innerHTML = `
     <div class="event-stage">
       <div class="event-illustration">♨</div>
       <span class="section-kicker">${isZh ? "靜謐營火休憩處" : "A QUIET CLEARING"}</span>
       <h1>${isZh ? "字與字之間的片刻寧靜" : "Rest between words."}</h1>
-      <p class="section-copy">${isZh ? "此處的森林暫時停止了對決。你可以烹茶休養意志，或在火光下研讀字彙。" : "For a moment, the forest stops asking questions. You may tend your resolve or prepare your mind."}</p>
+      <p class="section-copy">${isZh ? "此處的森林暫時停止了對決。你可以烹茶休養意志，在火光下研讀，或進行極速詞彙挑戰！" : "For a moment, the forest stops asking questions. You may tend your resolve, study, or test your speed in a rapid blitz trial."}</p>
       <div class="event-options">
-        <button class="button button-primary" data-rest="heal">${isZh ? "烹煮修復花茶" : "Brew restorative tea"}<small>${isZh ? `恢復 ${Math.round(healPercent * 100)}% 意志生命${hasRelic("candle") ? "（學者之燭 +15%）" : ""}` : `Restore ${Math.round(healPercent * 100)}% resolve${hasRelic("candle") ? " (Scholar's Candle +15%)" : ""}`}</small></button>
+        <button class="button button-primary" data-rest="heal">${isZh ? "烹煮修復花茶" : "Brew restorative tea"}<small>${isZh ? `恢復 ${Math.round(healPercent * 100)}% 意志生命${hasRelic("candle") ? "（學者之燭 +20%）" : ""}` : `Restore ${Math.round(healPercent * 100)}% resolve${hasRelic("candle") ? " (Scholar's Candle +20%)" : ""}`}</small></button>
         <button class="button button-ghost" data-rest="spark">${isZh ? "在火光下研讀" : "Study by firelight"}<small>${isZh ? "獲得 2 點火花與 1 點頓悟經驗" : "Gain 2 sparks and 1 insight"}</small></button>
+        <button class="button button-ghost" data-rest="blitz" style="border-color:var(--gold);">${isZh ? "⚡ 極速詞彙挑戰 (20s Speed Blitz)" : "⚡ Speed Blitz Challenge (20s)"}<small>${isZh ? "20秒限時快答，每答對一題獎勵 +5 墨水與火花！" : "20-second rapid-fire bonus! +5 Ink and sparks per hit!"}</small></button>
       </div>
     </div>`;
   document.querySelectorAll("[data-rest]").forEach(button => button.addEventListener("click", () => {
-    if (button.dataset.rest === "heal") heal(Math.ceil(state.maxHp * healPercent));
-    else { state.sparks = Math.min(9, state.sparks + 2); gainXp(1); toast(isZh ? "思緒更加清晰敏銳！<b>+2 火花</b>" : "Your mind feels sharper. <b>+2 sparks</b>"); }
-    completeNode();
+    const act = button.dataset.rest;
+    if (act === "heal") {
+      heal(Math.ceil(state.maxHp * healPercent));
+      completeNode();
+    } else if (act === "spark") {
+      state.sparks = Math.min(9, state.sparks + 2);
+      gainXp(1);
+      toast(isZh ? "思緒更加清晰敏銳！<b>+2 火花</b>" : "Your mind feels sharper. <b>+2 sparks</b>");
+      completeNode();
+    } else if (act === "blitz") {
+      startSpeedBlitz();
+    }
   }));
+  updateHUD();
+}
+
+function startSpeedBlitz() {
+  state.screen = "blitz";
+  const isZh = loadMeta().bilingual;
+  const allWords = REGIONS.flatMap(r => r.words);
+  let timeLeft = 20;
+  let scoreCount = 0;
+  let blitzActive = true;
+
+  $("#stage").innerHTML = `
+    <div class="battle-stage" style="text-align:center;">
+      <span class="section-kicker">⚡ SPEED BLITZ TRIAL ⚡</span>
+      <h1 id="blitz-timer" style="font-size:44px;color:var(--gold);margin:10px 0;">20.0s</h1>
+      <p id="blitz-score" style="font:700 16px var(--mono);">${isZh ? "已答對：" : "Score:"} 0</p>
+      <div id="blitz-content" style="margin-top:20px;"></div>
+    </div>
+  `;
+
+  const timerInterval = setInterval(() => {
+    timeLeft -= 0.1;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      blitzActive = false;
+      const totalInkGained = scoreCount * 5;
+      const sparksGained = Math.min(3, Math.floor(scoreCount / 2));
+      state.ink += totalInkGained;
+      state.sparks = Math.min(9, state.sparks + sparksGained);
+      playVictoryFanfare();
+      $("#stage").innerHTML = `
+        <div class="reward-stage" style="text-align:center;">
+          <span class="section-kicker">⚡ BLITZ COMPLETE ⚡</span>
+          <h1>${isZh ? "極速挑戰結束！" : "Time's Up!"}</h1>
+          <p class="section-copy">${isZh ? `你在 20 秒內成功答對了 <b>${scoreCount}</b> 個單字！` : `You mastered <b>${scoreCount}</b> words in 20 seconds!`}</p>
+          <div class="summary-stats">
+            <div><b>+${totalInkGained}</b><span>${isZh ? "獲得墨水" : "Ink Bonus"}</span></div>
+            <div><b>+${sparksGained}</b><span>${isZh ? "獲得火花" : "Sparks"}</span></div>
+          </div>
+          <button id="blitz-continue" class="button button-primary">${isZh ? "繼續前進 ➔" : "Continue Journey ➔"}</button>
+        </div>
+      `;
+      $("#blitz-continue")?.addEventListener("click", () => completeNode());
+      updateHUD();
+      return;
+    }
+    const timerEl = $("#blitz-timer");
+    if (timerEl) timerEl.textContent = `${timeLeft.toFixed(1)}s`;
+  }, 100);
+
+  function nextBlitzQuestion() {
+    if (!blitzActive) return;
+    const word = random(allWords);
+    const distractors = shuffle(allWords.filter(w => w.word !== word.word)).slice(0, 3);
+    const options = shuffle([word, ...distractors]);
+    const content = $("#blitz-content");
+    if (!content) return;
+    content.innerHTML = `
+      <div style="background:var(--cream);padding:18px;border-radius:12px;border:1px solid var(--line);margin-bottom:16px;">
+        <h2 style="font-size:26px;margin:0 0 6px;">${word.word}</h2>
+        <p style="margin:0;color:var(--ink-soft);font-size:12px;">${word.phonetic} · ${word.pos || "word"}</p>
+      </div>
+      <div class="answer-grid">
+        ${options.map((opt, i) => `
+          <button class="answer-button blitz-btn" data-correct="${opt.word === word.word}">
+            <span class="answer-key">${String.fromCharCode(65 + i)}</span>
+            <span class="answer-main">${opt.definition}</span>
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    document.querySelectorAll(".blitz-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!blitzActive) return;
+        if (btn.dataset.correct === "true") {
+          scoreCount++;
+          playHitSound(true, true);
+          const scoreEl = $("#blitz-score");
+          if (scoreEl) scoreEl.textContent = `${isZh ? "已答對：" : "Score:"} ${scoreCount}`;
+          nextBlitzQuestion();
+        } else {
+          tone(150, 0.1);
+          btn.classList.add("wrong");
+          setTimeout(nextBlitzQuestion, 200);
+        }
+      });
+    });
+  }
+
+  nextBlitzQuestion();
 }
 
 function showEvent() {
@@ -2675,17 +2778,17 @@ function renderPracticeQuestion() {
           : (isZh ? "主動拼寫" : "ACTIVE PRODUCTION");
 
   let headerTitle = word.word;
-  let headerSubtitle = `${word.phonetic} ${isZh && word.zh ? `· ${word.zh}` : ""}`;
+  let headerSubtitle = `${word.phonetic} · ${word.pos || "word"}`;
 
   if (typed) {
     headerTitle = mode === "typed-cloze" ? (isZh ? "句中缺少一個單字" : "Complete the sentence") : (isZh ? "默寫該單字" : "Recall the word");
-    headerSubtitle = isZh ? `首字母 “${word.word[0]}” · ${word.word.length} 個字母 ${word.zh ? `· ${word.zh}` : ""}` : `Starts with “${word.word[0]}” · ${word.word.length} letters`;
+    headerSubtitle = isZh ? `首字母 “${word.word[0]}” · ${word.word.length} 個字母` : `Starts with “${word.word[0]}” · ${word.word.length} letters`;
   } else if (mode === "audio-definition") {
     headerTitle = isZh ? "仔細聆聽發音" : "Listen closely";
     headerSubtitle = isZh ? "聲音 → 詞意連結" : "Sound → meaning";
   } else if (mode === "cloze") {
     headerTitle = isZh ? "句中缺少一個關鍵單字" : "A word is missing";
-    headerSubtitle = isZh ? `提示：${word.zh || ""} · ${word.pos || ""}` : `Choose the word that fits · ${word.pos || ""}`;
+    headerSubtitle = isZh ? `依語境選擇最適當的單字 · ${word.pos || ""}` : `Choose the word that fits · ${word.pos || ""}`;
   }
 
   const showSpeaker = !typed && mode !== "cloze";
@@ -2710,12 +2813,10 @@ function renderPracticeQuestion() {
         ? `<form id="typed-recall-form" class="typed-recall"><input id="typed-recall-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="${isZh ? "輸入單字…" : "Type the word…"}" aria-label="Type the missing word"><button class="button button-primary" type="submit">${isZh ? "確認 →" : "Check →"}</button></form><button id="reveal-answer" class="reveal-answer">${isZh ? "想不起來 (查看解答)" : "I don't remember"}</button>`
         : `<div class="answer-grid">${answerItems.map((item, index) => {
             const val = item[property];
-            const zh = (isZh && item.zh && property === "word") ? `<span class="answer-zh">（${item.zh}）</span>` : "";
             return `<button class="answer-button practice-answer" data-answer="${escapeAttribute(val)}">
               <span class="answer-key">${String.fromCharCode(65 + index)}</span>
               <div class="answer-content">
                 <span class="answer-main">${val}</span>
-                ${zh}
               </div>
             </button>`;
           }).join("")}</div>`}
