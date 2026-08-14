@@ -4272,12 +4272,53 @@ function showHallOfFame() {
   const meta = loadMeta();
   const isZh = meta.bilingual;
   const list = meta.highScores || [];
+  const reviews = meta.reviews || {};
+  const learned = meta.learned || {};
+  const allWords = REGIONS.flatMap(r => r.words);
+
+  // Calculate learning statistics
+  const masteredCount = Object.values(reviews).filter(r => r.mastered || r.strength >= 5).length;
+  const learningCount = Object.keys(learned).length;
+  
+  // CEFR Level breakdown
+  const levelCounts = { A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
+  Object.keys(learned).forEach(k => {
+    const w = allWords.find(item => item.word === k);
+    const lvl = (w && w.level) || "B2";
+    if (levelCounts[lvl] !== undefined) levelCounts[lvl]++;
+  });
 
   openModal(`
-    <span class="modal-kicker">${isZh ? "遠征歷史最高榮譽" : "HALL OF GLORY"}</span>
-    <h2>${isZh ? "名人堂與遠征排行榜" : "Hall of Fame"}</h2>
-    <p class="section-copy">${isZh ? "記錄你在歷次詞彙遠征中締造的最高評分與精通成就。" : "Your highest scoring journeys and vocabulary triumphs saved locally."}</p>
+    <span class="modal-kicker">${isZh ? "遠征歷史榮譽與學習洞察" : "HALL OF FAME & LEARNING ANALYTICS"}</span>
+    <h2>${isZh ? "名人堂與學習洞察" : "Hall of Fame & Insights"}</h2>
     
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 18px;text-align:center;">
+      <div style="padding:10px;background:var(--cream);border:1px solid var(--line);border-radius:8px;">
+        <b style="font:700 22px var(--display);color:var(--gold);">${meta.highScores?.[0]?.score?.toLocaleString() || 0}</b>
+        <span style="display:block;font:500 7px var(--mono);color:var(--ink-soft);text-transform:uppercase;">${isZh ? "最高歷史評分" : "High Score"}</span>
+      </div>
+      <div style="padding:10px;background:var(--cream);border:1px solid var(--line);border-radius:8px;">
+        <b style="font:700 22px var(--display);color:var(--teal-dark);">${learningCount}</b>
+        <span style="display:block;font:500 7px var(--mono);color:var(--ink-soft);text-transform:uppercase;">${isZh ? "累計已接觸單字" : "Words Encountered"}</span>
+      </div>
+      <div style="padding:10px;background:var(--cream);border:1px solid var(--line);border-radius:8px;">
+        <b style="font:700 22px var(--display);color:var(--coral-dark);">${masteredCount}</b>
+        <span style="display:block;font:500 7px var(--mono);color:var(--ink-soft);text-transform:uppercase;">${isZh ? "深度精通單字" : "Mastered Words"}</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;padding:12px;border:1px solid var(--line);border-radius:8px;background:rgba(255,250,240,0.8);">
+      <small style="color:var(--coral-dark);font:700 8px var(--mono);letter-spacing:0.12em;text-transform:uppercase;">${isZh ? "CEFR 歐洲語言架構單字分佈" : "CEFR LEVEL DISTRIBUTION"}</small>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        ${Object.entries(levelCounts).map(([lvl, count]) => `
+          <div style="flex:1;text-align:center;padding:6px;background:var(--cream);border-radius:6px;border:1px solid var(--line);">
+            <b style="font-size:12px;color:var(--ink);">${lvl}</b>
+            <span style="display:block;font:600 10px var(--mono);color:var(--teal);">${count}</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+
     ${list.length ? `
       <table class="fame-table">
         <thead>
@@ -4314,33 +4355,56 @@ function showHallOfFame() {
 function showEtymologyExplorer() {
   const isZh = loadMeta().bilingual;
   const allWords = REGIONS.flatMap(r => r.words).filter(w => w.root);
-  const groups = {};
-  allWords.forEach(w => {
-    const rootKey = w.root.split(" ")[0] || "Ancient";
-    groups[rootKey] = groups[rootKey] || [];
-    groups[rootKey].push(w);
-  });
+  
+  const rootFamilies = [
+    { root: "spec / spect", origin: "Latin spectare", meaning: "to look, see (看、觀察)", words: allWords.filter(w => /spec|spic/i.test(w.word) || /spec/i.test(w.root)) },
+    { root: "vert / vers", origin: "Latin vertere", meaning: "to turn (轉變、旋轉)", words: allWords.filter(w => /vert|vers/i.test(w.word) || /vers/i.test(w.root)) },
+    { root: "gen / gener", origin: "Greek/Latin genesis", meaning: "birth, produce (出生、產生)", words: allWords.filter(w => /gen/i.test(w.word) || /gen/i.test(w.root)) },
+    { root: "chron / tempo", origin: "Greek chronos / Latin tempus", meaning: "time (時間、時序)", words: allWords.filter(w => /chron|temp/i.test(w.word) || /chron|temp/i.test(w.root)) },
+    { root: "tract / drag", origin: "Latin trahere", meaning: "to pull, draw (拉、拖曳)", words: allWords.filter(w => /tract/i.test(w.word) || /tract/i.test(w.root)) },
+    { root: "duc / duct", origin: "Latin ducere", meaning: "to lead, guide (引導、帶領)", words: allWords.filter(w => /duc/i.test(w.word) || /duc/i.test(w.root)) },
+    { root: "flu / flux", origin: "Latin fluere", meaning: "to flow (流動、變化)", words: allWords.filter(w => /flu/i.test(w.word) || /flu/i.test(w.root)) },
+    { root: "aud / son", origin: "Latin audire / sonus", meaning: "to hear, sound (聽、聲音)", words: allWords.filter(w => /aud|son/i.test(w.word) || /aud|son/i.test(w.root)) }
+  ].filter(f => f.words.length > 0);
 
   openModal(`
-    <span class="modal-kicker">${isZh ? "詞源樹狀圖與語系探索" : "ETYMOLOGY TREE EXPLORER"}</span>
-    <h2>${isZh ? "古語詞根地圖 (Etymology Tree)" : "Word Family Tree"}</h2>
-    <p class="section-copy">${isZh ? "探索拉丁與希臘字根如何演變為現代英文單字，一次掌握整組同源詞彙。" : "Discover how ancient Latin and Greek roots blossom into families of rich English vocabulary."}</p>
+    <span class="modal-kicker">${isZh ? "語源家族演化樹與詞根精通" : "ETYMOLOGY FAMILY NETWORK"}</span>
+    <h2>${isZh ? "詞根家族探索地圖" : "Word Family Tree"}</h2>
+    <p class="section-copy">${isZh ? "掌握一個古拉丁或希臘詞根，就能輕鬆串聯記憶整個單字家族。點擊發音或探索例句：" : "Mastering one root unlocks entire clusters of academic vocabulary. Tap any word to hear natural pronunciation:"}</p>
     
-    <div style="display:grid;gap:14px;max-height:360px;overflow-y:auto;padding-right:4px;">
-      ${Object.entries(groups).map(([root, words]) => `
-        <div style="border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--cream);">
-          <b style="color:var(--coral-dark);font:700 13px var(--mono);">${root}</b>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
-            ${words.map(w => `
-              <span style="padding:3px 8px;border-radius:4px;background:rgba(255,250,240,0.9);border:1px solid var(--line);font-size:10px;" title="${w.definition} (${w.zh || ''})">
-                <b>${w.word}</b> <small style="color:var(--ink-soft);">(${w.zh || w.definition.slice(0, 20)}...)</small>
-              </span>
+    <div class="etymology-grid" style="display:grid;gap:14px;max-height:48vh;overflow-y:auto;padding-right:6px;">
+      ${rootFamilies.map(fam => `
+        <div class="root-family-card" style="border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--cream);">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;border-bottom:1px solid rgba(23,60,66,0.08);padding-bottom:8px;margin-bottom:10px;">
+            <div>
+              <b style="color:var(--coral-dark);font:700 15px var(--mono);">${fam.root}</b>
+              <small style="color:var(--ink-soft);margin-left:6px;">[${fam.origin}]</small>
+            </div>
+            <span style="font-weight:600;font-size:11px;color:var(--teal-dark);">${fam.meaning}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;">
+            ${fam.words.map(w => `
+              <div class="etym-word-node" style="padding:8px 10px;border-radius:6px;background:rgba(255,250,240,0.9);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <b style="font-size:13px;color:var(--ink);">${w.word}</b>
+                  <button class="speak-etym-btn icon-button" data-word="${w.word}" style="width:24px;height:24px;font-size:11px;" title="Pronounce">🔊</button>
+                </div>
+                <small style="color:var(--coral-dark);font:600 8.5px var(--mono);margin:2px 0;">${w.pos || "w."} · ${w.level || "B2"} · ${w.zh || ""}</small>
+                <p style="margin:2px 0 0;font-size:9.5px;color:var(--ink-soft);line-height:1.35;">${w.definition}</p>
+              </div>
             `).join("")}
           </div>
         </div>
       `).join("")}
     </div>
   `);
+
+  document.querySelectorAll(".speak-etym-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      speakWord(btn.dataset.word);
+    });
+  });
 }
 
 function showLexicon() {
