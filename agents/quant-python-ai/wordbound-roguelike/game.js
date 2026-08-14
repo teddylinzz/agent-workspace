@@ -308,23 +308,91 @@ const CLASSES = [
   }
 ];
 
+const ASCENSION_LEVELS = [
+  { level: 0, name: "Standard Expedition", zhName: "標準遠征", desc: "Standard rules of the wordbound realms.", zhDesc: "標準遠征規則。" },
+  { level: 1, name: "Fierce Elites", zhName: "強敵盤據", desc: "Elite enemies have +20% HP and yield bonus ink.", zhDesc: "精英敵人生命值 +20%，擊敗獎勵額外墨水。" },
+  { level: 2, name: "Serrated Wit", zhName: "利齒詞語", desc: "Normal enemies deal +1 extra damage.", zhDesc: "一般敵人攻擊傷害 +1。" },
+  { level: 3, name: "Bazaar Inflation", zhName: "黑市通膨", desc: "Merchant shop prices are increased by 20%.", zhDesc: "流浪黑市商人售價提高 20%。" },
+  { level: 4, name: "Fleeting Reflex", zhName: "急迫思維", desc: "Quick Wit reflex time window reduced by 0.5s.", zhDesc: "急速直覺判斷時間縮短 0.5 秒。" },
+  { level: 5, name: "Bitter Herbs", zhName: "微苦花茶", desc: "Rest sites restore 25% Resolve (down from 35%).", zhDesc: "營火休息花茶恢復量降為 25%。" },
+  { level: 6, name: "Guardian's Aegis", zhName: "領主堅盾", desc: "Boss Guardians spawn with +30% HP and unique Boss Blinds.", zhDesc: "區域領主生命提高 30% 且具備專屬詞彙限制。" },
+  { level: 7, name: "Diminished Sparks", zhName: "微弱火星", desc: "Start the expedition with 1 fewer Spark.", zhDesc: "出發時初始專注火花減少 1 點。" },
+  { level: 8, name: "Voracious Siphon", zhName: "貪婪汲取", desc: "Siphon enemies steal 2 Sparks instead of 1.", zhDesc: "具有汲取意圖的敵人奪取 2 點火花。" },
+  { level: 9, name: "Treacherous Map", zhName: "險惡路徑", desc: "More Elite encounters appear on the journey map.", zhDesc: "地圖上出現更多精英挑戰節點。" },
+  { level: 10, name: "Curse of Babel", zhName: "巴別詛咒", desc: "Start with -6 Maximum Resolve; score multiplier +100%.", zhDesc: "初始最大意志生命 -6；通關評分與榮譽倍率 +100%。" },
+  { level: 11, name: "Relentless Clamor", zhName: "狂暴喧囂", desc: "All enemy attack damage scales faster per floor.", zhDesc: "所有敵人的基礎攻擊力隨層數提升。" },
+  { level: 12, name: "Fading Ink", zhName: "乾涸墨水", desc: "Gain 20% less Ink from regular encounters.", zhDesc: "一般戰鬥獲得的墨水獎勵減少 20%。" },
+  { level: 13, name: "Strict Grasp", zhName: "嚴苛審核", desc: "Losing a streak inflicts 2 direct damage to Resolve.", zhDesc: "連擊中斷時將反噬遭受 2 點意志傷害。" },
+  { level: 14, name: "Heavy Tomes", zhName: "沉重典籍", desc: "Maximum Sparks cap reduced to 7.", zhDesc: "火花攜帶上限降低為 7 點。" },
+  { level: 15, name: "Ancient Colossus", zhName: "遠古巨像", desc: "Boss Guardians have +50% HP and extra intents.", zhDesc: "區域守護領主生命增加 50% 且行動意圖更強。" },
+  { level: 16, name: "Price Gouging", zhName: "黑市暴利", desc: "Merchant shop prices increased by 35%.", zhDesc: "流浪黑市商品售價提高 35%。" },
+  { level: 17, name: "Razor Instinct", zhName: "電光火石", desc: "Quick Wit window cut by 1.0s total.", zhDesc: "急速直覺時間判定縮短 1.0 秒。" },
+  { level: 18, name: "Dark Mire", zhName: "幽暗沼澤", desc: "Mystery events have a 60% chance of peril.", zhDesc: "未知事件觸發負面後果機率提高為 60%。" },
+  { level: 19, name: "Babel Ascendant", zhName: "巴別之巔", desc: "All enemies have +20% HP and shields.", zhDesc: "所有敵人生命值 +20% 且自帶護盾。" },
+  { level: 20, name: "Heart of the Word", zhName: "至高詞境", desc: "Ultimate roguelike trial. Score multiplier +300%.", zhDesc: "終極 Roguelike 考驗。所有詞彙領域極限強化，榮譽評分 +300%。" }
+];
+
+const POTIONS = [
+  { id: "elixir_reveal", name: "Elixir of Revelation", zhName: "顯影靈藥", icon: "🧪", desc: "Instantly eliminates 2 wrong answers in combat.", zhDesc: "立即排除當前題目的 2 個錯誤選項。" },
+  { id: "potion_freeze", name: "Chrono Draught", zhName: "靜時秘劑", icon: "⏳", desc: "Pauses timer & guarantees +100% Quick Wit crit on next hit.", zhDesc: "暫停計時並保證下一次答對觸發 +100% 急速爆擊。" },
+  { id: "draught_vitality", name: "Vital Tonic", zhName: "活力神泉", icon: "💖", desc: "Restores 18 Resolve immediately.", zhDesc: "立即恢復 18 點意志生命。" },
+  { id: "scroll_reroll", name: "Transmute Scroll", zhName: "換詞卷軸", icon: "📜", desc: "Rerolls current question into an easier word without spending Sparks.", zhDesc: "立即重抽當前題目，不消耗專注火花。" },
+  { id: "potion_midas", name: "Midas Phial", zhName: "邁達斯墨水", icon: "◈", desc: "Gain +32 Ink immediately.", zhDesc: "立即獲得 32 點墨水。" },
+  { id: "rune_shield", name: "Rune of Aegis", zhName: "護盾符文", icon: "🛡️", desc: "Grants 14 temporary Shield to absorb incoming hits.", zhDesc: "獲得 14 點護盾，優先吸收後續遭受的傷害。" }
+];
+
+const BOSS_BLINDS = [
+  { id: "blindfold", name: "The Blindfold", zhName: "致盲之霧", desc: "Answer choices are veiled for the first 1.2s.", zhDesc: "題目選項在前 1.2 秒內被迷霧遮蔽。" },
+  { id: "mute", name: "The Silence", zhName: "沉寂之境", desc: "Audio pronunciation and sound cues are silenced.", zhDesc: "發音與音訊線索被完全靜音。" },
+  { id: "haste", name: "Frenzied Pulse", zhName: "狂亂脈動", desc: "Enemy attacks faster; wrong answers deal +3 damage.", zhDesc: "敵人攻擊更加狂暴，答錯額外承受 +3 傷害。" },
+  { id: "armored", name: "Iron Bastion", zhName: "鐵壁防禦", desc: "Guardian starts with 25 heavy Shield.", zhDesc: "領主開場自帶 25 點堅固護盾。" },
+  { id: "cloze_only", name: "Syntax Crucible", zhName: "句法熔爐", desc: "All questions in this encounter are Cloze contextual tests.", zhDesc: "本場對決所有考題均為語境克漏字測試。" }
+];
+
 const RELICS = [
+  // 1. Core & Offensive
   { id: "echo", icon: "❞", name: "Echo Quill", zhName: "餘音羽毛筆", text: "+3 damage for every correct answer.", zhText: "每次答對額外造成 +3 點傷害。" },
-  { id: "shield", icon: "◉", name: "Patient Stone", zhName: "耐心之石", text: "Ignore the first wrong answer in each battle.", zhText: "每場戰鬥免疫第一次答錯的傷害。" },
-  { id: "ember", icon: "♨", name: "Ember Vial", zhName: "餘溫小瓶", text: "Heal 2 resolve every third answer in a streak.", zhText: "連擊中每答對 3 題恢復 2 點生命。" },
-  { id: "bookmark", icon: "▰", name: "Golden Bookmark", zhName: "鍍金書籤", text: "Gain 30% more ink after encounters.", zhText: "戰鬥結算獲得的墨水提高 30%。" },
-  { id: "boots", icon: "⌁", name: "Wayfarer Boots", zhName: "旅者之靴", text: "+8 maximum resolve immediately.", zhText: "立即提升 8 點最大生命值。" },
-  { id: "prism", icon: "◇", name: "Meaning Prism", zhName: "詞義稜鏡", text: "Clues remove two wrong answers.", zhText: "使用提示功能時額外排除 2 個錯誤選項。" },
-  { id: "crown", icon: "♛", name: "Scholar's Crown", zhName: "學者之冠", text: "Start each battle with +1 spark.", zhText: "每場戰鬥開始時額外獲得 1 點火花。" },
-  { id: "needle", icon: "↟", name: "Compass Needle", zhName: "羅盤指針", text: "Deal +5 damage on your first answer.", zhText: "戰鬥首回合答對造成 +5 點爆發傷害。" },
+  { id: "needle", icon: "↟", name: "Compass Needle", zhName: "羅盤指針", text: "Deal +6 damage on your first answer in each battle.", zhText: "戰鬥首回合答對造成 +6 點爆發傷害。" },
+  { id: "horn", icon: "📯", name: "Resonance Horn", zhName: "共鳴號角", text: "Deal +35% bonus damage to Elite and Boss guardians.", zhText: "對精英怪與區域守護者領主造成 +35% 額外傷害。" },
+  { id: "lightning_quill", icon: "⚡", name: "Lightning Quill", zhName: "閃電羽筆", text: "Quick Wit reflex deals +100% critical damage.", zhText: "急速直覺答對時造成 +100% 爆擊傷害。" },
+  { id: "rhythm_baton", icon: "🪄", name: "Conductor's Baton", zhName: "指揮魔棒", text: "Deal +2 additional damage for every active streak stack.", zhText: "每累積 1 層連擊，答題傷害額外 +2。" },
+  
+  // 2. Speed & Quick Wit
   { id: "hourglass", icon: "⌛", name: "Chronos Hourglass", zhName: "時光沙漏", text: "Quick Wit reflex deals +6 extra damage and timer is 1.5s longer.", zhText: "急速直覺判定時間延長 1.5 秒，並額外造成 +6 傷害。" },
+  { id: "sonic_bell", icon: "🔔", name: "Sonic Resonator", zhName: "超音共鳴鈴", text: "Answers submitted in under 2.0s deal +8 AoE shockwave damage.", zhText: "在 2 秒內極速答對時釋放衝擊波額外造成 8 點傷害。" },
+  { id: "mercury_sandals", icon: "👡", name: "Sandals of Hermes", zhName: "赫密斯之靴", text: "Extends all question timer countdowns by +1.5 seconds.", zhText: "所有考題倒數計時延長 1.5 秒。" },
+  
+  // 3. Streak & Rhythm
+  { id: "ember", icon: "♨", name: "Ember Vial", zhName: "餘溫小瓶", text: "Heal 2 resolve every third answer in a streak.", zhText: "連擊中每答對 3 題恢復 2 點生命。" },
+  { id: "ring", icon: "💍", name: "Ring of Fluency", zhName: "流利之戒", text: "Streaks of 4+ restore 1 spark immediately.", zhText: "達成 4 連擊時立即恢復 1 點火花。" },
+  { id: "metronome", icon: "🎼", name: "Precision Metronome", zhName: "精準節拍器", text: "Every 5th streak triggers +15 burst damage and heals 3 HP.", zhText: "每累積 5 連擊觸發 +15 點爆發傷害並恢復 3 點生命。" },
+  { id: "unbroken_cord", icon: "🎗️", name: "Cord of Continuity", zhName: "不絕之索", text: "Prevents your streak from breaking on your first mistake per run.", zhText: "每場遠征第一次答錯時不會中斷連擊計數。" },
+  
+  // 4. Economy & Ink
+  { id: "bookmark", icon: "▰", name: "Golden Bookmark", zhName: "鍍金書籤", text: "Gain 35% more ink after all encounters.", zhText: "所有戰鬥結算獲得的墨水提高 35%。" },
   { id: "alembic", icon: "⚗️", name: "Alchemist's Crucible", zhName: "煉金坩堝", text: "Gain +1 Ink for every letter in correct answers.", zhText: "答對時，單字的每個英文字母都轉化為 1 點墨水。" },
-  { id: "mirror", icon: "🪞", name: "Oracle's Mirror", zhName: "神諭之鏡", text: "Gain +1 Insight whenever you take damage.", zhText: "受到傷害時獲得 +1 點頓悟經驗。" },
-  { id: "feather", icon: "🪶", name: "Phoenix Feather", zhName: "鳳凰之羽", text: "Revive with 20 Resolve once upon fatal damage.", zhText: "遭受致命傷害時免死並恢復 20 點生命（限一次）。" },
+  { id: "midas_well", icon: "🏺", name: "Midas Inkwell", zhName: "邁達斯墨水池", text: "+50% ink found; every 20 ink held adds +1 combat damage.", zhText: "墨水獲取 +50%；每持有 20 點墨水增加 +1 點戰鬥傷害。" },
+  { id: "merchant_contract", icon: "📜", name: "Merchant Guild Seal", zhName: "商會印戒", text: "25% discount in shops + merchants offer 1 extra relic.", zhText: "流浪黑市商品享 75 折且額外上架 1 件珍稀遺物。" },
+  { id: "gilded_abacus", icon: "🧮", name: "Gilded Abacus", zhName: "鍍金算盤", text: "Receive +12 ink whenever entering any Rest or Shrine node.", zhText: "抵達營火或祭壇節點時自動獲得 12 點墨水。" },
+  
+  // 5. Etymology & Roots
+  { id: "prism", icon: "◇", name: "Meaning Prism", zhName: "詞義稜鏡", text: "Clues remove two wrong answers.", zhText: "使用提示功能時額外排除 2 個錯誤選項。" },
   { id: "magnifier", icon: "🔍", name: "Etymology Glass", zhName: "語源放大鏡", text: "Always shows root/origin hint during battles.", zhText: "戰鬥中永遠顯示該單字的語源與字根線索。" },
-  { id: "ring", icon: "💍", name: "Ring of Fluency", zhName: "流利之戒", text: "Streaks of 4+ restore 1 spark.", zhText: "達成 4 連擊時立即恢復 1 點火花。" },
-  { id: "horn", icon: "📯", name: "Resonance Horn", zhName: "共鳴號角", text: "Deal +30% bonus damage to Elite and Boss guardians.", zhText: "對精英怪與區域守護者領主造成 +30% 額外傷害。" },
-  { id: "candle", icon: "🕯️", name: "Scholar's Candle", zhName: "學者之燭", text: "Rest sites restore an extra 20% Resolve.", zhText: "在營火休息處恢復生命效果提升 20%。" }
+  { id: "tree_babel", icon: "🌳", name: "Tree of Babel", zhName: "巴別神木", text: "Words with Greek or Latin roots deal +9 bonus damage and grant +1 insight.", zhText: "解答帶有拉丁或希臘字根的單字造成 +9 額外傷害並獲 1 點經驗。" },
+  { id: "ancient_glyph", icon: "🔮", name: "Primordial Glyph", zhName: "原初符文", text: "Alchemy Shrines appear twice as often & offer dual blessings.", zhText: "字根煉金祭壇出現機率翻倍，且可同時獲得雙重祝福。" },
+  { id: "codex_roots", icon: "📖", name: "Lexical Codex", zhName: "詞彙法典", text: "Expedition victory yields +2 bonus mastery points per word.", zhText: "戰鬥勝利後所有單字獲得雙倍精通熟練度。" },
+  
+  // 6. Shield, Defense & Sustain
+  { id: "shield", icon: "◉", name: "Patient Stone", zhName: "耐心之石", text: "Ignore the first wrong answer in each battle.", zhText: "每場戰鬥免疫第一次答錯的傷害。" },
+  { id: "boots", icon: "⌁", name: "Wayfarer Boots", zhName: "旅者之靴", text: "+10 maximum resolve immediately and heal 10 HP.", zhText: "立即提升 10 點最大生命值並恢復 10 點生命。" },
+  { id: "crown", icon: "♛", name: "Scholar's Crown", zhName: "學者之冠", text: "Start each battle with +1 spark.", zhText: "每場戰鬥開始時額外獲得 1 點火花。" },
+  { id: "mirror", icon: "🪞", name: "Oracle's Mirror", zhName: "神諭之鏡", text: "Gain +1 Insight whenever you take damage.", zhText: "受到傷害時獲得 +1 點頓悟經驗。" },
+  { id: "feather", icon: "🪶", name: "Phoenix Feather", zhName: "鳳凰之羽", text: "Revive with 25 Resolve once upon fatal damage.", zhText: "遭受致命傷害時免死並恢復 25 點生命（限一次）。" },
+  { id: "candle", icon: "🕯️", name: "Scholar's Candle", zhName: "學者之燭", text: "Rest sites restore an extra 20% Resolve.", zhText: "在營火休息處恢復生命效果提升 20%。" },
+  { id: "aegis_tome", icon: "🛡️", name: "Aegis Tome", zhName: "守護法典", text: "Gain +6 temporary Shield at the start of every battle.", zhText: "每場戰鬥開始時自動獲得 6 點護盾。" },
+  { id: "iron_will", icon: "📿", name: "Iron Will Locket", zhName: "鋼鐵意志吊墜", text: "Elite and Boss attacks deal 35% less damage.", zhText: "菁英怪與區域領主的攻擊傷害降低 35%。" },
+  { id: "vital_spring", icon: "⛲", name: "Fountain of Words", zhName: "字泉甘霖", text: "Heal 3 Resolve upon entering any map node.", zhText: "每次跨入新的地圖節點時自動恢復 3 點意志生命。" },
+  { id: "potion_satchel", icon: "🧳", name: "Potion Satchel", zhName: "魔藥腰帶", text: "Start run with 2 random potions and potion effects are +30% stronger.", zhText: "遠征開始時自帶 2 瓶隨機藥水，且藥水效果提升 30%。" }
 ];
 
 const EXAM_DECKS = {
@@ -546,9 +614,27 @@ const SANCTUARY_TALENTS = [
     maxRank: 4, baseCost: 30, costMult: 1.5
   },
   {
+    id: "shield_wall", name: "Bastion of Babel", zhName: "巴別堡壘", icon: "🛡️",
+    desc: "Start every combat encounter with +3 Shield per rank.",
+    zhDesc: "每場戰鬥開始時獲得 +3 點初始護盾（每級）。",
+    maxRank: 4, baseCost: 40, costMult: 1.6
+  },
+  {
+    id: "sharp_edge", name: "Razor Focus", zhName: "鋒芒心智", icon: "🗡️",
+    desc: "+2 flat damage to all correct answers in combat per rank.",
+    zhDesc: "戰鬥中每次答對基礎攻擊力 +2 點傷害（每級）。",
+    maxRank: 4, baseCost: 50, costMult: 1.7
+  },
+  {
+    id: "rune_resonance", name: "Etymology Blessing", zhName: "古語共鳴", icon: "🔮",
+    desc: "+15% bonus damage on words that have root/origin metadata per rank.",
+    zhDesc: "解答具有語源或字根的單字時造成 +15% 額外傷害（每級）。",
+    maxRank: 3, baseCost: 45, costMult: 1.6
+  },
+  {
     id: "phoenix", name: "Phoenix Aegis", zhName: "鳳凰庇護", icon: "🪶",
-    desc: "Survive a lethal blow once per run, recovering 20 Resolve.",
-    zhDesc: "每場遠征享有一次免死機會，瀕死時恢復 20 點生命。",
+    desc: "Survive a lethal blow once per run, recovering 25 Resolve.",
+    zhDesc: "每場遠征享有一次免死機會，瀕死時恢復 25 點生命。",
     maxRank: 1, baseCost: 80, costMult: 1.0
   }
 ];
@@ -608,7 +694,9 @@ function showSanctuary() {
   });
 }
 
-function freshState(classId = "bard") {
+let chosenAscension = 0;
+
+function freshState(classId = "bard", ascension = chosenAscension) {
   const meta = loadMeta();
   const knownWords = meta.learned || {};
   const heroClass = CLASSES.find(c => c.id === classId) || CLASSES[0];
@@ -617,13 +705,20 @@ function freshState(classId = "bard") {
   const bonusSparks = talents.sparks || 0;
   const hasPhoenixAegis = Boolean(talents.phoenix && talents.phoenix > 0);
 
+  const startHp = heroClass.hp + bonusHp - (ascension >= 10 ? 6 : 0);
+  const startSparks = Math.max(1, heroClass.sparks + bonusSparks - (ascension >= 7 ? 1 : 0));
+  const startingRelics = heroClass.relic ? [{ id: heroClass.relic, edition: "standard" }] : [];
+  const startPotions = heroClass.id === "scholar" ? ["elixir_reveal"] : [];
+
   return {
     characterClass: heroClass.id,
-    hp: heroClass.hp + bonusHp, maxHp: heroClass.hp + bonusHp, level: 1, xp: 0, xpNext: 6,
-    sparks: heroClass.sparks + bonusSparks, ink: heroClass.ink, streak: 0, maxStreak: 0,
+    ascension: ascension,
+    hp: startHp, maxHp: startHp, shield: 0, level: 1, xp: 0, xpNext: 6,
+    sparks: startSparks, ink: heroClass.ink, streak: 0, maxStreak: 0,
     region: 0, cycle: 0, node: 0, day: 1,
     wordsAnswered: 0, correct: 0, quest: 0, questClaimed: false,
-    learned: { ...knownWords }, seen: [], relics: heroClass.relic ? [heroClass.relic] : [],
+    learned: { ...knownWords }, seen: [], relics: startingRelics,
+    potions: startPotions,
     sound: true, screen: "choice", startedAt: Date.now(),
     usedRevive: !hasPhoenixAegis,
     isDaily: false
@@ -632,9 +727,10 @@ function freshState(classId = "bard") {
 
 function loadMeta() {
   const defaults = {
-    totalWords: 0, bestStreak: 0, expeditions: 0, totalInk: 0,
+    totalWords: 0, bestStreak: 0, expeditions: 0, totalInk: 0, maxAscension: 0,
     learned: {}, reviews: {}, notes: {}, talents: {},
     bilingual: true, achievements: [], studyHistory: {},
+    highScores: [],
     speechRate: 0.85, autoSpeak: false
   };
   try {
@@ -647,6 +743,8 @@ function loadMeta() {
       talents: loaded.talents || {},
       achievements: loaded.achievements || [],
       studyHistory: loaded.studyHistory || {},
+      highScores: loaded.highScores || [],
+      maxAscension: typeof loaded.maxAscension === "number" ? loaded.maxAscension : 0,
       totalInk: typeof loaded.totalInk === "number" ? loaded.totalInk : 0,
       bilingual: loaded.bilingual !== undefined ? loaded.bilingual : true
     } : defaults;
@@ -663,7 +761,7 @@ function loadState() {
   try {
     const loaded = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (!loaded || typeof loaded.hp !== "number") return null;
-    return { ...freshState(loaded.characterClass || "bard"), ...loaded };
+    return { ...freshState(loaded.characterClass || "bard", loaded.ascension || 0), ...loaded };
   } catch { return null; }
 }
 
@@ -676,10 +774,29 @@ function updateContinueButton() {
 
 function showClassSelection() {
   const isZh = loadMeta().bilingual;
+  const meta = loadMeta();
+  const maxAllowedAsc = meta.maxAscension || 0;
+  if (chosenAscension > maxAllowedAsc) chosenAscension = maxAllowedAsc;
+  const currentAsc = ASCENSION_LEVELS[chosenAscension] || ASCENSION_LEVELS[0];
+
   openModal(`
-    <span class="modal-kicker">${isZh ? "選擇你的探索者原型" : "CHOOSE YOUR PATHFINDER"}</span>
+    <span class="modal-kicker">${isZh ? "選擇你的探索者原型與攀升挑戰" : "CHOOSE YOUR PATHFINDER & ASCENSION"}</span>
     <h2>${isZh ? "選擇職業原型" : "Select Archetype"}</h2>
+    
+    <div class="ascension-box">
+      <div class="ascension-ctrl">
+        <button id="asc-prev" class="asc-nav-btn" ${chosenAscension <= 0 ? "disabled" : ""}>◀</button>
+        <div style="text-align:center;">
+          <b>${isZh ? `攀升挑戰 ${chosenAscension} 階` : `Ascension ${chosenAscension}`}: ${isZh ? currentAsc.zhName : currentAsc.name}</b>
+          <span class="asc-multiplier-badge">${isZh ? `得分加成 +${chosenAscension * 15}%` : `Score +${chosenAscension * 15}%`}</span>
+        </div>
+        <button id="asc-next" class="asc-nav-btn" ${chosenAscension >= maxAllowedAsc ? "disabled" : ""}>▶</button>
+      </div>
+      <p class="ascension-desc">${isZh ? currentAsc.zhDesc : currentAsc.desc}</p>
+    </div>
+
     <p class="section-copy">${isZh ? "每個職業擁有不同的初始屬性、資源配置與專屬被動遺物。" : "Each archetype shapes your expedition with unique starting stats, resources, and passive relics."}</p>
+    
     <div class="class-grid">
       ${CLASSES.map(cls => `
         <button class="class-card" data-class="${cls.id}">
@@ -689,8 +806,8 @@ function showClassSelection() {
             <h3>${isZh ? cls.zhName : cls.name}</h3>
             <p>${isZh ? cls.zhDesc : cls.desc}</p>
             <div class="class-stats">
-              <span><b>${cls.hp}</b> HP</span>
-              <span><b>${cls.sparks}</b> ${isZh ? "火花" : "Sparks"}</span>
+              <span><b>${cls.hp - (chosenAscension >= 10 ? 6 : 0)}</b> HP</span>
+              <span><b>${Math.max(1, cls.sparks - (chosenAscension >= 7 ? 1 : 0))}</b> ${isZh ? "火花" : "Sparks"}</span>
               <span><b>${cls.ink}</b> ${isZh ? "墨水" : "Ink"}</span>
             </div>
             <span class="class-quote">“${cls.quote}”</span>
@@ -699,6 +816,21 @@ function showClassSelection() {
       `).join("")}
     </div>
   `);
+
+  $("#asc-prev")?.addEventListener("click", () => {
+    if (chosenAscension > 0) {
+      chosenAscension--;
+      showClassSelection();
+    }
+  });
+
+  $("#asc-next")?.addEventListener("click", () => {
+    if (chosenAscension < maxAllowedAsc) {
+      chosenAscension++;
+      showClassSelection();
+    }
+  });
+
   document.querySelectorAll("[data-class]").forEach(btn => {
     btn.addEventListener("click", () => {
       $("#modal").close();
@@ -708,7 +840,7 @@ function showClassSelection() {
 }
 
 function startNewRun(classId = "bard") {
-  state = freshState(classId);
+  state = freshState(classId, chosenAscension);
   soundEnabled = true;
   const meta = loadMeta();
   meta.expeditions += 1;
@@ -771,7 +903,8 @@ function updateHUD() {
   if (titleSmall) titleSmall.textContent = isZh ? heroClass.zhSubtitle : heroClass.subtitle.toUpperCase();
   if (titleH2) titleH2.textContent = isZh ? heroClass.zhName : heroClass.name;
   
-  $("#hp-text").textContent = `${state.hp} / ${state.maxHp}`;
+  const shieldHtml = state.shield > 0 ? ` <span class="shield-badge-hud">+${state.shield} 🛡️</span>` : "";
+  $("#hp-text").innerHTML = `${state.hp} / ${state.maxHp}${shieldHtml}`;
   $("#hp-bar").style.width = `${100 * state.hp / state.maxHp}%`;
   $("#xp-text").textContent = `${state.xp} / ${state.xpNext}`;
   $("#xp-bar").style.width = `${100 * state.xp / state.xpNext}%`;
@@ -794,8 +927,23 @@ function updateHUD() {
   $("#sound-toggle").textContent = soundEnabled ? "♪" : "×";
   $("#sound-toggle-title").textContent = soundEnabled ? "♪" : "×";
   renderRelics();
+  renderPotions();
   updateHabitTracker();
   applyLanguageToUI();
+
+  // Low HP visual and audio warning
+  const isLowHp = state.hp > 0 && (state.hp / state.maxHp) <= 0.28;
+  let vignette = $(".low-hp-vignette");
+  if (isLowHp) {
+    if (!vignette) {
+      vignette = document.createElement("div");
+      vignette.className = "low-hp-vignette";
+      document.body.appendChild(vignette);
+    }
+    playLowHpWarning();
+  } else if (vignette) {
+    vignette.remove();
+  }
 
   // Achievement milestones
   if (state.node > 0 || state.region > 0) checkAchievement("first_step");
@@ -842,22 +990,134 @@ function updateJourneyMap() {
   });
 }
 
+function hasRelic(id) {
+  if (!state || !state.relics) return false;
+  return state.relics.some(r => (typeof r === "string" ? r : r.id) === id);
+}
+
+function getRelicObj(id) {
+  if (!state || !state.relics) return null;
+  return state.relics.find(r => (typeof r === "string" ? r : r.id) === id);
+}
+
 function renderRelics() {
   const isZh = loadMeta().bilingual;
   const list = $("#relic-list");
+  if (!list) return;
   if (!state.relics.length) {
     list.innerHTML = `<span class="empty-relic">${isZh ? "行囊目前空空如也" : "Your satchel is empty"}</span>`;
     return;
   }
-  list.innerHTML = state.relics.map(id => {
+  list.innerHTML = state.relics.map(entry => {
+    const id = typeof entry === "string" ? entry : entry.id;
+    const edition = typeof entry === "object" && entry.edition ? entry.edition : "standard";
     const relic = RELICS.find(item => item.id === id);
+    if (!relic) return "";
     const rName = isZh ? (relic.zhName || relic.name) : relic.name;
     const rText = isZh ? (relic.zhText || relic.text) : relic.text;
-    return `<span class="relic" title="${rName}: ${rText}">${relic.icon}</span>`;
+    const edTag = edition === "foil" ? (isZh ? "【箔金 +6 HP】" : " [Foil: +6 Max HP]") :
+                  edition === "holo" ? (isZh ? "【全息 +4 傷害】" : " [Holo: +4 Dmg]") :
+                  edition === "poly" ? (isZh ? "【稜鏡 x1.35 傷害&墨水】" : " [Poly: x1.35 Mult]") :
+                  edition === "corrupted" ? (isZh ? "【詛咒 +8 傷害 / 答錯 -1 HP】" : " [Curse: +8 Dmg]") : "";
+    return `<span class="relic edition-${edition}" title="${rName}${edTag}: ${rText}">${relic.icon}</span>`;
   }).join("");
 }
 
-function hasRelic(id) { return state.relics.includes(id); }
+function renderPotions() {
+  const isZh = loadMeta().bilingual;
+  const belt = $("#potion-belt");
+  if (!belt || !state) return;
+  state.potions = state.potions || [];
+  belt.innerHTML = [0, 1].map(slot => {
+    const potId = state.potions[slot];
+    if (!potId) return `<div class="potion-slot" data-slot="${slot}"><small>${isZh ? "空" : "EMPTY"}</small></div>`;
+    const pot = POTIONS.find(p => p.id === potId);
+    if (!pot) return `<div class="potion-slot" data-slot="${slot}"><small>${isZh ? "空" : "EMPTY"}</small></div>`;
+    const pName = isZh ? pot.zhName : pot.name;
+    const pDesc = isZh ? pot.zhDesc : pot.desc;
+    return `
+      <div class="potion-slot filled" data-slot="${slot}" title="${pName}: ${pDesc} (${isZh ? "點擊使用 / 按鍵" : "Click to use / Key"} ${slot + 1})">
+        <span class="potion-icon">${pot.icon}</span>
+        <small>${slot + 1}</small>
+      </div>
+    `;
+  }).join("");
+
+  document.querySelectorAll(".potion-slot.filled").forEach(slotEl => {
+    slotEl.addEventListener("click", () => {
+      usePotion(Number(slotEl.dataset.slot));
+    });
+  });
+}
+
+function addPotion(potionId) {
+  state.potions = state.potions || [];
+  if (state.potions.length < 2) {
+    state.potions.push(potionId);
+    const pot = POTIONS.find(p => p.id === potionId);
+    const isZh = loadMeta().bilingual;
+    toast(isZh ? `獲得藥水：<b>${pot.zhName}</b>！` : `Acquired <b>${pot.name}</b>!`);
+    updateHUD();
+    return true;
+  }
+  toast(loadMeta().bilingual ? "魔藥腰帶已滿 (最多攜帶 2 瓶)" : "Potion satchel is full (Max 2)!");
+  return false;
+}
+
+function usePotion(slot) {
+  if (!state || !state.potions || !state.potions[slot]) return;
+  const potId = state.potions[slot];
+  const pot = POTIONS.find(p => p.id === potId);
+  const isZh = loadMeta().bilingual;
+  const hasSatchel = hasRelic("potion_satchel");
+  const mult = hasSatchel ? 1.3 : 1.0;
+
+  state.potions.splice(slot, 1);
+  tone(520, .1); setTimeout(() => tone(780, .15), 80);
+
+  if (potId === "elixir_reveal") {
+    if (state.screen === "battle" && battle && battle.question) {
+      const correctVal = battle.question.correctValue;
+      const wrongBtns = [...document.querySelectorAll(".answer-button:not(.faded)")].filter(b => b.dataset.answer !== correctVal);
+      shuffle(wrongBtns).slice(0, Math.round(2 * mult)).forEach(b => {
+        b.classList.add("faded");
+        b.disabled = true;
+      });
+      toast(isZh ? "🧪 <b>顯影靈藥：</b> 排除錯誤選項！" : "🧪 <b>Elixir of Revelation:</b> Removed incorrect options!");
+    } else {
+      toast(isZh ? "只能在戰鬥作答時使用此靈藥。" : "Can only be used during battle!");
+      state.potions.splice(slot, 0, potId);
+      return;
+    }
+  } else if (potId === "potion_freeze") {
+    if (battle) {
+      battle.freezeCrit = true;
+      toast(isZh ? "⏳ <b>靜時秘劑：</b> 下一題必觸發急速爆擊！" : "⏳ <b>Chrono Draught:</b> Next answer guaranteed Quick Wit Crit!");
+    }
+  } else if (potId === "draught_vitality") {
+    const healAmt = Math.round(18 * mult);
+    heal(healAmt);
+    toast(isZh ? `💖 <b>活力神泉：</b> 恢復 ${healAmt} 點意志生命！` : `💖 <b>Vital Tonic:</b> Restored ${healAmt} Resolve!`);
+  } else if (potId === "scroll_reroll") {
+    if (state.screen === "battle") {
+      renderQuestion();
+      toast(isZh ? "📜 <b>換詞卷軸：</b> 題目已重抽！" : "📜 <b>Transmute Scroll:</b> Word rerolled!");
+    } else {
+      toast(isZh ? "只能在戰鬥作答時使用此卷軸。" : "Can only be used in combat!");
+      state.potions.splice(slot, 0, potId);
+      return;
+    }
+  } else if (potId === "potion_midas") {
+    const inkAmt = Math.round(32 * mult);
+    state.ink += inkAmt;
+    toast(isZh ? `◈ <b>邁達斯墨水：</b> 獲得 +${inkAmt} 墨水！` : `◈ <b>Midas Phial:</b> Gained +${inkAmt} Ink!`);
+  } else if (potId === "rune_shield") {
+    const shieldAmt = Math.round(14 * mult);
+    state.shield = (state.shield || 0) + shieldAmt;
+    toast(isZh ? `🛡️ <b>護盾符文：</b> 獲得 ${shieldAmt} 點護盾！` : `🛡️ <b>Rune of Aegis:</b> +${shieldAmt} Shield!`);
+  }
+  updateHUD();
+}
 
 function showPathChoice() {
   state.screen = "choice";
@@ -938,8 +1198,17 @@ function choosePath(type) {
 }
 
 function startBattle(type) {
+  const meta = loadMeta();
+  const talents = meta.talents || {};
+  const asc = state.ascension || 0;
   const scaling = state.cycle * 6 + state.region * 2 + state.node;
-  const maxHp = type === "boss" ? 60 + scaling * 4 : type === "elite" ? 42 + scaling * 3 : 30 + scaling * 2;
+  let maxHp = type === "boss" ? 60 + scaling * 4 : type === "elite" ? 42 + scaling * 3 : 30 + scaling * 2;
+  
+  if (asc >= 1 && type === "elite") maxHp = Math.round(maxHp * 1.2);
+  if (asc >= 6 && type === "boss") maxHp = Math.round(maxHp * 1.3);
+  if (asc >= 15 && type === "boss") maxHp = Math.round(maxHp * 1.5);
+  if (asc >= 19) maxHp = Math.round(maxHp * 1.2);
+
   const enemy = type === "boss" ? ENEMIES.boss[state.region % ENEMIES.boss.length] : random(ENEMIES[type]);
   
   // Dynamic enemy traits
@@ -949,15 +1218,34 @@ function startBattle(type) {
       ? shuffle(["armored", "siphoner", "heavy", "swift"])[0]
       : Math.random() < 0.45 ? random(["armored", "siphoner", "drainer", "swift"]) : "none";
 
-  const initialShield = traitPool === "armored" ? (type === "boss" ? 24 + scaling : type === "elite" ? 16 + scaling : 10) : 0;
+  let initialShield = traitPool === "armored" ? (type === "boss" ? 24 + scaling : type === "elite" ? 16 + scaling : 10) : 0;
+  if (asc >= 19) initialShield += 12;
+
+  // Boss Blind roll
+  let bossBlind = null;
+  if (type === "boss") {
+    bossBlind = random(BOSS_BLINDS);
+    if (bossBlind.id === "armored") initialShield += 25;
+  }
   
+  let baseDamage = type === "boss" ? 10 + state.cycle * 2 : type === "elite" ? 8 + state.cycle : 6 + Math.floor(state.cycle / 2);
+  if (asc >= 2) baseDamage += 1;
+  if (asc >= 11) baseDamage += Math.floor(state.region / 2) + 1;
+
+  // Player starting shield
+  const talentShield = (talents.shield_wall || 0) * 3;
+  const relicShield = hasRelic("aegis_tome") ? 6 : 0;
+  state.shield = (state.shield || 0) + talentShield + relicShield;
+
   battle = {
     type, name: enemy[0], kind: enemy[1], hp: maxHp, maxHp,
     shield: initialShield, maxShield: initialShield,
     trait: traitPool,
-    damage: type === "boss" ? 10 + state.cycle * 2 : type === "elite" ? 8 + state.cycle : 6 + Math.floor(state.cycle / 2),
+    bossBlind: bossBlind,
+    damage: baseDamage,
     turn: 0, blocked: false, first: true, locked: false, current: null, usedWords: [],
-    currentIntent: null, startTime: Date.now()
+    currentIntent: null, startTime: Date.now(),
+    freezeCrit: false
   };
   
   if (hasRelic("crown")) state.sparks += 1;
@@ -984,315 +1272,454 @@ function startBattle(type) {
       traitBadge.hidden = true;
     }
   }
+
+  // Render Boss Blind Alert if present
+  if (battle.bossBlind) {
+    const isZh = loadMeta().bilingual;
+    const alertBox = document.createElement("div");
+    alertBox.className = "boss-blind-alert";
+    alertBox.innerHTML = `<span>⚠️ <b>${isZh ? `領主限制：${battle.bossBlind.zhName}` : `Boss Blind: ${battle.bossBlind.name}`}</b> — ${isZh ? battle.bossBlind.zhDesc : battle.bossBlind.desc}</span>`;
+    $(".battle-stage")?.prepend(alertBox);
+  }
   
   updateEnemyShieldUI();
-    $("#enemy-art").classList.add(type);
-    if (type === "boss") {
-      showBossIntro(battle.name, REGIONS[state.region % REGIONS.length].name);
-    }
-    $("#speak-button").addEventListener("click", speakCurrentWord);
-    $("#hint-button").addEventListener("click", useHint);
-    $("#skip-button").addEventListener("click", swapWord);
-    renderQuestion();
-    updateHUD();
+  $("#enemy-art").classList.add(type);
+  if (type === "boss") {
+    showBossIntro(battle.name, REGIONS[state.region % REGIONS.length].name);
   }
+  $("#speak-button").addEventListener("click", speakCurrentWord);
+  $("#hint-button").addEventListener("click", useHint);
+  $("#skip-button").addEventListener("click", swapWord);
+  renderQuestion();
+  updateHUD();
+}
 
-  function updateEnemyShieldUI() {
-    const shieldLabel = $("#enemy-shield-label");
-    const shieldBar = $("#enemy-shield-bar");
-    const shieldNum = $("#enemy-shield-num");
-    if (!shieldLabel || !shieldBar) return;
-    if (battle.shield > 0) {
-      shieldLabel.hidden = false;
-      if (shieldNum) shieldNum.textContent = battle.shield;
-      const ratio = battle.maxShield ? (battle.shield / battle.maxShield * 100) : 0;
-      shieldBar.style.width = `${ratio}%`;
-    } else {
-      shieldLabel.hidden = true;
-      shieldBar.style.width = "0%";
-    }
+function updateEnemyShieldUI() {
+  const shieldLabel = $("#enemy-shield-label");
+  const shieldBar = $("#enemy-shield-bar");
+  const shieldNum = $("#enemy-shield-num");
+  if (!shieldLabel || !shieldBar) return;
+  if (battle && battle.shield > 0) {
+    shieldLabel.hidden = false;
+    if (shieldNum) shieldNum.textContent = battle.shield;
+    const ratio = battle.maxShield ? (battle.shield / battle.maxShield * 100) : 0;
+    shieldBar.style.width = `${ratio}%`;
+  } else {
+    shieldLabel.hidden = true;
+    shieldBar.style.width = "0%";
   }
+}
 
-  function getWord() {
-    const regionWords = REGIONS[state.region % REGIONS.length].words;
-    const allWords = REGIONS.flatMap(region => region.words);
-    const reviewRecords = loadMeta().reviews;
-    const dueReviews = allWords.filter(word => {
-      const review = reviewRecords[word.word];
-      return review && review.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
-    });
-    let available = regionWords.filter(word => !battle.usedWords.includes(word.word));
-    if (!available.length) { battle.usedWords = []; available = regionWords; }
-    const unseen = available.filter(word => !state.seen.includes(word.word));
-    const reviewWord = dueReviews.length
-      ? shuffle(dueReviews).sort((a, b) => reviewRecords[b.word].misses - reviewRecords[a.word].misses)[0]
-      : null;
-    const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
-    battle.usedWords.push(word.word);
-    if (!state.seen.includes(word.word)) state.seen.push(word.word);
-    if (state.seen.length > 45) state.seen.shift();
-    return word;
-  }
+function getWord() {
+  const regionWords = REGIONS[state.region % REGIONS.length].words;
+  const allWords = REGIONS.flatMap(region => region.words);
+  const reviewRecords = loadMeta().reviews;
+  const dueReviews = allWords.filter(word => {
+    const review = reviewRecords[word.word];
+    return review && review.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
+  });
+  let available = regionWords.filter(word => !battle.usedWords.includes(word.word));
+  if (!available.length) { battle.usedWords = []; available = regionWords; }
+  const unseen = available.filter(word => !state.seen.includes(word.word));
+  const reviewWord = dueReviews.length
+    ? shuffle(dueReviews).sort((a, b) => reviewRecords[b.word].misses - reviewRecords[a.word].misses)[0]
+    : null;
+  const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
+  battle.usedWords.push(word.word);
+  if (!state.seen.includes(word.word)) state.seen.push(word.word);
+  if (state.seen.length > 45) state.seen.shift();
+  return word;
+}
 
-  function renderQuestion() {
-    battle.locked = false;
-    battle.turn += 1;
-    battle.startTime = Date.now();
-    battle.current = getWord();
-    $("#enemy-art").classList.remove("hurt", "attack");
-    const word = battle.current;
-    const regionWords = REGIONS[state.region % REGIONS.length].words;
+function renderQuestion() {
+  battle.locked = false;
+  battle.turn += 1;
+  battle.startTime = Date.now();
+  battle.current = getWord();
+  $("#enemy-art").classList.remove("hurt", "attack");
+  const word = battle.current;
+  const regionWords = REGIONS[state.region % REGIONS.length].words;
+  const isZh = loadMeta().bilingual;
+  
+  // Question Archetype selection
+  let mode = "definition";
+  if (battle.bossBlind && battle.bossBlind.id === "cloze_only") {
+    mode = "cloze";
+  } else if (battle.turn > 1) {
     const roll = Math.random();
-    const mode = battle.turn > 1 && roll < .25 ? "synonym" : battle.turn > 1 && roll < .5 ? "cloze" : "definition";
-    const property = mode === "synonym" ? "synonym" : mode === "cloze" ? "word" : "definition";
-    const isZh = loadMeta().bilingual;
-    const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3);
-    const answerItems = shuffle([word, ...distractors]);
-    battle.question = { mode, property, correctValue: word[property] };
+    if (roll < 0.25) mode = "synonym";
+    else if (roll < 0.50) mode = "cloze";
+    else if (roll < 0.65 && word.synonym) mode = "antonym";
+    else if (roll < 0.80) mode = "collocation";
+    else mode = "definition";
+  }
 
-    // Calculate Enemy Intent for this turn
-    let intent;
-    if (battle.trait === "heavy" && battle.turn % 3 === 0) {
-      const heavyDmg = Math.round(battle.damage * 1.7);
-      intent = { type: "heavy", label: `💥 ${heavyDmg} Slam`, damage: heavyDmg, desc: "Heavy strike charging!" };
-    } else if (battle.trait === "siphoner" && Math.random() < 0.4) {
-      intent = { type: "siphon", label: `✦ Siphon +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), siphon: 1, desc: "Will steal 1 spark on hit" };
-    } else if (battle.trait === "drainer" && Math.random() < 0.4) {
-      intent = { type: "drain", label: `◈ Leech +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), drain: 6, desc: "Will drain 6 ink on hit" };
-    } else if (battle.trait === "armored" && battle.shield <= 0 && Math.random() < 0.35) {
-      intent = { type: "shield", label: "🛡️ Fortify (+8)", damage: 3, shieldGain: 8, desc: "Gains shield and attacks" };
-    } else {
-      intent = { type: "attack", label: `⚔ ${battle.damage} Strike`, damage: battle.damage, desc: "Standard attack" };
-    }
-    battle.currentIntent = intent;
+  let property = "definition";
+  let promptText = isZh ? "選擇最符合的英文釋義 (Choose the closest meaning)" : "Choose the closest meaning";
+  let correctVal = word.definition;
+  let distractors = [];
 
-    $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
-    $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
-    $("#challenge-word").textContent = mode === "cloze" ? (isZh ? "句中缺少一個關鍵單字" : "A word is missing") : word.word;
-    $("#pronunciation").textContent = mode === "cloze" ? (isZh ? `提示：${word.zh || ""} · ${word.pos || ""}` : "Use the sentence to find it") : `${word.phonetic} ${isZh && word.zh ? `· ${word.zh}` : ""}`;
+  if (mode === "synonym") {
+    property = "synonym";
+    promptText = isZh ? "選擇最相近的英文同義詞 (Closest Synonym)" : "Choose the closest synonym";
+    correctVal = word.synonym || word.definition;
+    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.synonym || w.word);
+  } else if (mode === "cloze") {
+    property = "word";
+    promptText = makeCloze(word);
+    correctVal = word.word;
+    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.word);
+  } else if (mode === "antonym") {
+    property = "word";
+    promptText = isZh ? `找出與「${word.word}」意義最相反的詞 (Select the OPPOSITE meaning)` : `Select the word with the OPPOSITE meaning of "${word.word}"`;
+    correctVal = word.word;
+    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.word);
+  } else if (mode === "collocation") {
+    property = "word";
+    promptText = isZh ? `在語境中最道地的自然搭配詞是？ (Natural Collocation)` : `Which word naturally completes this phrase?`;
+    correctVal = word.word;
+    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.word);
+  } else {
+    property = "definition";
+    promptText = isZh ? "選擇最符合的英文釋義 (Choose the closest meaning)" : "Choose the closest meaning";
+    correctVal = word.definition;
+    distractors = shuffle(regionWords.filter(w => w.word !== word.word)).slice(0, 3).map(w => w.definition);
+  }
+
+  const answerItems = shuffle([
+    { text: correctVal, isCorrect: true, zh: word.zh },
+    ...distractors.map(dText => {
+      const matchW = regionWords.find(rw => rw.definition === dText || rw.word === dText || rw.synonym === dText);
+      return { text: dText, isCorrect: false, zh: matchW ? matchW.zh : "" };
+    })
+  ]);
+
+  battle.question = { mode, property, correctValue: correctVal };
+
+  // Calculate Enemy Intent for this turn
+  let intent;
+  if (battle.trait === "heavy" && battle.turn % 3 === 0) {
+    const heavyDmg = Math.round(battle.damage * 1.7);
+    intent = { type: "heavy", label: `💥 ${heavyDmg} Slam`, damage: heavyDmg, desc: "Heavy strike charging!" };
+  } else if (battle.trait === "siphoner" && Math.random() < 0.4) {
+    intent = { type: "siphon", label: `✦ Siphon +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), siphon: (state.ascension >= 8 ? 2 : 1), desc: "Will steal sparks on hit" };
+  } else if (battle.trait === "drainer" && Math.random() < 0.4) {
+    intent = { type: "drain", label: `◈ Leech +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), drain: 6, desc: "Will drain 6 ink on hit" };
+  } else if (battle.trait === "armored" && battle.shield <= 0 && Math.random() < 0.35) {
+    intent = { type: "shield", label: "🛡️ Fortify (+8)", damage: 3, shieldGain: 8, desc: "Gains shield and attacks" };
+  } else {
+    intent = { type: "attack", label: `⚔ ${battle.damage} Strike`, damage: battle.damage, desc: "Standard attack" };
+  }
+  battle.currentIntent = intent;
+
+  $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
+  $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
+  $("#challenge-word").textContent = mode === "cloze" ? (isZh ? "句中缺少一個關鍵單字" : "A word is missing") : word.word;
+  $("#pronunciation").textContent = mode === "cloze" ? (isZh ? `提示：${word.zh || ""} · ${word.pos || ""}` : "Use the sentence to find it") : `${word.phonetic} ${isZh && word.zh ? `· ${word.zh}` : ""}`;
+  $("#challenge-prompt").textContent = promptText;
+
+  const intentEl = $("#enemy-intent");
+  if (intentEl) {
+    intentEl.textContent = intent.label;
+    intentEl.className = `enemy-intent intent-${intent.type}`;
+    intentEl.title = intent.desc;
+  }
+
+  $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
+  updateEnemyShieldUI();
+  $("#clue-box").hidden = true;
+  if (hasRelic("magnifier") && word.root) {
+    $("#clue-box").hidden = false;
+    $("#clue-box").innerHTML = `<b>Origin Note (Etymology Glass):</b> ${word.root}`;
+  }
+  $("#feedback-panel").hidden = true;
+  $("#combo-display").hidden = state.streak < 2;
+  if (state.streak >= 2) $("#combo-display b").textContent = `×${Math.min(5, 1 + Math.floor(state.streak / 2))}`;
+  
+  $("#answer-grid").innerHTML = answerItems.map((item, index) => {
+    const val = item.text;
+    const zh = (isZh && item.zh) ? `<span class="answer-zh">（${item.zh}）</span>` : "";
+    return `
+      <button class="answer-button" data-answer="${escapeAttribute(val)}" data-correct="${item.isCorrect}">
+        <span class="answer-key">${String.fromCharCode(65 + index)}</span>
+        <div class="answer-content">
+          <span class="answer-main">${val}</span>
+          ${zh}
+        </div>
+      </button>
+    `;
+  }).join("");
+
+  // Boss Blind: The Blindfold (veiled for 1.2s)
+  if (battle.bossBlind && battle.bossBlind.id === "blindfold") {
+    const grid = $("#answer-grid");
+    grid.style.opacity = "0.08";
+    grid.style.filter = "blur(6px)";
+    setTimeout(() => {
+      grid.style.transition = "opacity .3s ease, filter .3s ease";
+      grid.style.opacity = "1";
+      grid.style.filter = "none";
+    }, 1200);
+  }
+
+  document.querySelectorAll(".answer-button").forEach(button => {
+    button.addEventListener("click", () => answerQuestion(button, button.dataset.correct === "true", mode));
+  });
+  updateHUD();
+}
+
+function escapeAttribute(text) {
+  return String(text).replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+}
+
+function makeCloze(word) {
+  const exact = new RegExp(`\\b${word.word}\\b`, "i");
+  if (exact.test(word.sentence)) return word.sentence.replace(exact, "________");
+  const stemLength = Math.max(4, word.word.length - 2);
+  const stem = word.word.slice(0, stemLength);
+  const inflected = new RegExp(`\\b${stem}[a-z]*\\b`, "i");
+  if (inflected.test(word.sentence)) return word.sentence.replace(inflected, "________");
+  return `________ — ${word.clue}`;
+}
+
+function answerQuestion(button, correct, mode) {
+  if (battle.locked) return;
+  battle.locked = true;
+  const elapsedSec = (Date.now() - battle.startTime) / 1000;
+  const word = battle.current;
+  const meta = loadMeta();
+  const talents = meta.talents || {};
+  const buttons = [...document.querySelectorAll(".answer-button")];
+  buttons.forEach(item => item.disabled = true);
+  state.wordsAnswered += 1;
+  
+  if (correct) {
+    button.classList.add("correct");
+    const btnBox = button.getBoundingClientRect();
+    spawnParticles(btnBox.left + btnBox.width / 2, btnBox.top + btnBox.height / 2, "#e3ac46", 14);
+
+    state.correct += 1;
+    state.streak += 1;
+    state.maxStreak = Math.max(state.maxStreak, state.streak);
+    state.quest += 1;
+    state.learned[word.word] = (state.learned[word.word] || 0) + 1;
+    updateReviewRecord(word.word, true, "good");
+    gainXp(1 + (talents.scholar_prodigy || 0));
     
-    if (isZh) {
-      $("#challenge-prompt").textContent = mode === "synonym"
-        ? "選擇最相近的英文同義詞 (Choose the closest synonym)"
-        : mode === "cloze"
-          ? makeCloze(word)
-          : "選擇最符合的英文釋義 (Choose the closest meaning)";
+    // Base damage + Talents + Relics
+    let damage = 10 + (talents.sharp_edge || 0) * 2 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 6 : 0);
+    if (state.streak >= 5) damage += 4;
+    
+    // Conductor's Baton synergy (+2 per streak)
+    if (hasRelic("rhythm_baton")) damage += state.streak * 2;
+
+    // Tree of Babel (+9 if Latin/Greek root)
+    if (hasRelic("tree_babel") && word.root) {
+      damage += 9;
+      gainXp(1);
+    }
+    
+    // Etymology blessing talent
+    if (talents.rune_resonance && word.root) {
+      damage = Math.round(damage * (1 + talents.rune_resonance * 0.15));
+    }
+
+    // Midas Well synergy (every 20 ink held = +1 damage)
+    if (hasRelic("midas_well")) {
+      damage += Math.floor(state.ink / 20);
+    }
+
+    // Sonic Resonator (+8 if under 2.0s)
+    if (hasRelic("sonic_bell") && elapsedSec <= 2.0) {
+      damage += 8;
+      showFloatingBanner("🔔 SONIC BURST! +8", "quickwit");
+    }
+
+    // Relic Editions flat / multiplier bonus
+    state.relics.forEach(r => {
+      const ed = typeof r === "object" ? r.edition : "standard";
+      if (ed === "holo") damage += 4;
+      if (ed === "corrupted") damage += 8;
+      if (ed === "poly") damage = Math.round(damage * 1.35);
+    });
+
+    // Quick Wit Bonus
+    const reflexExt = (talents.reflex || 0) * 0.4 - (state.ascension >= 4 ? 0.5 : 0) - (state.ascension >= 17 ? 0.5 : 0);
+    const reflexThreshold = (hasRelic("hourglass") ? 5.2 : 3.8) + reflexExt;
+    let isQuickWit = false;
+    if (elapsedSec <= reflexThreshold || battle.freezeCrit) {
+      isQuickWit = true;
+      battle.freezeCrit = false;
+      const critMultiplier = hasRelic("lightning_quill") ? 2.5 : 1.5;
+      damage = Math.round(damage * critMultiplier);
+      state.ink += (hasRelic("hourglass") ? 4 : 2);
+      triggerScreenShake("sm");
+      showFloatingBanner("⚡ QUICK WIT CRIT!", "quickwit");
+    }
+
+    // Precision Metronome (Every 5th streak: +15 burst damage + heal 3 HP)
+    if (hasRelic("metronome") && state.streak > 0 && state.streak % 5 === 0) {
+      damage += 15;
+      heal(3, false);
+      showFloatingBanner("🎼 METRONOME SURGE! +15", "combo");
+    }
+
+    if (state.streak >= 4 && state.streak % 2 === 0) {
+      triggerScreenShake("lg");
+      showFloatingBanner(`🔥 COMBO ×${state.streak}!`, "combo");
+    }
+    
+    // Horn of Resonance (+35% vs Boss/Elite)
+    if ((battle.type === "boss" || battle.type === "elite") && hasRelic("horn")) {
+      damage = Math.round(damage * 1.35);
+    }
+    
+    // Alchemist Crucible (+1 ink per letter)
+    if (hasRelic("alembic")) {
+      const letters = word.word.replace(/[^a-zA-Z]/g, "").length;
+      state.ink += letters;
+    }
+    
+    // Ring of Fluency (+1 spark on streak)
+    if (hasRelic("ring") && state.streak >= 4 && state.streak % 4 === 0) {
+      state.sparks = Math.min(9, state.sparks + 1);
+      toast("💍 <b>Ring of Fluency:</b> +1 Spark on streak!");
+    }
+    
+    // Enemy Shield absorption logic
+    if (battle.shield > 0) {
+      if (battle.shield >= damage) {
+        battle.shield -= damage;
+        showDamage(`SHIELD −${damage}`, false);
+      } else {
+        const leftover = damage - battle.shield;
+        battle.shield = 0;
+        battle.hp = Math.max(0, battle.hp - leftover);
+        showDamage(`BREAK! −${leftover}`, false);
+        showFloatingBanner("🛡️ SHIELD BROKEN!", "break");
+      }
     } else {
-      $("#challenge-prompt").textContent = mode === "synonym"
-        ? "Choose the closest synonym"
-        : mode === "cloze"
-          ? makeCloze(word)
-          : "Choose the closest meaning";
+      battle.hp = Math.max(0, battle.hp - damage);
+      showDamage(damage, false);
     }
-
-    const intentEl = $("#enemy-intent");
-    if (intentEl) {
-      intentEl.textContent = intent.label;
-      intentEl.className = `enemy-intent intent-${intent.type}`;
-      intentEl.title = intent.desc;
-    }
-
+    
     $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
     updateEnemyShieldUI();
-    $("#clue-box").hidden = true;
-    if (hasRelic("magnifier") && word.root) {
-      $("#clue-box").hidden = false;
-      $("#clue-box").innerHTML = `<b>Origin Note (Etymology Glass):</b> ${word.root}`;
-    }
-    $("#feedback-panel").hidden = true;
-    $("#combo-display").hidden = state.streak < 2;
-    if (state.streak >= 2) $("#combo-display b").textContent = `×${Math.min(5, 1 + Math.floor(state.streak / 2))}`;
+    $("#enemy-art").classList.add("hurt");
     
-    $("#answer-grid").innerHTML = answerItems.map((item, index) => {
-      const val = item[property];
-      const zh = (isZh && item.zh) ? `<span class="answer-zh">（${item.zh}）</span>` : "";
-      return `
-        <button class="answer-button" data-answer="${escapeAttribute(val)}">
-          <span class="answer-key">${String.fromCharCode(65 + index)}</span>
-          <div class="answer-content">
-            <span class="answer-main">${val}</span>
-            ${zh}
-          </div>
-        </button>
-      `;
-    }).join("");
-
-    document.querySelectorAll(".answer-button").forEach(button => {
-      button.addEventListener("click", () => answerQuestion(button, button.dataset.answer === battle.question.correctValue, mode));
-    });
+    playHitSound(damage > 18, isQuickWit);
+    playStreakChord(state.streak);
+    const isZh = loadMeta().bilingual;
+    const feedbackHeader = isQuickWit ? (isZh ? "<b>⚡ 急速直覺！</b> " : "<b>⚡ Quick Wit!</b> ") : (isZh ? "<b>完全正確！</b> " : "<b>Exactly.</b> ");
+    showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
+    
+    if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
+    handleQuest();
+    battle.first = false;
+    updateMeta();
     updateHUD();
-  }
-
-  function escapeAttribute(text) {
-    return text.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
-  }
-
-  function makeCloze(word) {
-    const exact = new RegExp(`\\b${word.word}\\b`, "i");
-    if (exact.test(word.sentence)) return word.sentence.replace(exact, "________");
-    const stemLength = Math.max(4, word.word.length - 2);
-    const stem = word.word.slice(0, stemLength);
-    const inflected = new RegExp(`\\b${stem}[a-z]*\\b`, "i");
-    if (inflected.test(word.sentence)) return word.sentence.replace(inflected, "________");
-    return `________ — ${word.clue}`;
-  }
-
-  function answerQuestion(button, correct, mode) {
-    if (battle.locked) return;
-    battle.locked = true;
-    const elapsedSec = (Date.now() - battle.startTime) / 1000;
-    const word = battle.current;
-    const buttons = [...document.querySelectorAll(".answer-button")];
-    buttons.forEach(item => item.disabled = true);
-    state.wordsAnswered += 1;
-    
-    if (correct) {
-      button.classList.add("correct");
-      const btnBox = button.getBoundingClientRect();
-      spawnParticles(btnBox.left + btnBox.width / 2, btnBox.top + btnBox.height / 2, "#e3ac46", 14);
-
-      state.correct += 1;
-      state.streak += 1;
-      state.maxStreak = Math.max(state.maxStreak, state.streak);
-      state.quest += 1;
-      state.learned[word.word] = (state.learned[word.word] || 0) + 1;
-      updateReviewRecord(word.word, true, "good");
-      gainXp(1);
-      
-      let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
-      if (state.streak >= 5) damage += 4;
-      
-      // Quick Wit Bonus with Chronos Hourglass synergy
-      const reflexThreshold = hasRelic("hourglass") ? 5.2 : 3.8;
-      let isQuickWit = false;
-      if (elapsedSec <= reflexThreshold) {
-        isQuickWit = true;
-        const bonusDmg = hasRelic("hourglass") ? 9 : 4;
-        damage += bonusDmg;
-        state.ink += (hasRelic("hourglass") ? 4 : 2);
-        triggerScreenShake("sm");
-        showFloatingBanner("⚡ QUICK WIT!", "quickwit");
-      }
-
-      if (state.streak >= 4 && state.streak % 2 === 0) {
-        triggerScreenShake("lg");
-        showFloatingBanner(`🔥 COMBO ×${state.streak}!`, "combo");
-      }
-      
-      // Horn of Resonance (+30% vs Boss/Elite)
-      if ((battle.type === "boss" || battle.type === "elite") && hasRelic("horn")) {
-        damage = Math.round(damage * 1.3);
-      }
-      
-      // Alchemist Crucible (+1 ink per letter)
-      if (hasRelic("alembic")) {
-        const letters = word.word.replace(/[^a-zA-Z]/g, "").length;
-        state.ink += letters;
-      }
-      
-      // Ring of Fluency (+1 spark on streak)
-      if (hasRelic("ring") && state.streak >= 4 && state.streak % 4 === 0) {
-        state.sparks = Math.min(9, state.sparks + 1);
-        toast("💍 <b>Ring of Fluency:</b> +1 Spark on streak!");
-      }
-      
-      // Shield absorption logic
-      if (battle.shield > 0) {
-        if (battle.shield >= damage) {
-          battle.shield -= damage;
-          showDamage(`SHIELD −${damage}`, false);
-        } else {
-          const leftover = damage - battle.shield;
-          battle.shield = 0;
-          battle.hp = Math.max(0, battle.hp - leftover);
-          showDamage(`BREAK! −${leftover}`, false);
-          showFloatingBanner("🛡️ SHIELD BROKEN!", "break");
-        }
-      } else {
-        battle.hp = Math.max(0, battle.hp - damage);
-        showDamage(damage, false);
-      }
-      
-      $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
-      updateEnemyShieldUI();
-      $("#enemy-art").classList.add("hurt");
-      
-      tone(520, .08); setTimeout(() => tone(690, .08), 80);
-      const feedbackHeader = isQuickWit ? "<b>⚡ Quick Wit!</b> " : "<b>Exactly.</b> ";
-      showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
-      
-      if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
-      handleQuest();
-      battle.first = false;
-      updateMeta();
-      updateHUD();
-      setTimeout(() => {
-        if (battle.hp <= 0) winBattle();
-        else renderQuestion();
-      }, 1200);
-    } else {
-      button.classList.add("wrong");
-      triggerScreenShake("lg");
-      const portrait = $(".portrait-wrap");
-      if (portrait) {
-        const pBox = portrait.getBoundingClientRect();
-        spawnParticles(pBox.left + pBox.width / 2, pBox.top + pBox.height / 2, "#e75b49", 12);
-      }
-      const correctValue = battle.question.correctValue;
-      buttons.find(item => item.dataset.answer === correctValue)?.classList.add("correct");
-      const protectedHit = hasRelic("shield") && !battle.blocked;
-      
-      const intent = battle.currentIntent || { damage: battle.damage };
-      
-      if (protectedHit) {
-        battle.blocked = true;
-      } else {
-        state.hp = Math.max(0, state.hp - intent.damage);
-        if (hasRelic("mirror")) {
-          gainXp(1);
-          toast("🪞 <b>Oracle's Mirror:</b> Gained +1 Insight from adversity.");
-        }
-        if (intent.siphon && state.sparks > 0) {
-          state.sparks -= 1;
-          toast("✦ <b>Spark Siphoned by enemy!</b>");
-        }
-        if (intent.drain && state.ink > 0) {
-          const lost = Math.min(6, state.ink);
-          state.ink -= lost;
-          toast(`◈ <b>Enemy leeched ${lost} Ink!</b>`);
-        }
-        if (intent.shieldGain) {
-          battle.shield = (battle.shield || 0) + intent.shieldGain;
-          battle.maxShield = Math.max(battle.maxShield, battle.shield);
-          updateEnemyShieldUI();
-        }
-        
-        // Phoenix feather revive
-        if (state.hp <= 0 && hasRelic("feather") && !state.usedRevive) {
-          state.usedRevive = true;
-          state.hp = 20;
-          toast("🪶 <b>Phoenix Feather shattered!</b> Restored 20 Resolve.");
-          showDamage("REVIVE", true);
-          tone(600, .15); setTimeout(() => tone(880, .25), 100);
-        }
-      }
-      
-      state.streak = 0;
-      updateReviewRecord(word.word, false);
-      $("#enemy-art").classList.add("attack");
-      document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
-      setTimeout(() => $(".screen-flash")?.remove(), 400);
-      showDamage(protectedHit ? "BLOCK" : intent.damage, true);
-      tone(150, .14);
-      
-      showFeedback(false, protectedHit
-        ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
-        : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
-      battle.first = false;
-      updateHUD();
-      setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
+    setTimeout(() => {
+      if (battle.hp <= 0) winBattle();
+      else renderQuestion();
+    }, 1200);
+  } else {
+    button.classList.add("wrong");
+    triggerScreenShake("lg");
+    const portrait = $(".portrait-wrap");
+    if (portrait) {
+      const pBox = portrait.getBoundingClientRect();
+      spawnParticles(pBox.left + pBox.width / 2, pBox.top + pBox.height / 2, "#e75b49", 12);
     }
+    const correctBtn = buttons.find(item => item.dataset.correct === "true");
+    if (correctBtn) correctBtn.classList.add("correct");
+
+    // Unbroken cord prevents streak break once
+    if (hasRelic("unbroken_cord") && !state.usedCord && state.streak >= 3) {
+      state.usedCord = true;
+      toast("🎗️ <b>Cord of Continuity:</b> Streak preserved from rupture!");
+    } else {
+      state.streak = 0;
+      if (state.ascension >= 13) {
+        state.hp = Math.max(0, state.hp - 2);
+        toast("⚠️ <b>Ascension 13 (Strict Grasp):</b> Lost 2 Resolve on streak break!");
+      }
+    }
+
+    const protectedHit = hasRelic("shield") && !battle.blocked;
+    const intent = battle.currentIntent || { damage: battle.damage };
+    let incomingDamage = intent.damage;
+    if (hasRelic("iron_will") && (battle.type === "boss" || battle.type === "elite")) {
+      incomingDamage = Math.round(incomingDamage * 0.65);
+    }
+
+    // Corrupted relic penalty (-1 HP on wrong)
+    const corruptedCount = state.relics.filter(r => typeof r === "object" && r.edition === "corrupted").length;
+    incomingDamage += corruptedCount;
+    
+    if (protectedHit) {
+      battle.blocked = true;
+    } else {
+      // Player Shield absorbs incoming damage first
+      if (state.shield > 0) {
+        if (state.shield >= incomingDamage) {
+          state.shield -= incomingDamage;
+          showDamage(`BLOCK −${incomingDamage}`, true);
+          incomingDamage = 0;
+        } else {
+          const leftover = incomingDamage - state.shield;
+          state.shield = 0;
+          state.hp = Math.max(0, state.hp - leftover);
+          showDamage(leftover, true);
+        }
+      } else {
+        state.hp = Math.max(0, state.hp - incomingDamage);
+        showDamage(incomingDamage, true);
+      }
+
+      if (hasRelic("mirror")) {
+        gainXp(1);
+        toast("🪞 <b>Oracle's Mirror:</b> Gained +1 Insight from adversity.");
+      }
+      if (intent.siphon && state.sparks > 0) {
+        state.sparks -= (state.ascension >= 8 ? 2 : 1);
+        toast("✦ <b>Spark Siphoned by enemy!</b>");
+      }
+      if (intent.drain && state.ink > 0) {
+        const lost = Math.min(6, state.ink);
+        state.ink -= lost;
+        toast(`◈ <b>Enemy leeched ${lost} Ink!</b>`);
+      }
+      if (intent.shieldGain) {
+        battle.shield = (battle.shield || 0) + intent.shieldGain;
+        battle.maxShield = Math.max(battle.maxShield, battle.shield);
+        updateEnemyShieldUI();
+      }
+      
+      // Phoenix feather revive
+      if (state.hp <= 0 && hasRelic("feather") && !state.usedRevive) {
+        state.usedRevive = true;
+        state.hp = 25;
+        toast("🪶 <b>Phoenix Feather shattered!</b> Restored 25 Resolve.");
+        showDamage("REVIVE", true);
+        tone(600, .15); setTimeout(() => tone(880, .25), 100);
+      }
+    }
+    
+    updateReviewRecord(word.word, false);
+    $("#enemy-art").classList.add("attack");
+    document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
+    setTimeout(() => $(".screen-flash")?.remove(), 400);
+    tone(150, .14);
+    
+    const correctValue = battle.question.correctValue;
+    showFeedback(false, protectedHit
+      ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
+      : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
+    battle.first = false;
+    updateHUD();
+    setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
   }
+}
 
 function showFeedback(correct, html) {
   const panel = $("#feedback-panel");
@@ -1892,11 +2319,13 @@ function showAlchemyBlessing() {
 function showGameOver() {
   state.screen = "gameover";
   state.hp = 0;
+  saveHighScoreRecord(false);
   const isZh = loadMeta().bilingual;
   const accuracy = state.wordsAnswered ? Math.round(state.correct / state.wordsAnswered * 100) : 0;
-  const known = Object.keys(state.learned).length;
   const allWords = REGIONS.flatMap(r => r.words);
   const runWords = (state.seen || []).map(w => allWords.find(item => item.word === w)).filter(Boolean);
+  const { score, grade, ascMult } = calculateRunScore();
+  const rankClass = grade === "S+" ? "rank-splus" : grade === "S" ? "rank-s" : grade === "A" ? "rank-a" : grade === "B" ? "rank-b" : "rank-c";
   
   $("#stage").innerHTML = `
     <div class="reward-stage gameover-stage">
@@ -1904,14 +2333,17 @@ function showGameOver() {
       <h1>${isZh ? "遠征探險紀錄誌" : "Expedition Chronicle"}</h1>
       <p class="section-copy">${isZh ? "每一次探索語言的旅程都不會白費。在下方複習本次遠征遇到的所有單字，或一鍵複製成學習筆記。" : "No voyage into language is wasted. Review your run's vocabulary sheet below or export it directly into your notes."}</p>
       
-      <div class="summary-stats">
-        <div><b>${state.wordsAnswered}</b><span>${isZh ? "答題總數" : "Words Answered"}</span></div>
-        <div><b>${accuracy}%</b><span>${isZh ? "正確率" : "Accuracy"}</span></div>
-        <div><b>${state.maxStreak}</b><span>${isZh ? "最高連擊" : "Best Streak"}</span></div>
+      <div class="score-tally-box">
+        <div class="rank-badge ${rankClass}">${grade}</div>
+        <div class="score-line"><span>${isZh ? "本次遠征總分" : "Final Run Score"}</span><b style="color:var(--coral-dark);font-size:16px;">${score} PTS</b></div>
+        <div class="score-line"><span>${isZh ? "答對題數 / 總作答" : "Words Mastered"}</span><b>${state.correct} / ${state.wordsAnswered} (${accuracy}%)</b></div>
+        <div class="score-line"><span>${isZh ? "最高連擊倍率" : "Max Streak"}</span><b>${state.maxStreak}×</b></div>
+        <div class="score-line"><span>${isZh ? "攀升挑戰難度加成" : "Ascension Multiplier"}</span><b>×${ascMult.toFixed(2)}</b></div>
       </div>
       
       <div class="hero-actions" style="margin-bottom: 20px;">
         <button id="retry-button" class="button button-primary">${isZh ? "重新啟程 ➔" : "Begin Again <span>→</span>"}</button>
+        <button id="fame-gameover-btn" class="button button-ghost">${isZh ? "🏆 查看名人堂" : "🏆 Hall of Fame"}</button>
         <button id="copy-chronicle-btn" class="button button-ghost">${isZh ? "📋 複製 Markdown 筆記" : "📋 Copy Study Sheet"}</button>
         <button id="review-button" class="button button-ghost">${isZh ? "檢視字彙庫" : "Review Lexicon"}</button>
       </div>
@@ -1932,9 +2364,10 @@ function showGameOver() {
 
   $("#retry-button")?.addEventListener("click", showClassSelection);
   $("#review-button")?.addEventListener("click", showLexicon);
+  $("#fame-gameover-btn")?.addEventListener("click", showHallOfFame);
   $("#copy-chronicle-btn")?.addEventListener("click", () => {
     let md = `# WordBound Expedition Chronicle — ${new Date().toLocaleDateString()}\n\n`;
-    md += `**Stats:** ${state.wordsAnswered} words answered · ${accuracy}% accuracy · ${state.maxStreak} max streak\n\n`;
+    md += `**Score:** ${score} PTS (Rank ${grade}) | ${state.wordsAnswered} words answered · ${accuracy}% accuracy · ${state.maxStreak} max streak\n\n`;
     md += `## Words Encountered\n\n`;
     runWords.forEach(w => {
       md += `- **${w.word}** (${w.pos || "word"}, ${w.level || "B1"}): ${w.definition} | 釋義: ${w.zh || ""} | Near: ${w.synonym}\n`;
@@ -1945,6 +2378,81 @@ function showGameOver() {
     });
   });
   updateHUD();
+}
+
+function showHallOfFame() {
+  const meta = loadMeta();
+  const isZh = meta.bilingual;
+  const list = meta.highScores || [];
+
+  openModal(`
+    <span class="modal-kicker">${isZh ? "遠征歷史最高榮譽" : "HALL OF GLORY"}</span>
+    <h2>${isZh ? "名人堂與遠征排行榜" : "Hall of Fame"}</h2>
+    <p class="section-copy">${isZh ? "記錄你在歷次詞彙遠征中締造的最高評分與精通成就。" : "Your highest scoring journeys and vocabulary triumphs saved locally."}</p>
+    
+    ${list.length ? `
+      <table class="fame-table">
+        <thead>
+          <tr>
+            <th>${isZh ? "名次" : "RANK"}</th>
+            <th>${isZh ? "職業原型" : "CLASS"}</th>
+            <th>${isZh ? "攀升" : "ASC"}</th>
+            <th>${isZh ? "評級" : "GRADE"}</th>
+            <th>${isZh ? "得分" : "SCORE"}</th>
+            <th>${isZh ? "答對" : "WORDS"}</th>
+            <th>${isZh ? "日期" : "DATE"}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${list.map((r, i) => `
+            <tr>
+              <td class="fame-rank">#${i + 1}</td>
+              <td>${r.classIcon} ${r.className}</td>
+              <td><b style="color:var(--coral-dark);">A${r.ascension || 0}</b></td>
+              <td><span style="font-weight:800;color:var(--gold);">${r.grade}</span></td>
+              <td><b>${r.score.toLocaleString()}</b></td>
+              <td>${r.words}</td>
+              <td style="color:var(--ink-soft);font-size:9px;">${r.date}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    ` : `
+      <p class="section-copy" style="font-style:italic;margin-top:20px;">${isZh ? "目前尚無歷史遠征紀錄。完成一場冒險即可在此登榜！" : "No expedition records yet. Complete a journey to make history!"}</p>
+    `}
+  `);
+}
+
+function showEtymologyExplorer() {
+  const isZh = loadMeta().bilingual;
+  const allWords = REGIONS.flatMap(r => r.words).filter(w => w.root);
+  const groups = {};
+  allWords.forEach(w => {
+    const rootKey = w.root.split(" ")[0] || "Ancient";
+    groups[rootKey] = groups[rootKey] || [];
+    groups[rootKey].push(w);
+  });
+
+  openModal(`
+    <span class="modal-kicker">${isZh ? "詞源樹狀圖與語系探索" : "ETYMOLOGY TREE EXPLORER"}</span>
+    <h2>${isZh ? "古語詞根地圖 (Etymology Tree)" : "Word Family Tree"}</h2>
+    <p class="section-copy">${isZh ? "探索拉丁與希臘字根如何演變為現代英文單字，一次掌握整組同源詞彙。" : "Discover how ancient Latin and Greek roots blossom into families of rich English vocabulary."}</p>
+    
+    <div style="display:grid;gap:14px;max-height:360px;overflow-y:auto;padding-right:4px;">
+      ${Object.entries(groups).map(([root, words]) => `
+        <div style="border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--cream);">
+          <b style="color:var(--coral-dark);font:700 13px var(--mono);">${root}</b>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+            ${words.map(w => `
+              <span style="padding:3px 8px;border-radius:4px;background:rgba(255,250,240,0.9);border:1px solid var(--line);font-size:10px;" title="${w.definition} (${w.zh || ''})">
+                <b>${w.word}</b> <small style="color:var(--ink-soft);">(${w.zh || w.definition.slice(0, 20)}...)</small>
+              </span>
+            `).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `);
 }
 
 function showLexicon() {
@@ -1995,6 +2503,7 @@ function showLexicon() {
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
       <span class="modal-kicker">${isZh ? "專屬詞彙紀錄庫" : "YOUR LIVING RECORD"}</span>
       <div style="display:flex; gap:6px;">
+        <button id="open-etymology-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">${isZh ? "🌳 古語詞根地圖" : "🌳 Etymology Tree"}</button>
         <button id="open-decks-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">${isZh ? "📚 考試詞庫與匯入" : "📚 Presets & Import"}</button>
         <button id="export-csv-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">${isZh ? "📥 匯出 CSV" : "📥 Export CSV"}</button>
       </div>
@@ -2007,6 +2516,7 @@ function showLexicon() {
     </div>
     ${reviewWords.length ? `<div class="review-callout"><div><small>${isZh ? "待加強單字" : "WORDS TO REVISIT"}</small><b>${isZh ? `今日需複習 ${dueCount} 個 · 累積學習中 ${reviewWords.length} 個` : `${dueCount} due now · ${reviewWords.length} learning`}</b><p>${isZh ? "間隔重複記憶法測驗，無失血懲罰，快速鞏固答錯單字。" : "Short, no-penalty recall sessions strengthen the words you missed."}</p></div><button id="start-review-modal" class="button button-primary">${isZh ? "立即複習 ➔" : "Practice now →"}</button></div>` : ""}
     <div class="lexicon-list">${content}</div>`);
+  $("#open-etymology-btn")?.addEventListener("click", showEtymologyExplorer);
   $("#start-review-modal")?.addEventListener("click", requestPractice);
   $("#open-decks-btn")?.addEventListener("click", showDeckManager);
   $("#export-csv-btn")?.addEventListener("click", exportDeckCSV);
@@ -2391,7 +2901,7 @@ function toggleSound() {
   if (soundEnabled) tone(520, .07);
 }
 
-function tone(frequency, duration = 0.1, type = "sine") {
+function tone(frequency, duration = 0.1, type = "sine", vol = 0.05) {
   if (!soundEnabled) return;
   try {
     audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
@@ -2399,11 +2909,44 @@ function tone(frequency, duration = 0.1, type = "sine") {
     const gain = audioContext.createGain();
     oscillator.type = type;
     oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(.04, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
+    gain.gain.setValueAtTime(vol, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.0001, audioContext.currentTime + duration);
     oscillator.connect(gain).connect(audioContext.destination);
     oscillator.start(); oscillator.stop(audioContext.currentTime + duration);
   } catch { /* Sound is optional. */ }
+}
+
+function playHitSound(isCrit = false, isQuickWit = false) {
+  if (!soundEnabled) return;
+  if (isCrit || isQuickWit) {
+    tone(620, .12, "triangle", 0.08);
+    setTimeout(() => tone(940, .18, "sine", 0.07), 50);
+  } else {
+    tone(440, .09, "sine", 0.05);
+    setTimeout(() => tone(660, .11, "triangle", 0.04), 40);
+  }
+}
+
+function playStreakChord(streak = 1) {
+  if (!soundEnabled) return;
+  const baseFreqs = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+  const rootIndex = Math.min(baseFreqs.length - 1, Math.floor(streak / 2));
+  const root = baseFreqs[rootIndex];
+  tone(root, 0.22, "sine", 0.06);
+  setTimeout(() => tone(root * 1.25, 0.25, "triangle", 0.05), 60);
+  if (streak >= 5) {
+    setTimeout(() => tone(root * 1.5, 0.3, "sine", 0.04), 120);
+  }
+}
+
+let lastLowHpSoundTime = 0;
+function playLowHpWarning() {
+  if (!soundEnabled) return;
+  const now = Date.now();
+  if (now - lastLowHpSoundTime < 2400) return;
+  lastLowHpSoundTime = now;
+  tone(75, 0.18, "sine", 0.12);
+  setTimeout(() => tone(65, 0.25, "sine", 0.10), 160);
 }
 
 function playChord(frequencies, duration = 0.35) {
@@ -2444,6 +2987,8 @@ $("#sanctuary-title-button")?.addEventListener("click", showSanctuary);
 $("#sanctuary-button")?.addEventListener("click", showSanctuary);
 $("#achievements-title-button")?.addEventListener("click", showAchievements);
 $("#achievements-button")?.addEventListener("click", showAchievements);
+$("#fame-title-button")?.addEventListener("click", showHallOfFame);
+$("#fame-button")?.addEventListener("click", showHallOfFame);
 $("#continue-button").addEventListener("click", continueRun);
 $("#practice-title-button").addEventListener("click", startPracticeFromTitle);
 $("#home-button").addEventListener("click", event => { event.preventDefault(); returnHome(); });
@@ -2459,9 +3004,46 @@ $("#modal").addEventListener("click", event => {
 });
 
 document.addEventListener("keydown", event => {
+  if ($("#modal")?.open) return;
+  
+  // Potion hotkeys (1 or 2 with Shift or outside answer buttons)
+  if (event.shiftKey && (event.key === "!" || event.key === "1")) {
+    usePotion(0);
+    return;
+  }
+  if (event.shiftKey && (event.key === "@" || event.key === "2")) {
+    usePotion(1);
+    return;
+  }
+
+  // Combat controls
   if (!battle || state?.screen !== "battle" || battle.locked) return;
-  const index = Number(event.key) - 1;
-  const buttons = [...document.querySelectorAll(".answer-button:not(:disabled)")];
+
+  // Spacebar to pronounce word
+  if (event.code === "Space") {
+    event.preventDefault();
+    speakCurrentWord();
+    return;
+  }
+  // 'H' for Hint
+  if (event.key.toLowerCase() === "h") {
+    useHint();
+    return;
+  }
+  // 'S' for Swap/Skip
+  if (event.key.toLowerCase() === "s") {
+    swapWord();
+    return;
+  }
+
+  // 1-4 or A-D for selecting answer buttons
+  let index = -1;
+  if (event.key >= "1" && event.key <= "4") index = Number(event.key) - 1;
+  else if (["a", "b", "c", "d"].includes(event.key.toLowerCase())) {
+    index = event.key.toLowerCase().charCodeAt(0) - 97;
+  }
+
+  const buttons = [...document.querySelectorAll(".answer-button:not(:disabled):not(.faded)")];
   if (index >= 0 && index < buttons.length) buttons[index].click();
 });
 
@@ -2504,6 +3086,7 @@ function applyLanguageToUI() {
   if (footer) footer.textContent = isZh ? "為熱愛探索的心靈打造 · 進度自動於本機儲存" : "Designed for curious minds · Progress saves locally";
   
   if ($("#sanctuary-title-button")) $("#sanctuary-title-button").textContent = isZh ? "🏛️ 聖殿天賦" : "🏛️ Sanctuary";
+  if ($("#fame-title-button")) $("#fame-title-button").textContent = isZh ? "🏆 名人堂" : "🏆 Hall of Fame";
   if ($("#achievements-title-button")) $("#achievements-title-button").title = isZh ? "成就勳章" : "Achievements";
 
   // 3. Game Header
@@ -2513,6 +3096,7 @@ function applyLanguageToUI() {
   const collBtn = $("#collection-button");
   if (collBtn) collBtn.innerHTML = isZh ? `字彙庫 <span id="learned-count">${Object.keys(state?.learned || meta.learned || {}).length}</span>` : `Lexicon <span id="learned-count">${Object.keys(state?.learned || meta.learned || {}).length}</span>`;
   
+  if ($("#fame-button")) $("#fame-button").textContent = isZh ? "名人堂 🏆" : "Fame 🏆";
   if ($("#sanctuary-button")) $("#sanctuary-button").textContent = isZh ? "萬字聖殿 🏛️" : "Sanctuary 🏛️";
   
   const achBtn = $("#achievements-button");
@@ -2530,6 +3114,8 @@ function applyLanguageToUI() {
     resourceSmalls[0].textContent = isZh ? "火花" : "Sparks";
     resourceSmalls[1].textContent = isZh ? "墨水" : "Ink";
   }
+
+  if ($("#potions-label")) $("#potions-label").textContent = isZh ? "魔藥與符文" : "Potions & Runes";
   
   const relicsLabel = $(".relics-block .stat-row span");
   if (relicsLabel) relicsLabel.textContent = isZh ? "攜帶遺物" : "Relics";
