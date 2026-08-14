@@ -4010,62 +4010,185 @@ function showAnagramChest() {
   const isZh = loadMeta().bilingual;
   const regionWords = REGIONS[state.region % REGIONS.length].words;
   const word = random(regionWords);
-  let shuffledLetters = shuffle(word.word.toUpperCase().split(""));
-  while (shuffledLetters.join("") === word.word.toUpperCase() && word.word.length > 2) {
+  const targetWord = word.word.toUpperCase();
+  
+  let shuffledLetters = shuffle(targetWord.split(""));
+  while (shuffledLetters.join("") === targetWord && targetWord.length > 2) {
     shuffledLetters = shuffle(shuffledLetters);
   }
 
-  $("#stage").innerHTML = `
-    <div class="event-stage riddle-stage">
-      <div class="event-illustration riddle-icon">🧩</div>
-      <span class="section-kicker">${isZh ? "古代字謎考驗" : "ANCIENT PUZZLE"}</span>
-      <h1>${isZh ? "謎語人黃銅寶箱" : "The Riddler's Chest"}</h1>
-      <p class="section-copy">${isZh ? "一個黃銅寶箱被混亂的符文鎖定。重組這些英文字母以解開寶箱，獲取其中的遺物與墨水。" : "A brass chest is sealed by scrambled runes. Unscramble the letters to claim the hidden relics and ink within."}</p>
-      
-      <div class="riddle-box">
-        <span class="riddle-clue-label">${isZh ? "線索 / 英文釋義" : "CLUE / DEFINITION"}</span>
-        <blockquote class="riddle-clue">“${word.definition}”</blockquote>
-        ${word.zh ? `<small class="riddle-zh">${isZh ? "繁中釋義" : "Meaning"}: ${word.zh}</small>` : ""}
-        
-        <div class="letter-tiles" id="letter-tiles">
-          ${shuffledLetters.map(l => `<span class="letter-tile">${l}</span>`).join("")}
-        </div>
-        
-        <form id="anagram-form" class="anagram-form">
-          <input id="anagram-input" type="text" autocomplete="off" spellcheck="false" placeholder="${isZh ? "輸入重組後的正確單字…" : "Type the unscrambled word…"}" aria-label="Unscrambled word">
-          <button type="submit" class="button button-primary">${isZh ? "解鎖寶箱 ➔" : "Unlock Chest ➔"}</button>
-        </form>
-        <button id="skip-riddle" class="reveal-answer" style="margin-top: 14px;">${isZh ? "放棄寶箱 (獲得 8 點安慰墨水)" : "Leave the chest (+8 Ink consolation)"}</button>
-      </div>
-    </div>
-  `;
+  let hintsUsed = 0;
+  let currentInkReward = 24;
+  let givesRelic = true;
+  let revealedPrefix = "";
 
-  $("#anagram-form")?.addEventListener("submit", event => {
-    event.preventDefault();
-    const val = $("#anagram-input").value.trim().toLowerCase();
-    if (val === word.word.toLowerCase()) {
-      state.ink += 22;
-      state.learned[word.word] = (state.learned[word.word] || 0) + 1;
-      updateReviewRecord(word.word, true, "easy");
-      tone(540, .08); setTimeout(() => tone(720, .12), 80); setTimeout(() => tone(960, .2), 160);
-      toast(isZh ? "🎉 <b>寶箱成功解鎖！</b> 獲得 +22 墨水與自選古代遺物！" : "🎉 <b>Chest Unlocked!</b> +22 Ink & Discovered Relic choice!");
-      completeNode(false);
-      showRelicReward(22, "elite");
+  function getRewardLabel() {
+    if (hintsUsed === 0) {
+      return isZh ? "🏆 完美解鎖獎勵：24 墨水 + 稀有遺物 (滿額獎勵)" : "🏆 Full Reward: 24 Ink + Rare Relic";
+    } else if (hintsUsed === 1) {
+      return isZh ? "💡 提示 1 獎勵：18 墨水 + 稀有遺物" : "💡 Tier 1 Reward: 18 Ink + Rare Relic";
+    } else if (hintsUsed === 2) {
+      return isZh ? "📖 提示 2 獎勵：12 墨水 + 稀有遺物" : "📖 Tier 2 Reward: 12 Ink + Rare Relic";
     } else {
-      tone(180, .15);
-      $("#anagram-input").classList.add("wrong");
-      setTimeout(() => $("#anagram-input")?.classList.remove("wrong"), 600);
-      toast(isZh ? "單字不正確，請再仔細閱讀線索！" : "Not the right word. Look at the clue closely!");
+      return isZh ? "🔍 深度輔助獎勵：8 墨水 + 1 火花 (無遺物)" : "🔍 Assisted Reward: 8 Ink + 1 Spark (No Relic)";
     }
-  });
+  }
 
-  $("#skip-riddle")?.addEventListener("click", () => {
-    state.ink += 8;
-    toast(isZh ? "你收下 8 點墨水並繼續前行。" : "You pocketed 8 loose ink and moved forward.");
-    completeNode();
-  });
+  function getWordSlotDisplay() {
+    const chars = targetWord.split("");
+    return chars.map((c, i) => {
+      if (i < revealedPrefix.length) return revealedPrefix[i];
+      return "_";
+    }).join(" ");
+  }
 
-  $("#anagram-input")?.focus();
+  function renderStage() {
+    $("#stage").innerHTML = `
+      <div class="event-stage riddle-stage">
+        <div class="event-illustration riddle-icon">🧩</div>
+        <span class="section-kicker">${isZh ? "古代字謎考驗" : "ANCIENT PUZZLE"}</span>
+        <h1>${isZh ? "謎語人黃銅寶箱" : "The Riddler's Chest"}</h1>
+        <p class="section-copy">${isZh ? "一個黃銅寶箱被混亂的字母符文鎖定。重組這些英文字母以解開寶箱；若感到困難，可使用提示輔助（獎勵將適度調降）。" : "A brass chest is sealed by scrambled runes. Unscramble the letters to claim the treasure, or use hints if needed (rewards scale accordingly)."}</p>
+        
+        <div class="riddle-box">
+          <div id="riddle-reward-tag" class="riddle-reward-bar">${getRewardLabel()}</div>
+          
+          <span class="riddle-clue-label">${isZh ? "線索 / 英文釋義" : "CLUE / DEFINITION"}</span>
+          <blockquote class="riddle-clue">“${word.definition}”</blockquote>
+          ${word.zh ? `<small class="riddle-zh">${isZh ? "繁中釋義" : "Meaning"}: ${word.zh}</small>` : ""}
+          
+          <div style="margin: 6px 0 10px; font: 700 16px var(--mono); letter-spacing: 0.15em; color: var(--teal-dark);">
+            ${getWordSlotDisplay()}
+          </div>
+
+          <div class="letter-tiles" id="letter-tiles">
+            ${shuffledLetters.map((l, i) => `<span class="letter-tile" data-idx="${i}" data-letter="${l}">${l}</span>`).join("")}
+          </div>
+          
+          <div class="riddle-hints-row">
+            ${hintsUsed < 1 ? `<button id="hint-first-letter" class="button button-ghost riddle-hint-btn">💡 ${isZh ? "提示 1：揭示首字 (扣 6 墨水)" : "Hint 1: Reveal First Letter (-6 Ink)"}</button>` : ""}
+            ${hintsUsed === 1 ? `<button id="hint-sentence" class="button button-ghost riddle-hint-btn">📖 ${isZh ? "提示 2：例句語境 (扣 6 墨水)" : "Hint 2: Example Sentence (-6 Ink)"}</button>` : ""}
+            ${hintsUsed === 2 ? `<button id="hint-prefix" class="button button-ghost riddle-hint-btn" style="border-color:var(--coral);">🔍 ${isZh ? "提示 3：揭示前三字 (降級為常規獎勵)" : "Hint 3: Reveal First 3 Letters (Basic Reward)"}</button>` : ""}
+          </div>
+
+          <div id="riddle-hint-content" class="riddle-hint-box" ${hintsUsed === 0 ? "hidden" : ""}></div>
+
+          <form id="anagram-form" class="anagram-form">
+            <input id="anagram-input" type="text" autocomplete="off" spellcheck="false" placeholder="${isZh ? "輸入重組後的英文單字…" : "Type unscrambled word…"}" aria-label="Unscrambled word">
+            <button type="button" id="clear-input-btn" class="button button-ghost" style="padding:10px 12px;font-size:11px;" title="Clear">⌫</button>
+            <button type="submit" class="button button-primary" style="padding:10px 16px;font-size:11px;">${isZh ? "解鎖寶箱 ➔" : "Unlock ➔"}</button>
+          </form>
+          
+          <button id="skip-riddle" class="reveal-answer" style="margin-top: 14px;">${isZh ? "放棄寶箱 (獲得 5 點安慰墨水)" : "Leave chest (+5 Ink consolation)"}</button>
+        </div>
+      </div>
+    `;
+
+    // Attach Click on Letter Tiles to auto-type
+    document.querySelectorAll(".letter-tile").forEach(tile => {
+      tile.addEventListener("click", () => {
+        const inp = $("#anagram-input");
+        if (inp) {
+          inp.value += tile.dataset.letter.toLowerCase();
+          inp.focus();
+        }
+        tone(480, 0.04);
+      });
+    });
+
+    $("#clear-input-btn")?.addEventListener("click", () => {
+      const inp = $("#anagram-input");
+      if (inp) {
+        inp.value = "";
+        inp.focus();
+      }
+    });
+
+    // Hint 1: First Letter
+    $("#hint-first-letter")?.addEventListener("click", () => {
+      hintsUsed = 1;
+      currentInkReward = 18;
+      revealedPrefix = targetWord.slice(0, 1);
+      toast(isZh ? `💡 <b>提示 1：</b> 首字母為 <b>${revealedPrefix}</b>！` : `💡 <b>Hint 1:</b> First letter is <b>${revealedPrefix}</b>!`);
+      tone(600, 0.1);
+      renderStage();
+      const hintBox = $("#riddle-hint-content");
+      if (hintBox) {
+        hintBox.hidden = false;
+        hintBox.innerHTML = `💡 <b>${isZh ? "首字母提示" : "First Letter Hint"}:</b> ${isZh ? `該單字以 <b>${revealedPrefix}</b> 開頭，共 ${targetWord.length} 個字母。` : `Starts with <b>${revealedPrefix}</b> (${targetWord.length} letters).`}`;
+      }
+    });
+
+    // Hint 2: Example Sentence & POS
+    $("#hint-sentence")?.addEventListener("click", () => {
+      hintsUsed = 2;
+      currentInkReward = 12;
+      revealedPrefix = targetWord.slice(0, 2);
+      toast(isZh ? "📖 <b>提示 2：</b> 已解鎖語境例句與詞性！" : "📖 <b>Hint 2:</b> Example sentence revealed!");
+      tone(650, 0.12);
+      renderStage();
+      const hintBox = $("#riddle-hint-content");
+      if (hintBox) {
+        hintBox.hidden = false;
+        const maskedSent = makeCloze(word);
+        hintBox.innerHTML = `📖 <b>${isZh ? "語境例句" : "Context Clue"}:</b> <em>“${maskedSent}”</em> <br/><small style="color:var(--coral-dark);font-weight:700;">[${word.pos || "word"}] · ${word.zh || ""}</small>`;
+      }
+    });
+
+    // Hint 3: Reveal First 3 Letters & Downgrade
+    $("#hint-prefix")?.addEventListener("click", () => {
+      hintsUsed = 3;
+      currentInkReward = 8;
+      givesRelic = false;
+      revealedPrefix = targetWord.slice(0, Math.min(4, Math.max(3, Math.floor(targetWord.length / 2))));
+      toast(isZh ? "🔍 <b>提示 3：</b> 已鎖定前半部字母！" : "🔍 <b>Hint 3:</b> Word pattern locked!");
+      tone(700, 0.15);
+      renderStage();
+      const hintBox = $("#riddle-hint-content");
+      if (hintBox) {
+        hintBox.hidden = false;
+        hintBox.innerHTML = `🔍 <b>${isZh ? "字母結構" : "Word Structure"}:</b> <b>${revealedPrefix}</b>... (${isZh ? "獎勵調整為 8 墨水 + 1 火花" : "Reward adjusted to 8 Ink + 1 Spark"})`;
+      }
+    });
+
+    // Form Submit
+    $("#anagram-form")?.addEventListener("submit", event => {
+      event.preventDefault();
+      const val = $("#anagram-input").value.trim().toLowerCase();
+      if (val === word.word.toLowerCase()) {
+        state.ink += currentInkReward;
+        state.learned[word.word] = (state.learned[word.word] || 0) + 1;
+        updateReviewRecord(word.word, true, hintsUsed > 1 ? "good" : "easy");
+        
+        if (givesRelic) {
+          tone(540, .08); setTimeout(() => tone(720, .12), 80); setTimeout(() => tone(960, .2), 160);
+          toast(isZh ? `🎉 <b>寶箱成功解鎖！</b> 獲得 +${currentInkReward} 墨水與古代遺物！` : `🎉 <b>Chest Unlocked!</b> +${currentInkReward} Ink & Discovered Relic!`);
+          completeNode(false);
+          showRelicReward(currentInkReward, "elite");
+        } else {
+          state.sparks = Math.min(9, state.sparks + 1);
+          playVictoryFanfare();
+          toast(isZh ? `🎉 <b>成功解開字謎！</b> 獲得 +${currentInkReward} 墨水與 +1 火花！` : `🎉 <b>Puzzle Solved!</b> +${currentInkReward} Ink & +1 Spark!`);
+          completeNode(true);
+        }
+      } else {
+        tone(180, .15);
+        $("#anagram-input").classList.add("wrong");
+        setTimeout(() => $("#anagram-input")?.classList.remove("wrong"), 600);
+        toast(isZh ? "拼字不完全相符，請參考提示或檢查字母！" : "Not quite right. Check the clues and tiles!");
+      }
+    });
+
+    $("#skip-riddle")?.addEventListener("click", () => {
+      state.ink += 5;
+      toast(isZh ? "你收下 5 點墨水並繼續踏上旅途。" : "You took 5 loose ink and continued forward.");
+      completeNode();
+    });
+
+    $("#anagram-input")?.focus();
+  }
+
+  renderStage();
 }
 
 function showAlchemyShrine() {
