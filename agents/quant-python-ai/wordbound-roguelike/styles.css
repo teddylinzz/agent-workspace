@@ -267,7 +267,30 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .alchemy-prompt { display: block; font: 600 14px/1.6 var(--body); margin-bottom: 18px; color: var(--ink); }
 .alchemy-prompt b { color: var(--purple); font-size: 17px; }
 .alchemy-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.alchemy-opt { padding: 14px; font-weight: 700; text-align: center; }
+/* Habit Tracker */
+.habit-card { margin-top: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 4px 16px 4px 16px; background: rgba(255,250,240,.6); }
+.habit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.habit-header small { font: 600 7px var(--mono); color: var(--coral-dark); letter-spacing: .12em; }
+.habit-header strong { font: 700 12px var(--display); color: var(--coral-dark); }
+.habit-dots { display: flex; justify-content: space-between; gap: 4px; }
+.habit-day { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.habit-dot { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--paper-deep); font: 700 10px var(--mono); color: var(--ink-soft); }
+.habit-day.done .habit-dot { background: var(--teal); color: white; }
+.habit-day.today .habit-dot { border: 2px solid var(--coral); }
+.habit-day small { font: 500 7px var(--mono); color: var(--ink-soft); }
+
+/* Achievements Grid */
+.achievements-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; max-height: 55vh; overflow-y: auto; padding-right: 6px; }
+.achieve-card { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 4px 14px 4px 14px; background: var(--cream); transition: .2s ease; }
+.achieve-card.locked { opacity: .5; filter: grayscale(1); background: rgba(0,0,0,.02); }
+.achieve-card.unlocked { border-color: var(--gold); box-shadow: 0 4px 15px rgba(227,172,70,.15); }
+.achieve-icon { font-size: 24px; flex-shrink: 0; }
+.achieve-info { flex: 1; text-align: left; }
+.achieve-info b { display: block; font: 700 13px var(--display); color: var(--ink); }
+.achieve-info p { margin: 2px 0 0; font-size: 9px; line-height: 1.4; color: var(--ink-soft); }
+.achieve-status { font: 700 7px var(--mono); letter-spacing: .1em; padding: 2px 5px; border-radius: 4px; }
+.achieve-card.unlocked .achieve-status { color: var(--teal-dark); background: rgba(47,122,114,.12); }
+.achieve-card.locked .achieve-status { color: var(--ink-soft); background: rgba(0,0,0,.08); }
 
 .settings-list { display: grid; gap: 12px; }.settings-list button { display: flex; justify-content: space-between; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }.danger-button { color: var(--coral-dark) !important; }
 .toast-region { position: fixed; z-index: 100; right: 22px; top: 88px; display: grid; gap: 8px; }

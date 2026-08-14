@@ -309,6 +309,32 @@ const RELICS = [
   { id: "candle", icon: "🕯️", name: "Scholar's Candle", text: "Rest sites restore an extra 20% Resolve." }
 ];
 
+const ACHIEVEMENTS = [
+  { id: "first_step", name: "First Steps", icon: "🌱", desc: "Complete your first journey node." },
+  { id: "scholar_25", name: "Lexical Seeker", icon: "📖", desc: "Discover 25 unique words in your lexicon." },
+  { id: "master_10", name: "Memory Weaver", icon: "🧠", desc: "Master 10 words in the spaced repetition system." },
+  { id: "streak_7", name: "Unbroken Chain", icon: "🔥", desc: "Reach a 7x word streak in battle." },
+  { id: "streak_15", name: "Flawless Rhythm", icon: "⚡", desc: "Reach a 15x word streak in battle." },
+  { id: "quick_wit_10", name: "Lightning Recall", icon: "⏱️", desc: "Trigger Quick Wit reflex 10 times." },
+  { id: "relic_satchel", name: "Curio Collector", icon: "🎒", desc: "Carry 5 or more relics simultaneously." },
+  { id: "daily_devotee", name: "Daily Habit", icon: "⭐", desc: "Complete a Daily Seeded Expedition." },
+  { id: "riddle_solver", name: "Riddlemaster", icon: "🧩", desc: "Successfully unlock an Anagram Chest." },
+  { id: "alchemy_adept", name: "Etymology Sage", icon: "🔮", desc: "Receive a blessing from the Word Alchemy Shrine." },
+  { id: "bazaar_patron", name: "Bazaar Patron", icon: "◈", desc: "Purchase 3 items from the Wandering Merchant." },
+  { id: "cycle_conqueror", name: "Endless Wanderer", icon: "👑", desc: "Complete Cycle 0 and enter the Endless Cycle." },
+  { id: "guardian_slayer", name: "Guardian Bane", icon: "⚔️", desc: "Defeat 3 region guardians." },
+  { id: "active_recall", name: "Active Producer", icon: "✍️", desc: "Complete a typed recall practice session." },
+  { id: "all_realms", name: "Cosmic Polyglot", icon: "🌌", desc: "Discover at least one word from all 6 realms." },
+  { id: "habit_7day", name: "7-Day Dedication", icon: "📅", desc: "Study 7 consecutive days in a row." }
+];
+
+const DAILY_QUESTS = [
+  { id: "words_8", text: "Answer 8 words correctly", target: 8, reward: 20 },
+  { id: "quick_3", text: "Score 3 Quick Wit answers", target: 3, reward: 25 },
+  { id: "streak_5", text: "Achieve a 5x streak in battle", target: 5, reward: 22 },
+  { id: "elites_1", text: "Defeat 1 Elite or Boss Guardian", target: 1, reward: 30 }
+];
+
 const EVENTS = [
   {
     icon: "⌘", title: "The Whispering Signpost",
@@ -349,6 +375,88 @@ let practice = null;
 let soundEnabled = true;
 let audioContext = null;
 
+function checkAchievement(id) {
+  const meta = loadMeta();
+  meta.achievements = meta.achievements || [];
+  if (!meta.achievements.includes(id)) {
+    meta.achievements.push(id);
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    const ach = ACHIEVEMENTS.find(a => a.id === id);
+    if (ach) {
+      toast(`🏆 <b>Achievement Unlocked:</b> ${ach.name} — ${ach.desc}`);
+      playChestFanfare();
+    }
+  }
+}
+
+function updateHabitTracker() {
+  const meta = loadMeta();
+  meta.studyHistory = meta.studyHistory || {};
+  const todayStr = new Date().toISOString().slice(0, 10);
+  meta.studyHistory[todayStr] = true;
+  
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const s = d.toISOString().slice(0, 10);
+    if (meta.studyHistory[s]) {
+      streak += 1;
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  meta.studyStreak = streak;
+  if (streak >= 7) checkAchievement("habit_7day");
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
+
+  const label = $("#study-streak-label");
+  if (label) label.textContent = `🔥 ${streak} Day${streak === 1 ? "" : "s"}`;
+
+  const habitDots = $("#habit-dots");
+  if (habitDots) {
+    const days = ["S", "M", "T", "W", "T", "F", "S"];
+    const now = new Date();
+    const currDay = now.getDay();
+    habitDots.innerHTML = days.map((dayName, idx) => {
+      const pastDate = new Date();
+      pastDate.setDate(now.getDate() - (currDay - idx));
+      const dateKey = pastDate.toISOString().slice(0, 10);
+      const isDone = Boolean(meta.studyHistory[dateKey]);
+      const isToday = idx === currDay;
+      return `<div class="habit-day ${isDone ? "done" : ""} ${isToday ? "today" : ""}">
+        <span class="habit-dot">${isDone ? "✓" : "•"}</span>
+        <small>${dayName}</small>
+      </div>`;
+    }).join("");
+  }
+}
+
+function showAchievements() {
+  const meta = loadMeta();
+  const unlocked = meta.achievements || [];
+  openModal(`
+    <span class="modal-kicker">HALL OF MASTERY</span>
+    <h2>Badges & Achievements</h2>
+    <p class="section-copy"><b>${unlocked.length} / ${ACHIEVEMENTS.length}</b> unlocked. Cultivate your daily vocabulary habits to claim every badge.</p>
+    <div class="achievements-grid">
+      ${ACHIEVEMENTS.map(ach => {
+        const isUnlocked = unlocked.includes(ach.id);
+        return `
+          <div class="achieve-card ${isUnlocked ? "unlocked" : "locked"}">
+            <span class="achieve-icon">${ach.icon}</span>
+            <div class="achieve-info">
+              <b>${ach.name}</b>
+              <p>${ach.desc}</p>
+            </div>
+            <span class="achieve-status">${isUnlocked ? "UNLOCKED" : "LOCKED"}</span>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `);
+}
+
 function freshState(classId = "bard") {
   const meta = loadMeta();
   const knownWords = meta.learned || {};
@@ -360,15 +468,29 @@ function freshState(classId = "bard") {
     region: 0, cycle: 0, node: 0, day: 1,
     wordsAnswered: 0, correct: 0, quest: 0, questClaimed: false,
     learned: { ...knownWords }, seen: [], relics: heroClass.relic ? [heroClass.relic] : [],
-    sound: true, screen: "choice", startedAt: Date.now(), usedRevive: false
+    sound: true, screen: "choice", startedAt: Date.now(), usedRevive: false,
+    isDaily: false
   };
 }
 
 function loadMeta() {
-  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {}, reviews: {}, notes: {}, bilingual: true };
+  const defaults = {
+    totalWords: 0, bestStreak: 0, expeditions: 0,
+    learned: {}, reviews: {}, notes: {},
+    bilingual: true, achievements: [], studyHistory: {},
+    speechRate: 0.85, autoSpeak: false
+  };
   try {
     const loaded = JSON.parse(localStorage.getItem(META_KEY));
-    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {}, reviews: loaded.reviews || {}, notes: loaded.notes || {}, bilingual: loaded.bilingual !== undefined ? loaded.bilingual : true } : defaults;
+    return loaded ? {
+      ...defaults, ...loaded,
+      learned: loaded.learned || {},
+      reviews: loaded.reviews || {},
+      notes: loaded.notes || {},
+      achievements: loaded.achievements || [],
+      studyHistory: loaded.studyHistory || {},
+      bilingual: loaded.bilingual !== undefined ? loaded.bilingual : true
+    } : defaults;
   } catch { return defaults; }
 }
 
@@ -458,6 +580,20 @@ function returnHome() {
   updateContinueButton();
 }
 
+function startDailyExpedition() {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  state = freshState("cartographer");
+  state.isDaily = true;
+  state.dailyDate = todayStr;
+  soundEnabled = true;
+  const meta = loadMeta();
+  meta.expeditions += 1;
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
+  toast(`⭐ <b>Daily Expedition for ${todayStr}</b> began!`);
+  enterGame();
+  showPathChoice();
+}
+
 function updateHUD() {
   if (!state) return;
   const region = REGIONS[state.region % REGIONS.length];
@@ -483,11 +619,26 @@ function updateHUD() {
   $("#streak-bonus").textContent = `+${Math.min(50, state.streak * 5)}%`;
   $("#learned-count").textContent = Object.keys(state.learned).length;
   $("#review-count").textContent = getReviewWords(true).length;
+  
+  const badgeCount = $("#badge-count");
+  if (badgeCount) badgeCount.textContent = (loadMeta().achievements || []).length;
+
   $("#quest-progress").textContent = `${Math.min(state.quest, 8)} / 8 · Reward: ${state.questClaimed ? "claimed" : "20 ink"}`;
   $("#quest-bar").style.width = `${Math.min(100, state.quest / 8 * 100)}%`;
   $("#sound-toggle").textContent = soundEnabled ? "♪" : "×";
   $("#sound-toggle-title").textContent = soundEnabled ? "♪" : "×";
   renderRelics();
+  updateHabitTracker();
+
+  // Achievement milestones
+  if (state.node > 0 || state.region > 0) checkAchievement("first_step");
+  if (Object.keys(loadMeta().learned).length >= 25) checkAchievement("scholar_25");
+  if (state.streak >= 7) checkAchievement("streak_7");
+  if (state.streak >= 15) checkAchievement("streak_15");
+  if (state.relics.length >= 5) checkAchievement("relic_satchel");
+  if (state.cycle > 0) checkAchievement("cycle_conqueror");
+  if (state.isDaily && state.node >= 4) checkAchievement("daily_devotee");
+  
   saveState();
 }
 
@@ -1778,6 +1929,9 @@ function toast(html) {
 }
 
 $("#new-run-button").addEventListener("click", showClassSelection);
+$("#daily-run-button")?.addEventListener("click", startDailyExpedition);
+$("#achievements-title-button")?.addEventListener("click", showAchievements);
+$("#achievements-button")?.addEventListener("click", showAchievements);
 $("#continue-button").addEventListener("click", continueRun);
 $("#practice-title-button").addEventListener("click", startPracticeFromTitle);
 $("#home-button").addEventListener("click", event => { event.preventDefault(); returnHome(); });

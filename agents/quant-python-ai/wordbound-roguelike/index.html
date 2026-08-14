@@ -27,6 +27,7 @@
           <span class="brand-mark">W</span>
           <span>WORDBOUND</span>
         </a>
+        <button id="achievements-title-button" class="icon-button" aria-label="Achievements" title="Achievements">🏆</button>
         <button id="sound-toggle-title" class="icon-button" aria-label="Toggle sound">♪</button>
       </header>
 
@@ -41,6 +42,9 @@
           <button id="new-run-button" class="button button-primary">
             Begin a new journey <span>→</span>
           </button>
+          <button id="daily-run-button" class="button button-ghost" style="border-color: var(--gold);">
+            ⭐ Daily Expedition
+          </button>
           <button id="continue-button" class="button button-ghost" hidden>
             Continue journey
           </button>
@@ -51,7 +55,7 @@
         <div class="feature-strip" aria-label="Game features">
           <div><b>∞</b><span>Endless<br />expeditions</span></div>
           <div><b>6</b><span>Word<br />realms</span></div>
-          <div><b>60+</b><span>Words to<br />master</span></div>
+          <div><b>180+</b><span>Words to<br />master</span></div>
         </div>
       </main>
 
@@ -86,6 +90,7 @@
         <div class="header-actions">
           <button id="review-queue-button" class="text-button review-queue-button">Practice <span id="review-count">0</span></button>
           <button id="collection-button" class="text-button">Lexicon <span id="learned-count">0</span></button>
+          <button id="achievements-button" class="text-button">Badges <span id="badge-count">0</span></button>
           <button id="sound-toggle" class="icon-button" aria-label="Toggle sound">♪</button>
           <button id="settings-button" class="icon-button" aria-label="Open settings">⋯</button>
         </div>
@@ -137,6 +142,13 @@
             <div class="streak-icon">↗</div>
             <div><small>CURRENT STREAK</small><strong><span id="streak-count">0</span> words</strong></div>
             <span id="streak-bonus">+0%</span>
+          </div>
+          <div class="habit-card" id="habit-tracker">
+            <div class="habit-header">
+              <small>7-DAY HABIT</small>
+              <strong id="study-streak-label">🔥 1 Day Streak</strong>
+            </div>
+            <div class="habit-dots" id="habit-dots"></div>
           </div>
           <div class="daily-card">
             <span class="daily-kicker">DAILY QUEST</span>
