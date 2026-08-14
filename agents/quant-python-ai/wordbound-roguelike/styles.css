@@ -135,10 +135,24 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .encounter-type { color: var(--coral-dark); }
 .enemy-zone { position: relative; height: 235px; margin: 11px 0; }
 .enemy-info { display: flex; justify-content: center; align-items: flex-start; gap: 18px; text-align: center; position: relative; z-index: 4; }
-.enemy-info small { font: 500 8px var(--mono); letter-spacing: .16em; color: var(--ink-soft); }.enemy-info h2 { margin: 3px 0; font: 700 20px var(--display); }
-.enemy-intent { padding: 6px 9px; border: 1px solid rgba(231,91,73,.35); border-radius: 6px; background: rgba(255,250,240,.8); color: var(--coral-dark); font: 500 10px var(--mono); }
-.enemy-health { width: 180px; height: 5px; margin: 0 auto; overflow: hidden; border-radius: 5px; background: rgba(23,60,66,.1); position: relative; z-index: 4; }
+.enemy-title-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.enemy-info small { font: 500 8px var(--mono); letter-spacing: .16em; color: var(--ink-soft); }
+.enemy-info h2 { margin: 3px 0; font: 700 20px var(--display); }
+.enemy-trait-badge { padding: 2px 6px; border-radius: 4px; font: 700 8px var(--mono); letter-spacing: .08em; background: rgba(102,80,137,.15); color: var(--purple); }
+.enemy-trait-badge.trait-armored { background: rgba(47,122,114,.18); color: var(--teal-dark); }
+.enemy-trait-badge.trait-heavy { background: rgba(231,91,73,.18); color: var(--coral-dark); }
+.enemy-trait-badge.trait-siphoner { background: rgba(227,172,70,.22); color: #845a0b; }
+.enemy-trait-badge.trait-drainer { background: rgba(57,117,140,.2); color: var(--ink); }
+.enemy-trait-badge.trait-swift { background: rgba(227,172,70,.25); color: #c47600; }
+.enemy-intent { padding: 6px 11px; border: 1px solid rgba(231,91,73,.35); border-radius: 6px; background: rgba(255,250,240,.9); color: var(--coral-dark); font: 700 10px var(--mono); box-shadow: 0 4px 10px rgba(0,0,0,.04); transition: transform .2s; }
+.enemy-intent.intent-heavy { border-color: var(--coral); background: rgba(231,91,73,.15); color: var(--coral-dark); animation: pulse 1.8s infinite; }
+.enemy-intent.intent-siphon { border-color: var(--gold); background: rgba(227,172,70,.15); color: #7f5707; }
+.enemy-intent.intent-drain { border-color: var(--teal); background: rgba(47,122,114,.12); color: var(--teal-dark); }
+.enemy-intent.intent-shield { border-color: var(--purple); background: rgba(102,80,137,.15); color: var(--purple); }
+.enemy-health { width: 180px; height: 6px; margin: 0 auto; overflow: hidden; border-radius: 5px; background: rgba(23,60,66,.1); position: relative; z-index: 4; }
 .enemy-health span { display: block; height: 100%; background: var(--coral); transition: width .35s; }
+.enemy-health .shield-fill { position: absolute; top: 0; left: 0; background: #3b82f6; opacity: .85; }
+.enemy-shield-label { margin-top: 4px; text-align: center; font: 700 8.5px var(--mono); color: #1d4ed8; position: relative; z-index: 4; }
 .enemy-art { width: 170px; height: 175px; position: absolute; left: 50%; bottom: -3px; transform: translateX(-50%); filter: drop-shadow(0 14px 13px rgba(27,48,39,.17)); }
 .enemy-body { position: absolute; z-index: 2; left: 30px; top: 28px; width: 112px; height: 123px; background: var(--teal); border-radius: 52% 48% 40% 44% / 43% 43% 57% 57%; animation: enemyFloat 3s ease-in-out infinite; }
 .enemy-body::before, .enemy-body::after { content: ""; position: absolute; bottom: -8px; width: 48px; height: 32px; background: inherit; border-radius: 0 0 50% 50%; }

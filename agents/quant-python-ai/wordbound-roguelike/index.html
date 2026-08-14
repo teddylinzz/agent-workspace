@@ -163,10 +163,20 @@
         </div>
         <div class="enemy-zone">
           <div class="enemy-info">
-            <div><small id="enemy-kind">INKLING</small><h2 id="enemy-name">The Mumbler</h2></div>
-            <span id="enemy-intent" class="enemy-intent">⚔ 7</span>
+            <div>
+              <div class="enemy-title-row">
+                <small id="enemy-kind">INKLING</small>
+                <span id="enemy-trait" class="enemy-trait-badge" hidden>ARMOURED</span>
+              </div>
+              <h2 id="enemy-name">The Mumbler</h2>
+            </div>
+            <span id="enemy-intent" class="enemy-intent">⚔ 7 Strike</span>
           </div>
-          <div class="enemy-health"><span id="enemy-hp-bar"></span></div>
+          <div class="enemy-health">
+            <span id="enemy-hp-bar"></span>
+            <span id="enemy-shield-bar" class="shield-fill"></span>
+          </div>
+          <div id="enemy-shield-label" class="enemy-shield-label" hidden>🛡️ <span id="enemy-shield-num">0</span> Shield</div>
           <div id="enemy-art" class="enemy-art">
             <span class="enemy-shadow"></span>
             <span class="enemy-body"></span>

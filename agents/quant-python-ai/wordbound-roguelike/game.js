@@ -495,23 +495,73 @@ function startBattle(type) {
   const scaling = state.cycle * 6 + state.region * 2 + state.node;
   const maxHp = type === "boss" ? 60 + scaling * 4 : type === "elite" ? 42 + scaling * 3 : 30 + scaling * 2;
   const enemy = type === "boss" ? ENEMIES.boss[state.region % ENEMIES.boss.length] : random(ENEMIES[type]);
+  
+  // Dynamic enemy traits
+  const traitPool = type === "boss"
+    ? ["armored", "heavy"]
+    : type === "elite"
+      ? shuffle(["armored", "siphoner", "heavy", "swift"])[0]
+      : Math.random() < 0.45 ? random(["armored", "siphoner", "drainer", "swift"]) : "none";
+
+  const initialShield = traitPool === "armored" ? (type === "boss" ? 24 + scaling : type === "elite" ? 16 + scaling : 10) : 0;
+  
   battle = {
     type, name: enemy[0], kind: enemy[1], hp: maxHp, maxHp,
+    shield: initialShield, maxShield: initialShield,
+    trait: traitPool,
     damage: type === "boss" ? 10 + state.cycle * 2 : type === "elite" ? 8 + state.cycle : 6 + Math.floor(state.cycle / 2),
-    turn: 0, blocked: false, first: true, locked: false, current: null, usedWords: []
+    turn: 0, blocked: false, first: true, locked: false, current: null, usedWords: [],
+    currentIntent: null, startTime: Date.now()
   };
+  
   if (hasRelic("crown")) state.sparks += 1;
   state.screen = "battle";
   $("#stage").innerHTML = $("#battle-template").innerHTML;
   $("#encounter-type").textContent = type === "boss" ? "REGION GUARDIAN" : type === "elite" ? "ELITE ENCOUNTER" : "WILD ENCOUNTER";
   $("#enemy-name").textContent = battle.name;
   $("#enemy-kind").textContent = battle.kind;
+  
+  const traitBadge = $("#enemy-trait");
+  if (traitBadge) {
+    if (battle.trait && battle.trait !== "none") {
+      traitBadge.hidden = false;
+      const traitLabels = {
+        armored: "🛡️ ARMORED",
+        heavy: "💥 HEAVY HITTER",
+        siphoner: "✦ SIPHONER",
+        drainer: "◈ INK THIEF",
+        swift: "⚡ SWIFT"
+      };
+      traitBadge.textContent = traitLabels[battle.trait] || battle.trait.toUpperCase();
+      traitBadge.className = `enemy-trait-badge trait-${battle.trait}`;
+    } else {
+      traitBadge.hidden = true;
+    }
+  }
+  
+  updateEnemyShieldUI();
   $("#enemy-art").classList.add(type);
   $("#speak-button").addEventListener("click", speakCurrentWord);
   $("#hint-button").addEventListener("click", useHint);
   $("#skip-button").addEventListener("click", swapWord);
   renderQuestion();
   updateHUD();
+}
+
+function updateEnemyShieldUI() {
+  const shieldLabel = $("#enemy-shield-label");
+  const shieldBar = $("#enemy-shield-bar");
+  const shieldNum = $("#enemy-shield-num");
+  if (!shieldLabel || !shieldBar) return;
+  if (battle.shield > 0) {
+    shieldLabel.hidden = false;
+    if (shieldNum) shieldNum.textContent = battle.shield;
+    const ratio = battle.maxShield ? (battle.shield / battle.maxShield * 100) : 0;
+    shieldBar.style.width = `${ratio}%`;
+  } else {
+    shieldLabel.hidden = true;
+    shieldBar.style.width = "0%";
+  }
 }
 
 function getWord() {
@@ -531,13 +581,14 @@ function getWord() {
   const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
   battle.usedWords.push(word.word);
   if (!state.seen.includes(word.word)) state.seen.push(word.word);
-  if (state.seen.length > 35) state.seen.shift();
+  if (state.seen.length > 45) state.seen.shift();
   return word;
 }
 
 function renderQuestion() {
   battle.locked = false;
   battle.turn += 1;
+  battle.startTime = Date.now();
   battle.current = getWord();
   $("#enemy-art").classList.remove("hurt", "attack");
   const word = battle.current;
@@ -548,6 +599,23 @@ function renderQuestion() {
   const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
   const answers = shuffle([word[property], ...distractors]);
   battle.question = { mode, property, correctValue: word[property] };
+
+  // Calculate Enemy Intent for this turn
+  let intent;
+  if (battle.trait === "heavy" && battle.turn % 3 === 0) {
+    const heavyDmg = Math.round(battle.damage * 1.7);
+    intent = { type: "heavy", label: `💥 ${heavyDmg} Slam`, damage: heavyDmg, desc: "Heavy strike charging!" };
+  } else if (battle.trait === "siphoner" && Math.random() < 0.4) {
+    intent = { type: "siphon", label: `✦ Siphon +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), siphon: 1, desc: "Will steal 1 spark on hit" };
+  } else if (battle.trait === "drainer" && Math.random() < 0.4) {
+    intent = { type: "drain", label: `◈ Leech +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), drain: 6, desc: "Will drain 6 ink on hit" };
+  } else if (battle.trait === "armored" && battle.shield <= 0 && Math.random() < 0.35) {
+    intent = { type: "shield", label: "🛡️ Fortify (+8)", damage: 3, shieldGain: 8, desc: "Gains shield and attacks" };
+  } else {
+    intent = { type: "attack", label: `⚔ ${battle.damage} Strike`, damage: battle.damage, desc: "Standard attack" };
+  }
+  battle.currentIntent = intent;
+
   $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
   $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
   $("#challenge-word").textContent = mode === "cloze" ? "A word is missing" : word.word;
@@ -557,8 +625,16 @@ function renderQuestion() {
     : mode === "cloze"
       ? makeCloze(word)
       : "Choose the closest meaning";
-  $("#enemy-intent").textContent = `⚔ ${battle.damage}`;
+
+  const intentEl = $("#enemy-intent");
+  if (intentEl) {
+    intentEl.textContent = intent.label;
+    intentEl.className = `enemy-intent intent-${intent.type}`;
+    intentEl.title = intent.desc;
+  }
+
   $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
+  updateEnemyShieldUI();
   $("#clue-box").hidden = true;
   $("#feedback-panel").hidden = true;
   $("#combo-display").hidden = state.streak < 2;
@@ -590,10 +666,12 @@ function makeCloze(word) {
 function answerQuestion(button, correct, mode) {
   if (battle.locked) return;
   battle.locked = true;
+  const elapsedSec = (Date.now() - battle.startTime) / 1000;
   const word = battle.current;
   const buttons = [...document.querySelectorAll(".answer-button")];
   buttons.forEach(item => item.disabled = true);
   state.wordsAnswered += 1;
+  
   if (correct) {
     button.classList.add("correct");
     state.correct += 1;
@@ -603,14 +681,42 @@ function answerQuestion(button, correct, mode) {
     state.learned[word.word] = (state.learned[word.word] || 0) + 1;
     updateReviewRecord(word.word, true, "good");
     gainXp(1);
+    
     let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
     if (state.streak >= 5) damage += 4;
-    battle.hp = Math.max(0, battle.hp - damage);
+    
+    // Quick Wit Bonus for rapid accurate recall
+    let isQuickWit = false;
+    if (elapsedSec <= 3.8) {
+      isQuickWit = true;
+      damage += 4;
+      state.ink += 2;
+    }
+    
+    // Shield absorption logic
+    if (battle.shield > 0) {
+      if (battle.shield >= damage) {
+        battle.shield -= damage;
+        showDamage(`SHIELD −${damage}`, false);
+      } else {
+        const leftover = damage - battle.shield;
+        battle.shield = 0;
+        battle.hp = Math.max(0, battle.hp - leftover);
+        showDamage(`BREAK! −${leftover}`, false);
+      }
+    } else {
+      battle.hp = Math.max(0, battle.hp - damage);
+      showDamage(damage, false);
+    }
+    
     $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
+    updateEnemyShieldUI();
     $("#enemy-art").classList.add("hurt");
-    showDamage(damage, false);
+    
     tone(520, .08); setTimeout(() => tone(690, .08), 80);
-    showFeedback(true, `<b>Exactly.</b> ${wordMemoryMap(word)}`);
+    const feedbackHeader = isQuickWit ? "<b>⚡ Quick Wit! (+4 bonus dmg & +2 ink)</b> " : "<b>Exactly.</b> ";
+    showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
+    
     if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
     handleQuest();
     battle.first = false;
@@ -625,15 +731,38 @@ function answerQuestion(button, correct, mode) {
     const correctValue = battle.question.correctValue;
     buttons.find(item => item.dataset.answer === correctValue)?.classList.add("correct");
     const protectedHit = hasRelic("shield") && !battle.blocked;
-    if (protectedHit) battle.blocked = true;
-    else state.hp = Math.max(0, state.hp - battle.damage);
+    
+    const intent = battle.currentIntent || { damage: battle.damage };
+    
+    if (protectedHit) {
+      battle.blocked = true;
+    } else {
+      state.hp = Math.max(0, state.hp - intent.damage);
+      // Apply intent special effects
+      if (intent.siphon && state.sparks > 0) {
+        state.sparks -= 1;
+        toast("✦ <b>Spark Siphoned by enemy!</b>");
+      }
+      if (intent.drain && state.ink > 0) {
+        const lost = Math.min(6, state.ink);
+        state.ink -= lost;
+        toast(`◈ <b>Enemy leeched ${lost} Ink!</b>`);
+      }
+      if (intent.shieldGain) {
+        battle.shield = (battle.shield || 0) + intent.shieldGain;
+        battle.maxShield = Math.max(battle.maxShield, battle.shield);
+        updateEnemyShieldUI();
+      }
+    }
+    
     state.streak = 0;
     updateReviewRecord(word.word, false);
     $("#enemy-art").classList.add("attack");
     document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
     setTimeout(() => $(".screen-flash")?.remove(), 400);
-    showDamage(protectedHit ? "BLOCK" : battle.damage, true);
+    showDamage(protectedHit ? "BLOCK" : intent.damage, true);
     tone(150, .14);
+    
     showFeedback(false, protectedHit
       ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
       : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
