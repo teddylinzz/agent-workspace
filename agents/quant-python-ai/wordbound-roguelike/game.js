@@ -2716,7 +2716,8 @@ function startBattle(type) {
       ? shuffle(["armored", "siphoner", "heavy", "swift"])[0]
       : Math.random() < 0.45 ? random(["armored", "siphoner", "drainer", "swift"]) : "none";
 
-  let initialShield = traitPool === "armored" ? (type === "boss" ? 24 + scaling : type === "elite" ? 16 + scaling : 10) : 0;
+  const isArmored = Array.isArray(traitPool) ? traitPool.includes("armored") : traitPool === "armored";
+  let initialShield = isArmored ? (type === "boss" ? 24 + scaling : type === "elite" ? 16 + scaling : 10) : 0;
   if (asc >= 19) initialShield += 12;
 
   // Boss Blind roll
@@ -2755,7 +2756,8 @@ function startBattle(type) {
   
   const traitBadge = $("#enemy-trait");
   if (traitBadge) {
-    if (battle.trait && battle.trait !== "none") {
+    const mainTrait = Array.isArray(battle.trait) ? battle.trait[0] : battle.trait;
+    if (mainTrait && mainTrait !== "none") {
       traitBadge.hidden = false;
       const traitLabels = {
         armored: "🛡️ ARMORED",
@@ -2764,8 +2766,8 @@ function startBattle(type) {
         drainer: "◈ INK THIEF",
         swift: "⚡ SWIFT"
       };
-      traitBadge.textContent = traitLabels[battle.trait] || battle.trait.toUpperCase();
-      traitBadge.className = `enemy-trait-badge trait-${battle.trait}`;
+      traitBadge.textContent = traitLabels[mainTrait] || String(mainTrait).toUpperCase();
+      traitBadge.className = `enemy-trait-badge trait-${mainTrait}`;
     } else {
       traitBadge.hidden = true;
     }
@@ -2895,15 +2897,16 @@ function renderQuestion() {
   battle.question = { mode, property, correctValue: correctVal };
 
   // Calculate Enemy Intent for this turn
+  const hasTrait = (t) => Array.isArray(battle.trait) ? battle.trait.includes(t) : battle.trait === t;
   let intent;
-  if (battle.trait === "heavy" && battle.turn % 3 === 0) {
+  if (hasTrait("heavy") && battle.turn % 3 === 0) {
     const heavyDmg = Math.round(battle.damage * 1.7);
     intent = { type: "heavy", label: `💥 ${heavyDmg} Slam`, damage: heavyDmg, desc: "Heavy strike charging!" };
-  } else if (battle.trait === "siphoner" && Math.random() < 0.4) {
+  } else if (hasTrait("siphoner") && Math.random() < 0.4) {
     intent = { type: "siphon", label: `✦ Siphon +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), siphon: (state.ascension >= 8 ? 2 : 1), desc: "Will steal sparks on hit" };
-  } else if (battle.trait === "drainer" && Math.random() < 0.4) {
+  } else if (hasTrait("drainer") && Math.random() < 0.4) {
     intent = { type: "drain", label: `◈ Leech +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), drain: 6, desc: "Will drain 6 ink on hit" };
-  } else if (battle.trait === "armored" && battle.shield <= 0 && Math.random() < 0.35) {
+  } else if (hasTrait("armored") && battle.shield <= 0 && Math.random() < 0.35) {
     intent = { type: "shield", label: "🛡️ Fortify (+8)", damage: 3, shieldGain: 8, desc: "Gains shield and attacks" };
   } else {
     intent = { type: "attack", label: `⚔ ${battle.damage} Strike`, damage: battle.damage, desc: "Standard attack" };
