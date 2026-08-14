@@ -934,272 +934,292 @@ function startBattle(type) {
   }
   
   updateEnemyShieldUI();
-  $("#enemy-art").classList.add(type);
-  $("#speak-button").addEventListener("click", speakCurrentWord);
-  $("#hint-button").addEventListener("click", useHint);
-  $("#skip-button").addEventListener("click", swapWord);
-  renderQuestion();
-  updateHUD();
-}
-
-function updateEnemyShieldUI() {
-  const shieldLabel = $("#enemy-shield-label");
-  const shieldBar = $("#enemy-shield-bar");
-  const shieldNum = $("#enemy-shield-num");
-  if (!shieldLabel || !shieldBar) return;
-  if (battle.shield > 0) {
-    shieldLabel.hidden = false;
-    if (shieldNum) shieldNum.textContent = battle.shield;
-    const ratio = battle.maxShield ? (battle.shield / battle.maxShield * 100) : 0;
-    shieldBar.style.width = `${ratio}%`;
-  } else {
-    shieldLabel.hidden = true;
-    shieldBar.style.width = "0%";
-  }
-}
-
-function getWord() {
-  const regionWords = REGIONS[state.region % REGIONS.length].words;
-  const allWords = REGIONS.flatMap(region => region.words);
-  const reviewRecords = loadMeta().reviews;
-  const dueReviews = allWords.filter(word => {
-    const review = reviewRecords[word.word];
-    return review && review.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
-  });
-  let available = regionWords.filter(word => !battle.usedWords.includes(word.word));
-  if (!available.length) { battle.usedWords = []; available = regionWords; }
-  const unseen = available.filter(word => !state.seen.includes(word.word));
-  const reviewWord = dueReviews.length
-    ? shuffle(dueReviews).sort((a, b) => reviewRecords[b.word].misses - reviewRecords[a.word].misses)[0]
-    : null;
-  const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
-  battle.usedWords.push(word.word);
-  if (!state.seen.includes(word.word)) state.seen.push(word.word);
-  if (state.seen.length > 45) state.seen.shift();
-  return word;
-}
-
-function renderQuestion() {
-  battle.locked = false;
-  battle.turn += 1;
-  battle.startTime = Date.now();
-  battle.current = getWord();
-  $("#enemy-art").classList.remove("hurt", "attack");
-  const word = battle.current;
-  const regionWords = REGIONS[state.region % REGIONS.length].words;
-  const roll = Math.random();
-  const mode = battle.turn > 1 && roll < .25 ? "synonym" : battle.turn > 1 && roll < .5 ? "cloze" : "definition";
-  const property = mode === "synonym" ? "synonym" : mode === "cloze" ? "word" : "definition";
-  const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
-  const answers = shuffle([word[property], ...distractors]);
-  battle.question = { mode, property, correctValue: word[property] };
-
-  // Calculate Enemy Intent for this turn
-  let intent;
-  if (battle.trait === "heavy" && battle.turn % 3 === 0) {
-    const heavyDmg = Math.round(battle.damage * 1.7);
-    intent = { type: "heavy", label: `💥 ${heavyDmg} Slam`, damage: heavyDmg, desc: "Heavy strike charging!" };
-  } else if (battle.trait === "siphoner" && Math.random() < 0.4) {
-    intent = { type: "siphon", label: `✦ Siphon +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), siphon: 1, desc: "Will steal 1 spark on hit" };
-  } else if (battle.trait === "drainer" && Math.random() < 0.4) {
-    intent = { type: "drain", label: `◈ Leech +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), drain: 6, desc: "Will drain 6 ink on hit" };
-  } else if (battle.trait === "armored" && battle.shield <= 0 && Math.random() < 0.35) {
-    intent = { type: "shield", label: "🛡️ Fortify (+8)", damage: 3, shieldGain: 8, desc: "Gains shield and attacks" };
-  } else {
-    intent = { type: "attack", label: `⚔ ${battle.damage} Strike`, damage: battle.damage, desc: "Standard attack" };
-  }
-  battle.currentIntent = intent;
-
-  $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
-  $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
-  $("#challenge-word").textContent = mode === "cloze" ? "A word is missing" : word.word;
-  $("#pronunciation").textContent = mode === "cloze" ? "Use the sentence to find it" : word.phonetic;
-  $("#challenge-prompt").textContent = mode === "synonym"
-    ? "Choose the closest synonym"
-    : mode === "cloze"
-      ? makeCloze(word)
-      : "Choose the closest meaning";
-
-  const intentEl = $("#enemy-intent");
-  if (intentEl) {
-    intentEl.textContent = intent.label;
-    intentEl.className = `enemy-intent intent-${intent.type}`;
-    intentEl.title = intent.desc;
+    $("#enemy-art").classList.add(type);
+    if (type === "boss") {
+      showBossIntro(battle.name, REGIONS[state.region % REGIONS.length].name);
+    }
+    $("#speak-button").addEventListener("click", speakCurrentWord);
+    $("#hint-button").addEventListener("click", useHint);
+    $("#skip-button").addEventListener("click", swapWord);
+    renderQuestion();
+    updateHUD();
   }
 
-  $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
-  updateEnemyShieldUI();
-  $("#clue-box").hidden = true;
-  if (hasRelic("magnifier") && word.root) {
-    $("#clue-box").hidden = false;
-    $("#clue-box").innerHTML = `<b>Origin Note (Etymology Glass):</b> ${word.root}`;
-  }
-  $("#feedback-panel").hidden = true;
-  $("#combo-display").hidden = state.streak < 2;
-  if (state.streak >= 2) $("#combo-display b").textContent = `×${Math.min(5, 1 + Math.floor(state.streak / 2))}`;
-  $("#answer-grid").innerHTML = answers.map((answer, index) => `
-    <button class="answer-button" data-answer="${escapeAttribute(answer)}">
-      <span>${String.fromCharCode(65 + index)}</span>${answer}
-    </button>`).join("");
-  document.querySelectorAll(".answer-button").forEach(button => {
-    button.addEventListener("click", () => answerQuestion(button, button.dataset.answer === battle.question.correctValue, mode));
-  });
-  updateHUD();
-}
-
-function escapeAttribute(text) {
-  return text.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
-}
-
-function makeCloze(word) {
-  const exact = new RegExp(`\\b${word.word}\\b`, "i");
-  if (exact.test(word.sentence)) return word.sentence.replace(exact, "________");
-  const stemLength = Math.max(4, word.word.length - 2);
-  const stem = word.word.slice(0, stemLength);
-  const inflected = new RegExp(`\\b${stem}[a-z]*\\b`, "i");
-  if (inflected.test(word.sentence)) return word.sentence.replace(inflected, "________");
-  return `________ — ${word.clue}`;
-}
-
-function answerQuestion(button, correct, mode) {
-  if (battle.locked) return;
-  battle.locked = true;
-  const elapsedSec = (Date.now() - battle.startTime) / 1000;
-  const word = battle.current;
-  const buttons = [...document.querySelectorAll(".answer-button")];
-  buttons.forEach(item => item.disabled = true);
-  state.wordsAnswered += 1;
-  
-  if (correct) {
-    button.classList.add("correct");
-    state.correct += 1;
-    state.streak += 1;
-    state.maxStreak = Math.max(state.maxStreak, state.streak);
-    state.quest += 1;
-    state.learned[word.word] = (state.learned[word.word] || 0) + 1;
-    updateReviewRecord(word.word, true, "good");
-    gainXp(1);
-    
-    let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
-    if (state.streak >= 5) damage += 4;
-    
-    // Quick Wit Bonus with Chronos Hourglass synergy
-    const reflexThreshold = hasRelic("hourglass") ? 5.2 : 3.8;
-    let isQuickWit = false;
-    if (elapsedSec <= reflexThreshold) {
-      isQuickWit = true;
-      const bonusDmg = hasRelic("hourglass") ? 9 : 4;
-      damage += bonusDmg;
-      state.ink += (hasRelic("hourglass") ? 4 : 2);
-    }
-    
-    // Horn of Resonance (+30% vs Boss/Elite)
-    if ((battle.type === "boss" || battle.type === "elite") && hasRelic("horn")) {
-      damage = Math.round(damage * 1.3);
-    }
-    
-    // Alchemist Crucible (+1 ink per letter)
-    if (hasRelic("alembic")) {
-      const letters = word.word.replace(/[^a-zA-Z]/g, "").length;
-      state.ink += letters;
-    }
-    
-    // Ring of Fluency (+1 spark on streak)
-    if (hasRelic("ring") && state.streak >= 4 && state.streak % 4 === 0) {
-      state.sparks = Math.min(9, state.sparks + 1);
-      toast("💍 <b>Ring of Fluency:</b> +1 Spark on streak!");
-    }
-    
-    // Shield absorption logic
+  function updateEnemyShieldUI() {
+    const shieldLabel = $("#enemy-shield-label");
+    const shieldBar = $("#enemy-shield-bar");
+    const shieldNum = $("#enemy-shield-num");
+    if (!shieldLabel || !shieldBar) return;
     if (battle.shield > 0) {
-      if (battle.shield >= damage) {
-        battle.shield -= damage;
-        showDamage(`SHIELD −${damage}`, false);
-      } else {
-        const leftover = damage - battle.shield;
-        battle.shield = 0;
-        battle.hp = Math.max(0, battle.hp - leftover);
-        showDamage(`BREAK! −${leftover}`, false);
-      }
+      shieldLabel.hidden = false;
+      if (shieldNum) shieldNum.textContent = battle.shield;
+      const ratio = battle.maxShield ? (battle.shield / battle.maxShield * 100) : 0;
+      shieldBar.style.width = `${ratio}%`;
     } else {
-      battle.hp = Math.max(0, battle.hp - damage);
-      showDamage(damage, false);
+      shieldLabel.hidden = true;
+      shieldBar.style.width = "0%";
     }
-    
+  }
+
+  function getWord() {
+    const regionWords = REGIONS[state.region % REGIONS.length].words;
+    const allWords = REGIONS.flatMap(region => region.words);
+    const reviewRecords = loadMeta().reviews;
+    const dueReviews = allWords.filter(word => {
+      const review = reviewRecords[word.word];
+      return review && review.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
+    });
+    let available = regionWords.filter(word => !battle.usedWords.includes(word.word));
+    if (!available.length) { battle.usedWords = []; available = regionWords; }
+    const unseen = available.filter(word => !state.seen.includes(word.word));
+    const reviewWord = dueReviews.length
+      ? shuffle(dueReviews).sort((a, b) => reviewRecords[b.word].misses - reviewRecords[a.word].misses)[0]
+      : null;
+    const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
+    battle.usedWords.push(word.word);
+    if (!state.seen.includes(word.word)) state.seen.push(word.word);
+    if (state.seen.length > 45) state.seen.shift();
+    return word;
+  }
+
+  function renderQuestion() {
+    battle.locked = false;
+    battle.turn += 1;
+    battle.startTime = Date.now();
+    battle.current = getWord();
+    $("#enemy-art").classList.remove("hurt", "attack");
+    const word = battle.current;
+    const regionWords = REGIONS[state.region % REGIONS.length].words;
+    const roll = Math.random();
+    const mode = battle.turn > 1 && roll < .25 ? "synonym" : battle.turn > 1 && roll < .5 ? "cloze" : "definition";
+    const property = mode === "synonym" ? "synonym" : mode === "cloze" ? "word" : "definition";
+    const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
+    const answers = shuffle([word[property], ...distractors]);
+    battle.question = { mode, property, correctValue: word[property] };
+
+    // Calculate Enemy Intent for this turn
+    let intent;
+    if (battle.trait === "heavy" && battle.turn % 3 === 0) {
+      const heavyDmg = Math.round(battle.damage * 1.7);
+      intent = { type: "heavy", label: `💥 ${heavyDmg} Slam`, damage: heavyDmg, desc: "Heavy strike charging!" };
+    } else if (battle.trait === "siphoner" && Math.random() < 0.4) {
+      intent = { type: "siphon", label: `✦ Siphon +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), siphon: 1, desc: "Will steal 1 spark on hit" };
+    } else if (battle.trait === "drainer" && Math.random() < 0.4) {
+      intent = { type: "drain", label: `◈ Leech +${Math.max(4, battle.damage - 2)}`, damage: Math.max(4, battle.damage - 2), drain: 6, desc: "Will drain 6 ink on hit" };
+    } else if (battle.trait === "armored" && battle.shield <= 0 && Math.random() < 0.35) {
+      intent = { type: "shield", label: "🛡️ Fortify (+8)", damage: 3, shieldGain: 8, desc: "Gains shield and attacks" };
+    } else {
+      intent = { type: "attack", label: `⚔ ${battle.damage} Strike`, damage: battle.damage, desc: "Standard attack" };
+    }
+    battle.currentIntent = intent;
+
+    $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
+    $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
+    $("#challenge-word").textContent = mode === "cloze" ? "A word is missing" : word.word;
+    $("#pronunciation").textContent = mode === "cloze" ? "Use the sentence to find it" : word.phonetic;
+    $("#challenge-prompt").textContent = mode === "synonym"
+      ? "Choose the closest synonym"
+      : mode === "cloze"
+        ? makeCloze(word)
+        : "Choose the closest meaning";
+
+    const intentEl = $("#enemy-intent");
+    if (intentEl) {
+      intentEl.textContent = intent.label;
+      intentEl.className = `enemy-intent intent-${intent.type}`;
+      intentEl.title = intent.desc;
+    }
+
     $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
     updateEnemyShieldUI();
-    $("#enemy-art").classList.add("hurt");
-    
-    tone(520, .08); setTimeout(() => tone(690, .08), 80);
-    const feedbackHeader = isQuickWit ? "<b>⚡ Quick Wit!</b> " : "<b>Exactly.</b> ";
-    showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
-    
-    if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
-    handleQuest();
-    battle.first = false;
-    updateMeta();
+    $("#clue-box").hidden = true;
+    if (hasRelic("magnifier") && word.root) {
+      $("#clue-box").hidden = false;
+      $("#clue-box").innerHTML = `<b>Origin Note (Etymology Glass):</b> ${word.root}`;
+    }
+    $("#feedback-panel").hidden = true;
+    $("#combo-display").hidden = state.streak < 2;
+    if (state.streak >= 2) $("#combo-display b").textContent = `×${Math.min(5, 1 + Math.floor(state.streak / 2))}`;
+    $("#answer-grid").innerHTML = answers.map((answer, index) => `
+      <button class="answer-button" data-answer="${escapeAttribute(answer)}">
+        <span>${String.fromCharCode(65 + index)}</span>${answer}
+      </button>`).join("");
+    document.querySelectorAll(".answer-button").forEach(button => {
+      button.addEventListener("click", () => answerQuestion(button, button.dataset.answer === battle.question.correctValue, mode));
+    });
     updateHUD();
-    setTimeout(() => {
-      if (battle.hp <= 0) winBattle();
-      else renderQuestion();
-    }, 1200);
-  } else {
-    button.classList.add("wrong");
-    const correctValue = battle.question.correctValue;
-    buttons.find(item => item.dataset.answer === correctValue)?.classList.add("correct");
-    const protectedHit = hasRelic("shield") && !battle.blocked;
+  }
+
+  function escapeAttribute(text) {
+    return text.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+  }
+
+  function makeCloze(word) {
+    const exact = new RegExp(`\\b${word.word}\\b`, "i");
+    if (exact.test(word.sentence)) return word.sentence.replace(exact, "________");
+    const stemLength = Math.max(4, word.word.length - 2);
+    const stem = word.word.slice(0, stemLength);
+    const inflected = new RegExp(`\\b${stem}[a-z]*\\b`, "i");
+    if (inflected.test(word.sentence)) return word.sentence.replace(inflected, "________");
+    return `________ — ${word.clue}`;
+  }
+
+  function answerQuestion(button, correct, mode) {
+    if (battle.locked) return;
+    battle.locked = true;
+    const elapsedSec = (Date.now() - battle.startTime) / 1000;
+    const word = battle.current;
+    const buttons = [...document.querySelectorAll(".answer-button")];
+    buttons.forEach(item => item.disabled = true);
+    state.wordsAnswered += 1;
     
-    const intent = battle.currentIntent || { damage: battle.damage };
-    
-    if (protectedHit) {
-      battle.blocked = true;
-    } else {
-      state.hp = Math.max(0, state.hp - intent.damage);
-      if (hasRelic("mirror")) {
-        gainXp(1);
-        toast("🪞 <b>Oracle's Mirror:</b> Gained +1 Insight from adversity.");
+    if (correct) {
+      button.classList.add("correct");
+      const btnBox = button.getBoundingClientRect();
+      spawnParticles(btnBox.left + btnBox.width / 2, btnBox.top + btnBox.height / 2, "#e3ac46", 14);
+
+      state.correct += 1;
+      state.streak += 1;
+      state.maxStreak = Math.max(state.maxStreak, state.streak);
+      state.quest += 1;
+      state.learned[word.word] = (state.learned[word.word] || 0) + 1;
+      updateReviewRecord(word.word, true, "good");
+      gainXp(1);
+      
+      let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
+      if (state.streak >= 5) damage += 4;
+      
+      // Quick Wit Bonus with Chronos Hourglass synergy
+      const reflexThreshold = hasRelic("hourglass") ? 5.2 : 3.8;
+      let isQuickWit = false;
+      if (elapsedSec <= reflexThreshold) {
+        isQuickWit = true;
+        const bonusDmg = hasRelic("hourglass") ? 9 : 4;
+        damage += bonusDmg;
+        state.ink += (hasRelic("hourglass") ? 4 : 2);
+        triggerScreenShake("sm");
+        showFloatingBanner("⚡ QUICK WIT!", "quickwit");
       }
-      if (intent.siphon && state.sparks > 0) {
-        state.sparks -= 1;
-        toast("✦ <b>Spark Siphoned by enemy!</b>");
-      }
-      if (intent.drain && state.ink > 0) {
-        const lost = Math.min(6, state.ink);
-        state.ink -= lost;
-        toast(`◈ <b>Enemy leeched ${lost} Ink!</b>`);
-      }
-      if (intent.shieldGain) {
-        battle.shield = (battle.shield || 0) + intent.shieldGain;
-        battle.maxShield = Math.max(battle.maxShield, battle.shield);
-        updateEnemyShieldUI();
+
+      if (state.streak >= 4 && state.streak % 2 === 0) {
+        triggerScreenShake("lg");
+        showFloatingBanner(`🔥 COMBO ×${state.streak}!`, "combo");
       }
       
-      // Phoenix feather revive
-      if (state.hp <= 0 && hasRelic("feather") && !state.usedRevive) {
-        state.usedRevive = true;
-        state.hp = 20;
-        toast("🪶 <b>Phoenix Feather shattered!</b> Restored 20 Resolve.");
-        showDamage("REVIVE", true);
-        tone(600, .15); setTimeout(() => tone(880, .25), 100);
+      // Horn of Resonance (+30% vs Boss/Elite)
+      if ((battle.type === "boss" || battle.type === "elite") && hasRelic("horn")) {
+        damage = Math.round(damage * 1.3);
       }
+      
+      // Alchemist Crucible (+1 ink per letter)
+      if (hasRelic("alembic")) {
+        const letters = word.word.replace(/[^a-zA-Z]/g, "").length;
+        state.ink += letters;
+      }
+      
+      // Ring of Fluency (+1 spark on streak)
+      if (hasRelic("ring") && state.streak >= 4 && state.streak % 4 === 0) {
+        state.sparks = Math.min(9, state.sparks + 1);
+        toast("💍 <b>Ring of Fluency:</b> +1 Spark on streak!");
+      }
+      
+      // Shield absorption logic
+      if (battle.shield > 0) {
+        if (battle.shield >= damage) {
+          battle.shield -= damage;
+          showDamage(`SHIELD −${damage}`, false);
+        } else {
+          const leftover = damage - battle.shield;
+          battle.shield = 0;
+          battle.hp = Math.max(0, battle.hp - leftover);
+          showDamage(`BREAK! −${leftover}`, false);
+          showFloatingBanner("🛡️ SHIELD BROKEN!", "break");
+        }
+      } else {
+        battle.hp = Math.max(0, battle.hp - damage);
+        showDamage(damage, false);
+      }
+      
+      $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
+      updateEnemyShieldUI();
+      $("#enemy-art").classList.add("hurt");
+      
+      tone(520, .08); setTimeout(() => tone(690, .08), 80);
+      const feedbackHeader = isQuickWit ? "<b>⚡ Quick Wit!</b> " : "<b>Exactly.</b> ";
+      showFeedback(true, `${feedbackHeader}${wordMemoryMap(word)}`);
+      
+      if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
+      handleQuest();
+      battle.first = false;
+      updateMeta();
+      updateHUD();
+      setTimeout(() => {
+        if (battle.hp <= 0) winBattle();
+        else renderQuestion();
+      }, 1200);
+    } else {
+      button.classList.add("wrong");
+      triggerScreenShake("lg");
+      const portrait = $(".portrait-wrap");
+      if (portrait) {
+        const pBox = portrait.getBoundingClientRect();
+        spawnParticles(pBox.left + pBox.width / 2, pBox.top + pBox.height / 2, "#e75b49", 12);
+      }
+      const correctValue = battle.question.correctValue;
+      buttons.find(item => item.dataset.answer === correctValue)?.classList.add("correct");
+      const protectedHit = hasRelic("shield") && !battle.blocked;
+      
+      const intent = battle.currentIntent || { damage: battle.damage };
+      
+      if (protectedHit) {
+        battle.blocked = true;
+      } else {
+        state.hp = Math.max(0, state.hp - intent.damage);
+        if (hasRelic("mirror")) {
+          gainXp(1);
+          toast("🪞 <b>Oracle's Mirror:</b> Gained +1 Insight from adversity.");
+        }
+        if (intent.siphon && state.sparks > 0) {
+          state.sparks -= 1;
+          toast("✦ <b>Spark Siphoned by enemy!</b>");
+        }
+        if (intent.drain && state.ink > 0) {
+          const lost = Math.min(6, state.ink);
+          state.ink -= lost;
+          toast(`◈ <b>Enemy leeched ${lost} Ink!</b>`);
+        }
+        if (intent.shieldGain) {
+          battle.shield = (battle.shield || 0) + intent.shieldGain;
+          battle.maxShield = Math.max(battle.maxShield, battle.shield);
+          updateEnemyShieldUI();
+        }
+        
+        // Phoenix feather revive
+        if (state.hp <= 0 && hasRelic("feather") && !state.usedRevive) {
+          state.usedRevive = true;
+          state.hp = 20;
+          toast("🪶 <b>Phoenix Feather shattered!</b> Restored 20 Resolve.");
+          showDamage("REVIVE", true);
+          tone(600, .15); setTimeout(() => tone(880, .25), 100);
+        }
+      }
+      
+      state.streak = 0;
+      updateReviewRecord(word.word, false);
+      $("#enemy-art").classList.add("attack");
+      document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
+      setTimeout(() => $(".screen-flash")?.remove(), 400);
+      showDamage(protectedHit ? "BLOCK" : intent.damage, true);
+      tone(150, .14);
+      
+      showFeedback(false, protectedHit
+        ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
+        : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
+      battle.first = false;
+      updateHUD();
+      setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
     }
-    
-    state.streak = 0;
-    updateReviewRecord(word.word, false);
-    $("#enemy-art").classList.add("attack");
-    document.body.insertAdjacentHTML("beforeend", '<span class="screen-flash"></span>');
-    setTimeout(() => $(".screen-flash")?.remove(), 400);
-    showDamage(protectedHit ? "BLOCK" : intent.damage, true);
-    tone(150, .14);
-    
-    showFeedback(false, protectedHit
-      ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
-      : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
-    battle.first = false;
-    updateHUD();
-    setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
   }
-}
 
 function showFeedback(correct, html) {
   const panel = $("#feedback-panel");
@@ -1232,6 +1252,52 @@ function showDamage(value, player) {
   number.style.top = `${box.top + box.height / 3}px`;
   document.body.appendChild(number);
   setTimeout(() => number.remove(), 850);
+}
+
+function triggerScreenShake(intensity = "sm") {
+  const el = $("#stage") || document.body;
+  const cls = intensity === "lg" ? "shake-lg" : "shake-sm";
+  el.classList.add(cls);
+  setTimeout(() => el.classList.remove(cls), 360);
+}
+
+function spawnParticles(x, y, color = "#e3ac46", count = 12) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement("span");
+    p.className = "spark-particle";
+    p.style.left = `${x}px`;
+    p.style.top = `${y}px`;
+    p.style.backgroundColor = color;
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 25 + Math.random() * 55;
+    p.style.setProperty("--tx", `${Math.cos(angle) * dist}px`);
+    p.style.setProperty("--ty", `${Math.sin(angle) * dist}px`);
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 650);
+  }
+}
+
+function showFloatingBanner(text, type = "quickwit") {
+  const banner = document.createElement("div");
+  banner.className = `floating-callout callout-${type}`;
+  banner.innerHTML = text;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 1100);
+}
+
+function showBossIntro(bossName, regionName) {
+  const intro = document.createElement("div");
+  intro.className = "boss-intro-banner";
+  intro.innerHTML = `
+    <div class="boss-intro-content">
+      <span class="boss-intro-kicker">⚔️ REGION GUARDIAN ⚔️</span>
+      <h2>${bossName}</h2>
+      <p>Guardian of ${regionName}</p>
+    </div>
+  `;
+  document.body.appendChild(intro);
+  playChestFanfare();
+  setTimeout(() => intro.remove(), 1800);
 }
 
 function useHint() {
