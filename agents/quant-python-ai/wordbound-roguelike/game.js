@@ -309,6 +309,42 @@ const RELICS = [
   { id: "candle", icon: "🕯️", name: "Scholar's Candle", text: "Rest sites restore an extra 20% Resolve." }
 ];
 
+const EXAM_DECKS = {
+  toeic: {
+    name: "TOEIC Business Core", icon: "💼",
+    desc: "Essential workplace, commercial negotiation, and administrative vocabulary.",
+    words: [
+      { word: "negotiate", phonetic: "/nəˈɡoʊ.ʃi.eɪt/", pos: "v.", level: "B2", zh: "談判，協商", root: "Latin negotium (business)", definition: "to obtain or bring about by discussion", synonym: "bargain", sentence: "They met to negotiate a new multi-year contract.", clue: "Finding mutual agreement through discussion." },
+      { word: "procure", phonetic: "/prəˈkjʊr/", pos: "v.", level: "C1", zh: "採購，獲得", root: "Latin procurare (take care of)", definition: "to obtain something, especially with care or effort", synonym: "acquire", sentence: "The department must procure raw materials on schedule.", clue: "Obtaining supplies for an organization." },
+      { word: "expedite", phonetic: "/ˈek.spə.daɪt/", pos: "v.", level: "C1", zh: "加快，加速", root: "Latin expedire (extricate)", definition: "to make an action or process happen sooner", synonym: "accelerate", sentence: "Please pay an extra fee to expedite the shipping.", clue: "Speeding up a process." },
+      { word: "compliance", phonetic: "/kəmˈplaɪ.əns/", pos: "n.", level: "B2", zh: "順從，合規", root: "Latin complere (fulfill)", definition: "the state of according with rules or laws", synonym: "conformity", sentence: "Safety compliance is mandatory in every workshop.", clue: "Following laws and regulations." },
+      { word: "feasibility", phonetic: "/ˌfiː.zəˈbɪl.ə.t̬i/", pos: "n.", level: "B2", zh: "可行性", root: "French faisable (doable)", definition: "the state or degree of being easily done", synonym: "viability", sentence: "We conducted a feasibility study before investing.", clue: "Whether an idea can practically work." }
+    ]
+  },
+  toefl: {
+    name: "TOEFL Academic & Science", icon: "🎓",
+    desc: "Key academic reading, scientific hypothesis, and argumentative terms.",
+    words: [
+      { word: "hypothesis", phonetic: "/haɪˈpɑː.θə.sɪs/", pos: "n.", level: "B2", zh: "假設，假說", root: "Greek hypo (under) + thesis", definition: "a proposed explanation based on limited evidence", synonym: "theory", sentence: "The laboratory experiments confirmed their initial hypothesis.", clue: "A testable scientific idea." },
+      { word: "empirical", phonetic: "/emˈpɪr.ɪ.kəl/", pos: "adj.", level: "C1", zh: "經驗主義的，實證的", root: "Greek empeiria (experience)", definition: "based on observation or experiment rather than theory", synonym: "observational", sentence: "They gathered solid empirical evidence to support the claim.", clue: "Based on real-world testing." },
+      { word: "paradigm", phonetic: "/ˈper.ə.daɪm/", pos: "n.", level: "C1", zh: "範例，典範", root: "Greek paradeigma (pattern)", definition: "a typical example, pattern, or framework of ideas", synonym: "model", sentence: "Quantum mechanics caused a major paradigm shift.", clue: "A fundamental framework or model." },
+      { word: "synthesize", phonetic: "/ˈsɪn.θə.saɪz/", pos: "v.", level: "B2", zh: "綜合，合成", root: "Greek synthesis (putting together)", definition: "to combine diverse ideas or substances into a whole", synonym: "integrate", sentence: "The essay synthesizes data from multiple research papers.", clue: "Combining parts into a single whole." },
+      { word: "ubiquitous", phonetic: "/juːˈbɪk.wə.t̬əs/", pos: "adj.", level: "C2", zh: "無處不在的", root: "Latin ubique (everywhere)", definition: "present, appearing, or found everywhere", synonym: "omnipresent", sentence: "Smartphones have become ubiquitous across modern life.", clue: "Found all around us." }
+    ]
+  },
+  gre: {
+    name: "GRE Verbal High-Yield", icon: "🏛️",
+    desc: "Nuanced, high-level vocabulary for advanced prose and analytical reasoning.",
+    words: [
+      { word: "laconic", phonetic: "/ləˈkɑː.nɪk/", pos: "adj.", level: "C2", zh: "簡潔的，言簡意賅的", root: "Greek Lakon (Spartan)", definition: "using very few words to express much", synonym: "terse", sentence: "His laconic reply conveyed calm authority.", clue: "Expressing thoughts in very few words." },
+      { word: "alacrity", phonetic: "/əˈlæk.rə.t̬i/", pos: "n.", level: "C2", zh: "敏捷，欣然", root: "Latin alacer (lively)", definition: "brisk and cheerful readiness to act", synonym: "eagerness", sentence: "She accepted the challenging project with alacrity.", clue: "Cheerful and brisk eagerness." },
+      { word: "enervate", phonetic: "/ˈen.ɚ.veɪt/", pos: "v.", level: "C2", zh: "使衰弱，使無力", root: "Latin e- (out) + nervus (sinew)", definition: "to drain energy or vitality from", synonym: "weaken", sentence: "The relentless desert sun threatened to enervate the travelers.", clue: "Draining one's strength." },
+      { word: "obsequious", phonetic: "/əbˈsiː.kwi.əs/", pos: "adj.", level: "C2", zh: "諂媚的，奉承的", root: "Latin obsequi (comply)", definition: "obedient or attentive to an excessive degree", synonym: "fawning", sentence: "The courtiers were obsequious in the king's presence.", clue: "Excessively flattering." },
+      { word: "capricious", phonetic: "/kəˈprɪʃ.əs/", pos: "adj.", level: "C1", zh: "善變的，反覆無常的", root: "Italian capriccio (whim)", definition: "given to sudden and unaccountable changes of mood", synonym: "fickle", sentence: "The mountain weather is famously capricious.", clue: "Changing rapidly on a whim." }
+    ]
+  }
+};
+
 const ACHIEVEMENTS = [
   { id: "first_step", name: "First Steps", icon: "🌱", desc: "Complete your first journey node." },
   { id: "scholar_25", name: "Lexical Seeker", icon: "📖", desc: "Discover 25 unique words in your lexicon." },
@@ -1752,11 +1788,117 @@ function showLexicon() {
       ${notes[key] ? `<blockquote>“${notes[key]}”</blockquote>` : ""}
     </div>`;
   }).filter(Boolean).join("") : '<p class="section-copy">Your lexicon is waiting for its first word.</p>';
-  openModal(`<span class="modal-kicker">YOUR LIVING RECORD</span><h2>Lexicon</h2>
+  openModal(`
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <span class="modal-kicker">YOUR LIVING RECORD</span>
+      <div style="display:flex; gap:6px;">
+        <button id="open-decks-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">📚 Presets & Import</button>
+        <button id="export-csv-btn" class="button button-ghost" style="padding:4px 9px;font-size:9px;">📥 Export CSV</button>
+      </div>
+    </div>
+    <h2>Lexicon</h2>
     <div class="mastery-strip"><div><b>${mastery.learning}</b><span>Learning</span></div><div><b>${mastery.strong}</b><span>Strong</span></div><div><b>${mastery.mastered}</b><span>Mastered</span></div></div>
     ${reviewWords.length ? `<div class="review-callout"><div><small>WORDS TO REVISIT</small><b>${dueCount} due now · ${reviewWords.length} learning</b><p>Short, no-penalty recall sessions strengthen the words you missed.</p></div><button id="start-review-modal" class="button button-primary">Practice now →</button></div>` : ""}
     <div class="lexicon-list">${content}</div>`);
   $("#start-review-modal")?.addEventListener("click", requestPractice);
+  $("#open-decks-btn")?.addEventListener("click", showDeckManager);
+  $("#export-csv-btn")?.addEventListener("click", exportDeckCSV);
+}
+
+function showDeckManager() {
+  const meta = loadMeta();
+  meta.activeDecks = meta.activeDecks || ["toeic", "toefl", "gre"];
+  meta.customWords = meta.customWords || [];
+  
+  openModal(`
+    <span class="modal-kicker">CUSTOM DECKS & IMPORTER</span>
+    <h2>Curated Decks</h2>
+    <p class="section-copy">Enable targeted exam presets or import your own vocabulary lists.</p>
+    
+    <div class="deck-list">
+      ${Object.entries(EXAM_DECKS).map(([key, deck]) => {
+        const isActive = meta.activeDecks.includes(key);
+        return `
+          <div class="deck-item">
+            <span class="deck-icon">${deck.icon}</span>
+            <div class="deck-info">
+              <b>${deck.name}</b>
+              <p>${deck.desc} (${deck.words.length} words)</p>
+            </div>
+            <button class="button ${isActive ? "button-primary" : "button-ghost"} toggle-deck-btn" data-deck="${key}">
+              ${isActive ? "ACTIVE" : "INACTIVE"}
+            </button>
+          </div>
+        `;
+      }).join("")}
+    </div>
+
+    <div class="import-section" style="margin-top: 18px;">
+      <span class="modal-kicker">CUSTOM VOCABULARY IMPORTER</span>
+      <p class="section-copy" style="margin-bottom: 8px;">Paste words (format: <code>word, definition, synonym, root, zh</code> or <code>word - definition</code>):</p>
+      <textarea id="import-textarea" class="import-textarea" placeholder="ephemeral, lasting a short time, fleeting, Greek ephemeros, 短暫的&#10;serendipity, finding good things by chance, luck, English, 機緣湊巧" rows="4"></textarea>
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <button id="submit-import-btn" class="button button-primary" style="font-size: 10px;">Import Words</button>
+        <button id="back-to-lexicon" class="button button-ghost" style="font-size: 10px;">Back to Lexicon</button>
+      </div>
+    </div>
+  `);
+
+  document.querySelectorAll(".toggle-deck-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.deck;
+      const idx = meta.activeDecks.indexOf(key);
+      if (idx > -1) meta.activeDecks.splice(idx, 1);
+      else meta.activeDecks.push(key);
+      localStorage.setItem(META_KEY, JSON.stringify(meta));
+      showDeckManager();
+    });
+  });
+
+  $("#submit-import-btn")?.addEventListener("click", () => {
+    const raw = $("#import-textarea")?.value.trim();
+    if (!raw) return;
+    const lines = raw.split("\n").map(l => l.trim()).filter(Boolean);
+    let count = 0;
+    lines.forEach(line => {
+      let parts = line.split(",").map(p => p.trim());
+      if (parts.length < 2) parts = line.split("-").map(p => p.trim());
+      if (parts.length >= 2) {
+        const word = parts[0].toLowerCase();
+        const definition = parts[1];
+        const synonym = parts[2] || "related";
+        const root = parts[3] || "";
+        const zh = parts[4] || "";
+        meta.customWords.push({ word, definition, synonym, root, zh, phonetic: "", level: "Custom", pos: "n.", sentence: `Example context for ${word}.`, clue: definition });
+        meta.learned[word] = (meta.learned[word] || 0) + 1;
+        count += 1;
+      }
+    });
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    toast(`Successfully imported <b>${count} custom words</b>!`);
+    playChestFanfare();
+    showLexicon();
+  });
+
+  $("#back-to-lexicon")?.addEventListener("click", showLexicon);
+}
+
+function exportDeckCSV() {
+  const allWords = REGIONS.flatMap(r => r.words);
+  let csv = "word,pos,level,definition,zh,synonym,root,sentence\n";
+  allWords.forEach(w => {
+    csv += `"${w.word}","${w.pos || ""}","${w.level || ""}","${(w.definition || "").replace(/"/g, '""')}","${w.zh || ""}","${w.synonym || ""}","${w.root || ""}","${(w.sentence || "").replace(/"/g, '""')}"\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `wordbound-vocabulary-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast("Exported vocabulary deck to CSV!");
 }
 
 function requestPractice() {
