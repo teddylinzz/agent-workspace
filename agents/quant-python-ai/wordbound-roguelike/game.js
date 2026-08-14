@@ -183,10 +183,10 @@ function freshState() {
 }
 
 function loadMeta() {
-  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {}, reviews: {} };
+  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {}, reviews: {}, notes: {} };
   try {
     const loaded = JSON.parse(localStorage.getItem(META_KEY));
-    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {}, reviews: loaded.reviews || {} } : defaults;
+    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {}, reviews: loaded.reviews || {}, notes: loaded.notes || {} } : defaults;
   } catch { return defaults; }
 }
 
@@ -421,15 +421,21 @@ function renderQuestion() {
   $("#enemy-art").classList.remove("hurt", "attack");
   const word = battle.current;
   const regionWords = REGIONS[state.region % REGIONS.length].words;
-  const mode = Math.random() < .34 && battle.turn > 1 ? "synonym" : "definition";
-  const property = mode === "synonym" ? "synonym" : "definition";
+  const roll = Math.random();
+  const mode = battle.turn > 1 && roll < .25 ? "synonym" : battle.turn > 1 && roll < .5 ? "cloze" : "definition";
+  const property = mode === "synonym" ? "synonym" : mode === "cloze" ? "word" : "definition";
   const distractors = shuffle(regionWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
   const answers = shuffle([word[property], ...distractors]);
+  battle.question = { mode, property, correctValue: word[property] };
   $("#word-progress").textContent = `WORD ${battle.turn} · ${battle.hp} HP LEFT`;
   $("#difficulty-tag").textContent = `${battle.type === "boss" ? "GUARDIAN" : battle.type === "elite" ? "RARE" : "COMMON"} · ${word.level}`;
-  $("#challenge-word").textContent = word.word;
-  $("#pronunciation").textContent = word.phonetic;
-  $("#challenge-prompt").textContent = mode === "synonym" ? "Choose the closest synonym" : "Choose the closest meaning";
+  $("#challenge-word").textContent = mode === "cloze" ? "A word is missing" : word.word;
+  $("#pronunciation").textContent = mode === "cloze" ? "Use the sentence to find it" : word.phonetic;
+  $("#challenge-prompt").textContent = mode === "synonym"
+    ? "Choose the closest synonym"
+    : mode === "cloze"
+      ? makeCloze(word)
+      : "Choose the closest meaning";
   $("#enemy-intent").textContent = `⚔ ${battle.damage}`;
   $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
   $("#clue-box").hidden = true;
@@ -441,13 +447,23 @@ function renderQuestion() {
       <span>${String.fromCharCode(65 + index)}</span>${answer}
     </button>`).join("");
   document.querySelectorAll(".answer-button").forEach(button => {
-    button.addEventListener("click", () => answerQuestion(button, button.dataset.answer === word[property], mode));
+    button.addEventListener("click", () => answerQuestion(button, button.dataset.answer === battle.question.correctValue, mode));
   });
   updateHUD();
 }
 
 function escapeAttribute(text) {
   return text.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+}
+
+function makeCloze(word) {
+  const exact = new RegExp(`\\b${word.word}\\b`, "i");
+  if (exact.test(word.sentence)) return word.sentence.replace(exact, "________");
+  const stemLength = Math.max(4, word.word.length - 2);
+  const stem = word.word.slice(0, stemLength);
+  const inflected = new RegExp(`\\b${stem}[a-z]*\\b`, "i");
+  if (inflected.test(word.sentence)) return word.sentence.replace(inflected, "________");
+  return `________ — ${word.clue}`;
 }
 
 function answerQuestion(button, correct, mode) {
@@ -464,7 +480,7 @@ function answerQuestion(button, correct, mode) {
     state.maxStreak = Math.max(state.maxStreak, state.streak);
     state.quest += 1;
     state.learned[word.word] = (state.learned[word.word] || 0) + 1;
-    updateReviewRecord(word.word, true);
+    updateReviewRecord(word.word, true, "good");
     gainXp(1);
     let damage = 10 + Math.min(8, state.streak) + (hasRelic("echo") ? 3 : 0) + (battle.first && hasRelic("needle") ? 5 : 0);
     if (state.streak >= 5) damage += 4;
@@ -473,7 +489,7 @@ function answerQuestion(button, correct, mode) {
     $("#enemy-art").classList.add("hurt");
     showDamage(damage, false);
     tone(520, .08); setTimeout(() => tone(690, .08), 80);
-    showFeedback(true, `<b>Exactly.</b> ${word.word} means “${word.definition}.” <i>${word.sentence}</i>`);
+    showFeedback(true, `<b>Exactly.</b> ${wordMemoryMap(word)}`);
     if (hasRelic("ember") && state.streak % 3 === 0) heal(2, false);
     handleQuest();
     battle.first = false;
@@ -485,7 +501,7 @@ function answerQuestion(button, correct, mode) {
     }, 1200);
   } else {
     button.classList.add("wrong");
-    const correctValue = mode === "synonym" ? word.synonym : word.definition;
+    const correctValue = battle.question.correctValue;
     buttons.find(item => item.dataset.answer === correctValue)?.classList.add("correct");
     const protectedHit = hasRelic("shield") && !battle.blocked;
     if (protectedHit) battle.blocked = true;
@@ -498,8 +514,8 @@ function answerQuestion(button, correct, mode) {
     showDamage(protectedHit ? "BLOCK" : battle.damage, true);
     tone(150, .14);
     showFeedback(false, protectedHit
-      ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.”`
-      : `<b>Not quite.</b> ${word.word} means “${word.definition}.” <i>${word.sentence}</i><br><small>Added to Words to Revisit.</small>`);
+      ? `<b>Patient Stone blocked the blow.</b> The answer was “${correctValue}.” ${wordMemoryMap(word)}`
+      : `<b>Not quite.</b> ${wordMemoryMap(word)}<small>Added to Words to Revisit. It will return later.</small>`);
     battle.first = false;
     updateHUD();
     setTimeout(() => state.hp <= 0 ? showGameOver() : renderQuestion(), 1550);
@@ -511,6 +527,10 @@ function showFeedback(correct, html) {
   panel.hidden = false;
   panel.classList.toggle("wrong", !correct);
   panel.innerHTML = html;
+}
+
+function wordMemoryMap(word) {
+  return `<span class="mini-memory-map"><span><small>MEANING</small>${word.definition}</span><span><small>NEAR WORD</small>${word.synonym}</span><span><small>IN CONTEXT</small><i>${word.sentence}</i></span></span>`;
 }
 
 function showDamage(value, player) {
@@ -530,9 +550,7 @@ function useHint() {
   state.sparks -= 1;
   $("#clue-box").hidden = false;
   $("#clue-box").innerHTML = `<b>Clue:</b> ${battle.current.clue}`;
-  const wrongButtons = shuffle([...document.querySelectorAll(".answer-button")].filter(button => {
-    return button.dataset.answer !== battle.current.definition && button.dataset.answer !== battle.current.synonym;
-  }));
+  const wrongButtons = shuffle([...document.querySelectorAll(".answer-button")].filter(button => button.dataset.answer !== battle.question.correctValue));
   const removeCount = hasRelic("prism") ? 2 : 1;
   wrongButtons.slice(0, removeCount).forEach(button => { button.disabled = true; button.classList.add("faded"); });
   tone(760, .07);
@@ -585,23 +603,28 @@ function updateMeta() {
   localStorage.setItem(META_KEY, JSON.stringify(meta));
 }
 
-function updateReviewRecord(word, correct) {
+function updateReviewRecord(word, correct, rating = "good") {
   const meta = loadMeta();
   const previous = meta.reviews[word];
-  if (!previous && correct) return;
-  const review = previous || { misses: 0, successes: 0, strength: 0, dueAt: 0, lastSeen: 0 };
+  const review = previous || { misses: 0, successes: 0, strength: 0, dueAt: 0, lastSeen: 0, mastered: false };
   review.lastSeen = Date.now();
   if (correct) {
     review.successes += 1;
-    review.strength = Math.min(4, review.strength + 1);
-    const intervals = [0, 10 * 60 * 1000, 24 * 60 * 60 * 1000, 3 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000];
-    review.dueAt = Date.now() + intervals[review.strength];
-    if (review.strength >= 4 && review.successes >= review.misses + 2) delete meta.reviews[word];
-    else meta.reviews[word] = review;
+    const growth = rating === "easy" ? 2 : rating === "hard" ? 0 : 1;
+    review.strength = Math.min(5, Math.max(1, review.strength + growth));
+    const intervals = {
+      hard: [0, 5 * 60 * 1000, 4 * 60 * 60 * 1000, 12 * 60 * 60 * 1000, 24 * 60 * 60 * 1000, 3 * 24 * 60 * 60 * 1000],
+      good: [0, 10 * 60 * 1000, 24 * 60 * 60 * 1000, 3 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000, 21 * 24 * 60 * 60 * 1000],
+      easy: [0, 24 * 60 * 60 * 1000, 3 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000, 21 * 24 * 60 * 60 * 1000, 45 * 24 * 60 * 60 * 1000]
+    };
+    review.dueAt = Date.now() + intervals[rating][review.strength];
+    review.mastered = review.strength >= 5 && review.successes >= 4;
+    meta.reviews[word] = review;
   } else {
     review.misses += 1;
     review.strength = 0;
     review.dueAt = Date.now();
+    review.mastered = false;
     meta.reviews[word] = review;
   }
   localStorage.setItem(META_KEY, JSON.stringify(meta));
@@ -611,7 +634,7 @@ function getReviewWords(includeNotDue = false) {
   const reviews = loadMeta().reviews;
   const now = Date.now();
   return Object.keys(reviews)
-    .filter(word => includeNotDue || reviews[word].dueAt <= now)
+    .filter(word => !reviews[word].mastered && (includeNotDue || reviews[word].dueAt <= now))
     .sort((a, b) => reviews[b].misses - reviews[a].misses || reviews[a].dueAt - reviews[b].dueAt);
 }
 
@@ -765,12 +788,21 @@ function showLexicon() {
   });
   const reviewWords = getReviewWords(true);
   const dueCount = getReviewWords().length;
+  const mastery = Object.values(reviews).reduce((totals, review) => {
+    if (review.mastered || review.strength >= 5) totals.mastered += 1;
+    else if (review.strength >= 3) totals.strong += 1;
+    else totals.learning += 1;
+    return totals;
+  }, { learning: 0, strong: 0, mastered: 0 });
+  const notes = loadMeta().notes;
   const content = learned.length ? learned.map(([key, count]) => {
     const word = allWords.find(item => item.word === key);
     const review = reviews[key];
-    return `<div class="lexicon-word ${review ? "needs-review" : ""}"><b>${word.word}</b><span>${word.phonetic} · recalled ${count}×</span>${review ? `<mark>${review.strength ? `stage ${review.strength}` : "revisit"}</mark>` : ""}<p>${word.definition}</p></div>`;
+    const status = review ? review.mastered || review.strength >= 5 ? "mastered" : review.strength >= 3 ? "strong" : "learning" : "discovered";
+    return `<div class="lexicon-word ${review && !review.mastered ? "needs-review" : ""}"><b>${word.word}</b><span>${word.phonetic} · recalled ${count}×</span><mark class="${status}">${status}</mark><p>${word.definition}</p>${notes[key] ? `<blockquote>“${notes[key]}”</blockquote>` : ""}</div>`;
   }).join("") : '<p class="section-copy">Your lexicon is waiting for its first word.</p>';
   openModal(`<span class="modal-kicker">YOUR LIVING RECORD</span><h2>Lexicon</h2>
+    <div class="mastery-strip"><div><b>${mastery.learning}</b><span>Learning</span></div><div><b>${mastery.strong}</b><span>Strong</span></div><div><b>${mastery.mastered}</b><span>Mastered</span></div></div>
     ${reviewWords.length ? `<div class="review-callout"><div><small>WORDS TO REVISIT</small><b>${dueCount} due now · ${reviewWords.length} learning</b><p>Short, no-penalty recall sessions strengthen the words you missed.</p></div><button id="start-review-modal" class="button button-primary">Practice now →</button></div>` : ""}
     <div class="lexicon-list">${content}</div>`);
   $("#start-review-modal")?.addEventListener("click", requestPractice);
@@ -796,7 +828,7 @@ function startPractice() {
   $("#modal").open && $("#modal").close();
   const words = getReviewWords(true);
   if (!words.length) { toast("No words need review right now."); return; }
-  practice = { words: words.slice(0, 10), index: 0, correct: 0, answered: false };
+  practice = { words: words.slice(0, 10), initialCount: Math.min(10, words.length), index: 0, remembered: new Set(), attempts: {}, answered: false };
   state.screen = "practice";
   renderPracticeQuestion();
 }
@@ -806,60 +838,116 @@ function renderPracticeQuestion() {
   const allWords = REGIONS.flatMap(region => region.words);
   const word = allWords.find(item => item.word === practice.words[practice.index]);
   if (!word) { practice.index += 1; renderPracticeQuestion(); return; }
-  const mode = practice.index % 2 ? "synonym" : "definition";
-  const property = mode === "synonym" ? "synonym" : "definition";
+  const review = loadMeta().reviews[word.word] || { strength: 0 };
+  const mode = review.strength === 0 ? "definition" : review.strength === 1 ? "cloze" : review.strength === 2 ? "audio-definition" : review.strength >= 4 ? "typed-cloze" : "typed-definition";
+  const property = mode === "definition" || mode === "audio-definition" ? "definition" : "word";
   const distractors = shuffle(allWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
   const answers = shuffle([word[property], ...distractors]);
+  const typed = mode.startsWith("typed");
+  const prompt = mode === "definition"
+    ? "What does this word mean?"
+    : mode === "audio-definition"
+      ? "Listen to the word, then connect it to its meaning."
+    : mode.includes("cloze")
+      ? makeCloze(word)
+      : word.definition;
+  const label = mode === "definition" ? "MEANING RECALL" : mode === "cloze" ? "CONTEXT CLUE" : mode === "audio-definition" ? "LISTEN & CONNECT" : mode === "typed-cloze" ? "USE IN CONTEXT" : "ACTIVE PRODUCTION";
+  practice.current = { word, mode, property, correctValue: word[property] };
+  practice.attempts[word.word] = (practice.attempts[word.word] || 0) + 1;
   practice.answered = false;
   $("#stage").innerHTML = `<div class="practice-stage">
     <div class="practice-progress"><span>RECALL SESSION</span><b>${practice.index + 1} / ${practice.words.length}</b></div>
     <div class="practice-meter"><span style="width:${practice.index / practice.words.length * 100}%"></span></div>
     <div class="practice-card">
-      <span class="practice-kicker">${mode === "synonym" ? "SYNONYM RECALL" : "MEANING RECALL"} · NO PENALTY</span>
-      <div class="practice-word-row"><div><h1>${word.word}</h1><p>${word.phonetic}</p></div><button id="practice-speak" class="speak-button" aria-label="Hear pronunciation">◖))</button></div>
-      <p class="challenge-prompt">${mode === "synonym" ? "Which word is closest in meaning?" : "What does this word mean?"}</p>
-      <div class="answer-grid">${answers.map((answer, index) => `<button class="answer-button practice-answer" data-answer="${escapeAttribute(answer)}"><span>${String.fromCharCode(65 + index)}</span>${answer}</button>`).join("")}</div>
+      <span class="practice-kicker">${label} · ${typed ? "TYPE IT FROM MEMORY" : "CHOOSE ONE"}</span>
+      <div class="practice-word-row"><div><h1>${typed ? "Recall the word" : mode === "audio-definition" ? "Listen closely" : word.word}</h1><p>${typed ? `Starts with “${word.word[0]}” · ${word.word.length} letters` : mode === "audio-definition" ? "Sound → meaning" : word.phonetic}</p></div>${typed ? "" : '<button id="practice-speak" class="speak-button" aria-label="Hear pronunciation">◖))</button>'}</div>
+      <p class="challenge-prompt practice-prompt">${prompt}</p>
+      ${typed
+        ? `<form id="typed-recall-form" class="typed-recall"><input id="typed-recall-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type the word…" aria-label="Type the missing word"><button class="button button-primary" type="submit">Check →</button></form><button id="reveal-answer" class="reveal-answer">I don't remember</button>`
+        : `<div class="answer-grid">${answers.map((answer, index) => `<button class="answer-button practice-answer" data-answer="${escapeAttribute(answer)}"><span>${String.fromCharCode(65 + index)}</span>${answer}</button>`).join("")}</div>`}
       <div id="practice-feedback" class="practice-feedback" hidden></div>
     </div>
     <button id="leave-practice" class="practice-leave">← Return to journey</button>
   </div>`;
-  $("#practice-speak").addEventListener("click", () => speakWord(word.word));
+  $("#practice-speak")?.addEventListener("click", () => speakWord(word.word));
+  if (mode === "audio-definition") setTimeout(() => speakWord(word.word), 180);
   $("#leave-practice").addEventListener("click", resumeAfterPractice);
   document.querySelectorAll(".practice-answer").forEach(button => button.addEventListener("click", () => {
-    answerPractice(button, button.dataset.answer === word[property], word, property);
+    answerPractice(button.dataset.answer === word[property], button);
   }));
+  $("#typed-recall-form")?.addEventListener("submit", event => {
+    event.preventDefault();
+    const answer = $("#typed-recall-input").value;
+    answerPractice(normalizeAnswer(answer) === normalizeAnswer(word.word), $("#typed-recall-input"));
+  });
+  $("#reveal-answer")?.addEventListener("click", () => answerPractice(false, $("#typed-recall-input")));
+  $("#typed-recall-input")?.focus();
 }
 
-function answerPractice(button, correct, word, property) {
+function normalizeAnswer(value) {
+  return value.trim().toLocaleLowerCase().replace(/[.!?,;:'”’]/g, "");
+}
+
+function answerPractice(correct, control) {
   if (practice.answered) return;
   practice.answered = true;
+  const { word, property } = practice.current;
   const buttons = [...document.querySelectorAll(".practice-answer")];
   buttons.forEach(item => item.disabled = true);
+  $("#typed-recall-input") && ($("#typed-recall-input").disabled = true);
+  $("#reveal-answer") && ($("#reveal-answer").hidden = true);
   const feedback = $("#practice-feedback");
   feedback.hidden = false;
   if (correct) {
-    practice.correct += 1;
-    button.classList.add("correct");
-    updateReviewRecord(word.word, true);
-    feedback.innerHTML = `<b>Remembered.</b> ${word.sentence}`;
+    practice.remembered.add(word.word);
+    control.classList.add("correct");
+    feedback.innerHTML = `<b>Retrieved from memory.</b>${wordMemoryMap(word)}${personalAnchorEditor(word)}
+      <div class="recall-rating"><span>How did that recall feel?</span><button data-rating="hard">Hard <small>soon</small></button><button data-rating="good">Good <small>later</small></button><button data-rating="easy">Easy <small>much later</small></button></div>`;
     tone(540, .08); setTimeout(() => tone(720, .08), 80);
+    bindAnchorEditor(word.word);
+    document.querySelectorAll("[data-rating]").forEach(button => button.addEventListener("click", () => {
+      updateReviewRecord(word.word, true, button.dataset.rating);
+      advancePractice();
+    }));
   } else {
-    button.classList.add("wrong");
+    control.classList.add("wrong");
     buttons.find(item => item.dataset.answer === word[property])?.classList.add("correct");
     updateReviewRecord(word.word, false);
     feedback.classList.add("wrong");
-    feedback.innerHTML = `<b>Keep this one close.</b> ${word.word} means “${word.definition}.”<br><i>${word.sentence}</i>`;
+    if (practice.attempts[word.word] < 2) practice.words.push(word.word);
+    feedback.innerHTML = `<b>Study the connections, then try it again later.</b>${wordMemoryMap(word)}${personalAnchorEditor(word)}<button id="next-practice" class="button button-primary">Keep going →</button>`;
     tone(170, .12);
+    bindAnchorEditor(word.word);
+    $("#next-practice").addEventListener("click", advancePractice);
   }
-  feedback.insertAdjacentHTML("beforeend", '<button id="next-practice" class="button button-primary">Next word →</button>');
-  $("#next-practice").addEventListener("click", () => { practice.index += 1; renderPracticeQuestion(); });
   updateHUD();
 }
 
+function advancePractice() {
+  practice.index += 1;
+  renderPracticeQuestion();
+}
+
+function personalAnchorEditor(word) {
+  const note = loadMeta().notes[word.word] || "";
+  return `<label class="personal-anchor"><span>MAKE IT YOURS</span><small>A funny or true sentence creates another path to the memory.</small><input id="personal-anchor-input" value="${escapeAttribute(note)}" placeholder="My sentence with “${word.word}”…"></label>`;
+}
+
+function bindAnchorEditor(word) {
+  $("#personal-anchor-input")?.addEventListener("change", event => {
+    const meta = loadMeta();
+    const note = event.target.value.trim();
+    if (note) meta.notes[word] = note;
+    else delete meta.notes[word];
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    toast(note ? "Personal memory saved." : "Personal memory removed.");
+  });
+}
+
 function showPracticeSummary() {
-  const score = practice.correct;
-  const total = practice.words.length;
-  $("#stage").innerHTML = `<div class="reward-stage practice-summary"><span class="section-kicker">RECALL SESSION COMPLETE</span><h1>Your memory grows roots.</h1><p class="section-copy">Words answered correctly will rest longer before returning. Missed words stay close for another attempt.</p><div class="summary-stats"><div><b>${score}/${total}</b><span>Remembered</span></div><div><b>${getReviewWords().length}</b><span>Due now</span></div></div><div class="hero-actions"><button id="practice-again" class="button button-primary">Practice again →</button><button id="practice-done" class="button button-ghost">Return to journey</button></div></div>`;
+  const score = practice.remembered.size;
+  const total = practice.initialCount;
+  $("#stage").innerHTML = `<div class="reward-stage practice-summary"><span class="section-kicker">RECALL SESSION COMPLETE</span><h1>Your memory grows roots.</h1><p class="section-copy">You practiced recognition, context, and active production. The words you found difficult will return sooner; confident recalls can rest longer.</p><div class="summary-stats"><div><b>${score}/${total}</b><span>Remembered</span></div><div><b>${getReviewWords().length}</b><span>Due now</span></div><div><b>${practice.words.length - total}</b><span>Smart retries</span></div></div><div class="hero-actions"><button id="practice-again" class="button button-primary">Practice again →</button><button id="practice-done" class="button button-ghost">Return to journey</button></div></div>`;
   $("#practice-again").addEventListener("click", startPractice);
   $("#practice-done").addEventListener("click", resumeAfterPractice);
   updateHUD();
