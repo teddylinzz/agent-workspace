@@ -1,4 +1,4 @@
-const CACHE_NAME = "wordbound-v3";
+const CACHE_NAME = "wordbound-v4";
 const ASSETS = [
   "./",
   "./index.html",

@@ -247,64 +247,94 @@ const ENEMIES = {
 
 const CLASSES = [
   {
-    id: "scholar",
-    name: "The Scholar",
-    zhName: "學者 (The Scholar)",
-    subtitle: "Seeker of Etymology",
-    zhSubtitle: "詞源探索者",
-    icon: "🎓",
-    hp: 38,
-    sparks: 5,
-    ink: 10,
-    relic: "prism",
-    desc: "Starts with +2 Sparks and the Meaning Prism. Clues remove 2 wrong answers.",
-    zhDesc: "初始火花 +2，自帶「詞義稜鏡」。提示功能額外排除 2 個錯誤選項。",
-    quote: "Every word is an open book."
+    "id": "scholar",
+    "name": "The Scholar",
+    "zhName": "學者 (The Scholar)",
+    "subtitle": "Seeker of Etymology",
+    "zhSubtitle": "詞源探索者",
+    "icon": "🎓",
+    "hp": 38,
+    "sparks": 5,
+    "ink": 10,
+    "relic": "prism",
+    "desc": "Starts with +2 Sparks and the Meaning Prism. Clues remove 2 wrong answers.",
+    "zhDesc": "初始火花 +2，自帶「詞義稜鏡」。提示功能額外排除 2 個錯誤選項。",
+    "quote": "Every word is an open book."
   },
   {
-    id: "bard",
-    name: "The Bard",
-    zhName: "詩人 (The Bard)",
-    subtitle: "Rhythmic Master",
-    zhSubtitle: "節奏大師",
-    icon: "🪕",
-    hp: 42,
-    sparks: 3,
-    ink: 15,
-    relic: "ember",
-    desc: "Streaks heal resolve and deal +40% combo power. Starts with Ember Vial.",
-    zhDesc: "連擊持續恢復意志生命，並獲得 +40% 連擊傷害加成。自帶「餘溫小瓶」。",
-    quote: "Language is music in disguise."
+    "id": "bard",
+    "name": "The Bard",
+    "zhName": "詩人 (The Bard)",
+    "subtitle": "Rhythmic Master",
+    "zhSubtitle": "節奏大師",
+    "icon": "🪕",
+    "hp": 42,
+    "sparks": 3,
+    "ink": 15,
+    "relic": "ember",
+    "desc": "Streaks heal resolve and deal +40% combo power. Starts with Ember Vial.",
+    "zhDesc": "連擊持續恢復意志生命，並獲得 +40% 連擊傷害加成。自帶「餘溫小瓶」。",
+    "quote": "Language is music in disguise."
   },
   {
-    id: "duelist",
-    name: "The Duelist",
-    zhName: "決鬥者 (The Duelist)",
-    subtitle: "Blade of Wit",
-    zhSubtitle: "直覺之刃",
-    icon: "⚔️",
-    hp: 40,
-    sparks: 3,
-    ink: 0,
-    relic: "needle",
-    desc: "Longer Quick Wit window (+1.5s) and deals massive opening burst damage.",
-    zhDesc: "急速直覺判定時間延長 (+1.5s)，戰鬥首回合造成額外爆擊傷害。自帶「指針」。",
-    quote: "Cut through confusion with razor wit."
+    "id": "duelist",
+    "name": "The Duelist",
+    "zhName": "決鬥者 (The Duelist)",
+    "subtitle": "Blade of Wit",
+    "zhSubtitle": "直覺之刃",
+    "icon": "⚔️",
+    "hp": 40,
+    "sparks": 3,
+    "ink": 0,
+    "relic": "needle",
+    "desc": "Longer Quick Wit window (+1.5s) and deals massive opening burst damage.",
+    "zhDesc": "急速直覺判定時間延長 (+1.5s)，戰鬥首回合造成額外爆擊傷害。自帶「指針」。",
+    "quote": "Cut through confusion with razor wit."
   },
   {
-    id: "cartographer",
-    name: "The Cartographer",
-    zhName: "製圖師 (The Cartographer)",
-    subtitle: "Uncharted Explorer",
-    zhSubtitle: "荒野探索者",
-    icon: "🧭",
-    hp: 50,
-    sparks: 3,
-    ink: 30,
-    relic: "bookmark",
-    desc: "High starting Resolve (+10 HP), extra starting Ink (+30), and Golden Bookmark.",
-    zhDesc: "初始意志提高 (+10 HP)，戰鬥額外獲得 30% 墨水。自帶「鍍金書籤」。",
-    quote: "Every uncharted phrase is a new horizon."
+    "id": "cartographer",
+    "name": "The Cartographer",
+    "zhName": "製圖師 (The Cartographer)",
+    "subtitle": "Uncharted Explorer",
+    "zhSubtitle": "荒野探索者",
+    "icon": "🧭",
+    "hp": 50,
+    "sparks": 3,
+    "ink": 30,
+    "relic": "bookmark",
+    "desc": "High starting Resolve (+10 HP), extra starting Ink (+30), and Golden Bookmark.",
+    "zhDesc": "初始意志提高 (+10 HP)，戰鬥額外獲得 30% 墨水。自帶「鍍金書籤」。",
+    "quote": "Every uncharted phrase is a new horizon."
+  },
+  {
+    "id": "alchemist",
+    "name": "The Alchemist",
+    "zhName": "煉金術師 (The Alchemist)",
+    "subtitle": "Master of Transmutation",
+    "zhSubtitle": "秘藥調配大師",
+    "icon": "⚗️",
+    "hp": 36,
+    "sparks": 4,
+    "ink": 20,
+    "relic": "potion_satchel",
+    "desc": "Starts with 2 Potions. Every 3-streak automatically brews a fresh Potion!",
+    "zhDesc": "自帶 2 瓶隨機藥水。每達成 3 連擊自動調配並贈送 1 瓶隨機藥水！",
+    "quote": "Words are raw elements waiting to be distilled."
+  },
+  {
+    "id": "chronomancer",
+    "name": "The Chronomancer",
+    "zhName": "時空行者 (The Chronomancer)",
+    "subtitle": "Weaver of Timelines",
+    "zhSubtitle": "時間編織者",
+    "icon": "⏳",
+    "hp": 35,
+    "sparks": 6,
+    "ink": 10,
+    "relic": "feather",
+    "desc": "Starts with 6 Sparks and Chrono Draught. Phoenix Feather automatically rewinds fatal turns.",
+    "zhDesc": "初始擁有 6 點火花與靜時秘劑。自帶「鳳凰之羽」自動逆轉致命傷害。",
+    "quote": "In the river of language, time bends to our will."
   }
 ];
 
@@ -2746,8 +2776,10 @@ function updateEnemyShieldUI() {
 }
 
 function getWord() {
-  const regionWords = REGIONS[state.region % REGIONS.length].words;
-  const allWords = REGIONS.flatMap(region => region.words);
+  state.banishedWords = state.banishedWords || [];
+  state.gildedWords = state.gildedWords || [];
+  const regionWords = REGIONS[state.region % REGIONS.length].words.filter(w => !state.banishedWords.includes(w.word));
+  const allWords = REGIONS.flatMap(region => region.words).filter(w => !state.banishedWords.includes(w.word));
   const reviewRecords = loadMeta().reviews;
   const dueReviews = allWords.filter(word => {
     const review = reviewRecords[word.word];
@@ -2968,6 +3000,60 @@ function answerQuestion(button, correct, mode) {
       showFloatingBanner("🔔 SONIC BURST! +8", "quickwit");
     }
 
+    // 1. Gilded Inscription Forge Synergy
+    if (state.gildedWords && state.gildedWords.includes(word.word)) {
+      damage = Math.round(damage * 1.8);
+      state.shield = (state.shield || 0) + 4;
+      state.ink += 6;
+      showFloatingBanner("⭐ GILDED INSCRIPTION!", "quickwit");
+      toast("⭐ <b>Gilded Word:</b> +80% DMG, +4 Shield, +6 Ink!");
+    }
+
+    // 2. Grammar Affinity Chaining & Root Resonance
+    const currentPos = (word.pos || "w.").toLowerCase();
+    if (state.lastPos && state.lastPos === currentPos) {
+      state.posStreak = (state.posStreak || 1) + 1;
+    } else {
+      state.lastPos = currentPos;
+      state.posStreak = 1;
+    }
+
+    if (state.posStreak >= 2) {
+      if (currentPos.startsWith("v")) {
+        damage += 6;
+        showFloatingBanner("⚡ VERB FLURRY +6!", "combo");
+        toast("⚡ <b>Verb Surge:</b> +6 Armor Pierce Damage!");
+      } else if (currentPos.startsWith("adj")) {
+        state.shield = (state.shield || 0) + 4;
+        heal(2, false);
+        showFloatingBanner("🌿 ADJ HARMONY +4 Shield!", "quickwit");
+        toast("🌿 <b>Adjective Harmony:</b> +4 Shield & +2 HP restored!");
+      } else if (currentPos.startsWith("n")) {
+        state.shield = (state.shield || 0) + 6;
+        showFloatingBanner("🏰 NOUN BASTION +6 Shield!", "quickwit");
+        toast("🏰 <b>Noun Bastion:</b> +6 Heavy Shield!");
+      }
+    }
+
+    if (word.root) {
+      damage += 4;
+      showFloatingBanner("🧬 ROOT HARMONICS +4!", "combo");
+    }
+
+    // 3. Alchemist Class Potion Craft on 3-Streak
+    if (state.characterClass === "alchemist" && state.streak > 0 && state.streak % 3 === 0) {
+      const randPot = random(POTIONS);
+      state.potions = state.potions || [];
+      if (state.potions.length < 2) {
+        state.potions.push(randPot.id);
+        toast(`⚗️ <b>Alchemical Brew:</b> Crafted 1× <b>${randPot.name}</b>!`);
+      } else {
+        state.ink += 12;
+        toast(`⚗️ <b>Alchemical Synthesis:</b> Belt full! Converted to +12 Ink.`);
+      }
+      renderPotionBelt();
+    }
+
     // Relic Editions flat / multiplier bonus
     state.relics.forEach(r => {
       const ed = typeof r === "object" ? r.edition : "standard";
@@ -3039,6 +3125,16 @@ function answerQuestion(button, correct, mode) {
     $("#enemy-hp-bar").style.width = `${100 * battle.hp / battle.maxHp}%`;
     updateEnemyShieldUI();
     $("#enemy-art").classList.add("hurt");
+
+    // Guardian Phase 2 Overdrive Enrage
+    if (battle.type === "boss" && battle.hp <= battle.maxHp * 0.45 && !battle.enraged && battle.hp > 0) {
+      battle.enraged = true;
+      triggerScreenShake("lg");
+      showFloatingBanner("⚠️ GUARDIAN ENRAGED! PHASE 2!", "break");
+      battle.damage = Math.round(battle.damage * 1.35);
+      toast("⚠️ <b>Boss Enraged:</b> Attacks deal +35% damage!");
+      tone(120, 0.25);
+    }
     
     playHitSound(damage > 18, isQuickWit);
     playStreakChord(state.streak);
@@ -3483,6 +3579,7 @@ function showRest() {
       <div class="event-options">
         <button class="button button-primary" data-rest="heal">${isZh ? "烹煮修復花茶" : "Brew restorative tea"}<small>${isZh ? `恢復 ${Math.round(healPercent * 100)}% 意志生命${hasRelic("candle") ? "（學者之燭 +20%）" : ""}` : `Restore ${Math.round(healPercent * 100)}% resolve${hasRelic("candle") ? " (Scholar's Candle +20%)" : ""}`}</small></button>
         <button class="button button-ghost" data-rest="spark">${isZh ? "在火光下研讀" : "Study by firelight"}<small>${isZh ? "獲得 2 點火花與 1 點頓悟經驗" : "Gain 2 sparks and 1 insight"}</small></button>
+        <button class="button button-ghost" data-rest="forge" style="border-color:var(--purple);">${isZh ? "⚒️ 詞庫銘刻與淨化 (Lexical Forge)" : "⚒️ Lexical Forge & Banish"}<small>${isZh ? "銘刻單字獲得爆擊護盾加成，或淨化已精通單字以精簡牌庫" : "Inscribe a word for double damage & shields, or banish a known word"}</small></button>
         <button class="button button-ghost" data-rest="blitz" style="border-color:var(--gold);">${isZh ? "⚡ 極速詞彙挑戰 (20s Speed Blitz)" : "⚡ Speed Blitz Challenge (20s)"}<small>${isZh ? "20秒限時快答，每答對一題獎勵 +5 墨水與火花！" : "20-second rapid-fire bonus! +5 Ink and sparks per hit!"}</small></button>
       </div>
     </div>`;
@@ -3496,6 +3593,8 @@ function showRest() {
       gainXp(1);
       toast(isZh ? "思緒更加清晰敏銳！<b>+2 火花</b>" : "Your mind feels sharper. <b>+2 sparks</b>");
       completeNode();
+    } else if (act === "forge") {
+      showForgeModal();
     } else if (act === "blitz") {
       startSpeedBlitz();
     }
@@ -4929,5 +5028,64 @@ updateContinueButton();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+
+function showForgeModal() {
+  const isZh = loadMeta().bilingual;
+  const regionWords = REGIONS[state.region % REGIONS.length].words;
+  state.gildedWords = state.gildedWords || [];
+  state.banishedWords = state.banishedWords || [];
+  
+  openModal(`
+    <span class="modal-kicker">${isZh ? "詞庫銘刻與牌庫精簡" : "LEXICAL FORGE & BANISHMENT"}</span>
+    <h2>${isZh ? "詞彙銘刻工坊" : "Lexical Forge"}</h2>
+    <p class="section-copy">${isZh ? "挑選一個單字進行「鍍金銘刻」（戰鬥中答對觸發 +80% 傷害、護盾與墨水），或「淨化排除」已精通的簡單單字以提高抽中生詞的機率！" : "Gild a word for massive combat perks, or banish a mastered word from this run to thin your vocabulary deck."}</p>
+    
+    <div class="lexicon-list" style="max-height: 45vh;">
+      ${regionWords.map(w => {
+        const isGilded = state.gildedWords.includes(w.word);
+        const isBanished = state.banishedWords.includes(w.word);
+        return `
+          <div class="lexicon-word" style="display:flex;justify-content:space-between;align-items:center;padding:10px;">
+            <div>
+              <b>${w.word}</b> <small style="color:var(--coral-dark);">${w.pos || "w."}</small>
+              <p style="margin:2px 0 0;font-size:10px;color:var(--ink-soft);">${w.definition}</p>
+              ${isGilded ? `<span style="color:var(--gold);font-weight:700;font-size:9px;">⭐ Gilded (+80% DMG, +4 Shield)</span>` : ""}
+              ${isBanished ? `<span style="color:var(--coral);font-weight:700;font-size:9px;">❌ Banished from Run</span>` : ""}
+            </div>
+            <div style="display:flex;gap:6px;">
+              ${!isGilded && !isBanished ? `
+                <button class="button button-ghost forge-gild-btn" data-word="${w.word}" style="font-size:9px;padding:5px 8px;border-color:var(--gold);color:#8a6008;">⭐ ${isZh ? "鍍金銘刻" : "Gild"}</button>
+                <button class="button button-ghost forge-banish-btn" data-word="${w.word}" style="font-size:9px;padding:5px 8px;border-color:var(--coral);color:var(--coral-dark);">❌ ${isZh ? "淨化排除" : "Banish"}</button>
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `);
+
+  document.querySelectorAll(".forge-gild-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const w = btn.dataset.word;
+      state.gildedWords.push(w);
+      toast(isZh ? `⭐ 已成功將 <b>${w}</b> 鍍金銘刻！` : `⭐ Successfully Gilded <b>${w}</b>!`);
+      playChestFanfare();
+      $("#modal")?.close();
+      completeNode();
+    });
+  });
+
+  document.querySelectorAll(".forge-banish-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const w = btn.dataset.word;
+      state.banishedWords.push(w);
+      toast(isZh ? `❌ 已將 <b>${w}</b> 從本次遠征中淨化排除！` : `❌ Banished <b>${w}</b> from this run!`);
+      tone(320, 0.15);
+      $("#modal")?.close();
+      completeNode();
+    });
   });
 }
