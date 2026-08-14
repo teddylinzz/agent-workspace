@@ -396,6 +396,373 @@ const RELICS = [
 ];
 
 const EXAM_DECKS = {
+  "intermediate": {
+    "name": "Intermediate Core (GEPT 中級/中高級 · 實用必備)",
+    "icon": "📘",
+    "desc": "High-yield B1~B2 practical vocabulary for everyday fluency, exam mastery, and conversation.",
+    "words": [
+      {
+        "word": "accomplish",
+        "phonetic": "/əˈkɑːm.plɪʃ/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "完成，實現",
+        "root": "Latin ad- + complere (to fill up)",
+        "definition": "to succeed in doing or completing something",
+        "synonym": "achieve",
+        "sentence": "If we work together, we can accomplish our goal ahead of time.",
+        "clue": "To successfully finish a difficult task."
+      },
+      {
+        "word": "adequate",
+        "phonetic": "/ˈæd.ə.kwət/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "足夠的，適當的",
+        "root": "Latin adaequare (make equal)",
+        "definition": "enough or satisfactory for a particular purpose",
+        "synonym": "sufficient",
+        "sentence": "The hotel room was small but adequate for a one-night stay.",
+        "clue": "Good enough to meet the need."
+      },
+      {
+        "word": "anticipate",
+        "phonetic": "/ænˈtɪs.ə.peɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "預期，預料",
+        "root": "Latin ante- (before) + capere (take)",
+        "definition": "to expect or foresee that something will happen",
+        "synonym": "expect",
+        "sentence": "We anticipate a large crowd at the product launch tomorrow.",
+        "clue": "To look forward to or prepare for the future."
+      },
+      {
+        "word": "apparent",
+        "phonetic": "/əˈpær.ənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "顯而易見的",
+        "root": "Latin apparere (appear)",
+        "definition": "clearly visible or easily understood",
+        "synonym": "obvious",
+        "sentence": "It became apparent that the project needed more funding.",
+        "clue": "Plain to see and recognize."
+      },
+      {
+        "word": "clarify",
+        "phonetic": "/ˈklær.ə.faɪ/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "澄清，闡明",
+        "root": "Latin clarus (clear) + facere (make)",
+        "definition": "to make something clear or easier to understand",
+        "synonym": "explain",
+        "sentence": "Could you clarify what you meant by the second paragraph?",
+        "clue": "Making a confusing point clear."
+      },
+      {
+        "word": "collaborate",
+        "phonetic": "/kəˈlæb.ə.reɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "合作，協同工作",
+        "root": "Latin com- (with) + laborare (to work)",
+        "definition": "to work jointly on an activity or project",
+        "synonym": "cooperate",
+        "sentence": "Designers and engineers collaborate closely to build the app.",
+        "clue": "Working as a united team."
+      },
+      {
+        "word": "consequence",
+        "phonetic": "/ˈkɑːn.sə.kwəns/",
+        "pos": "n.",
+        "level": "B1",
+        "zh": "後果，結果",
+        "root": "Latin com- + sequi (to follow)",
+        "definition": "a result or effect of an action or condition",
+        "synonym": "outcome",
+        "sentence": "Every choice comes with a natural consequence.",
+        "clue": "What happens because of a decision."
+      },
+      {
+        "word": "consistent",
+        "phonetic": "/kənˈsɪs.tənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "始終如一的，一致的",
+        "root": "Latin consistere (stand firm)",
+        "definition": "acting or done in the same way over time",
+        "synonym": "steady",
+        "sentence": "Consistent daily practice is the key to mastering vocabulary.",
+        "clue": "Reliable and unchanging quality."
+      },
+      {
+        "word": "distinguish",
+        "phonetic": "/dɪˈstɪŋ.ɡwɪʃ/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "區分，辨別",
+        "root": "Latin dis- (apart) + stinguere (quench, prick)",
+        "definition": "to recognize or point out a difference",
+        "synonym": "differentiate",
+        "sentence": "Can you distinguish between real silk and synthetic fabric?",
+        "clue": "Telling two things apart."
+      },
+      {
+        "word": "efficient",
+        "phonetic": "/ɪˈfɪʃ.ənt/",
+        "pos": "adj.",
+        "level": "B1",
+        "zh": "高效率的",
+        "root": "Latin efficere (accomplish)",
+        "definition": "achieving maximum productivity with minimum wasted effort",
+        "synonym": "effective",
+        "sentence": "The new transit system provides fast and efficient travel.",
+        "clue": "Doing things quickly without waste."
+      },
+      {
+        "word": "elaborate",
+        "phonetic": "/iˈlæb.ɚ.ət/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "精細詳盡的，精心製作的",
+        "root": "Latin e- + labor (work)",
+        "definition": "involving many carefully arranged parts or details",
+        "synonym": "detailed",
+        "sentence": "The wedding stage had an elaborate floral arrangement.",
+        "clue": "Complicated and richly detailed."
+      },
+      {
+        "word": "emphasize",
+        "phonetic": "/ˈem.fə.saɪz/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "強調，重視",
+        "root": "Greek emphasis (significance)",
+        "definition": "to give special importance or prominence to something",
+        "synonym": "stress",
+        "sentence": "The teacher emphasized the importance of regular review.",
+        "clue": "Putting strong focus on something."
+      },
+      {
+        "word": "evaluate",
+        "phonetic": "/ɪˈvæl.ju.eɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "評估，評價",
+        "root": "Latin ex- + valere (be of value)",
+        "definition": "to judge or calculate the quality or importance of",
+        "synonym": "assess",
+        "sentence": "We must evaluate all candidate solutions before deciding.",
+        "clue": "Measuring value or performance."
+      },
+      {
+        "word": "fundamental",
+        "phonetic": "/ˌfʌn.dəˈmen.t̬əl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "基礎的，根本的",
+        "root": "Latin fundamentum (foundation)",
+        "definition": "forming a necessary base or core; central",
+        "synonym": "essential",
+        "sentence": "Good communication is a fundamental skill in teamwork.",
+        "clue": "At the very root and core."
+      },
+      {
+        "word": "generate",
+        "phonetic": "/ˈdʒen.ə.reɪt/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "產生，引起",
+        "root": "Latin generare (beget)",
+        "definition": "to cause something to exist or produce energy",
+        "synonym": "produce",
+        "sentence": "Wind turbines generate clean electricity for the valley.",
+        "clue": "Creating or bringing into existence."
+      },
+      {
+        "word": "illustrate",
+        "phonetic": "/ˈɪl.ə.streɪt/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "插圖說明，以例闡述",
+        "root": "Latin in- + lustrare (illuminate)",
+        "definition": "to explain or clarify by using examples or pictures",
+        "synonym": "demonstrate",
+        "sentence": "The speaker used real cases to illustrate his points.",
+        "clue": "Making an idea visual or obvious."
+      },
+      {
+        "word": "indicate",
+        "phonetic": "/ˈɪn.də.keɪt/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "指出，顯示",
+        "root": "Latin in- + dicare (make known)",
+        "definition": "to point out or show as a sign",
+        "synonym": "show",
+        "sentence": "Dark clouds indicate that rain is on the way.",
+        "clue": "Signaling something to come."
+      },
+      {
+        "word": "maintain",
+        "phonetic": "/meɪnˈteɪn/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "維持，保養",
+        "root": "Latin manus (hand) + tenere (hold)",
+        "definition": "to keep in existence or continue in the same state",
+        "synonym": "preserve",
+        "sentence": "It is important to maintain a healthy sleep schedule.",
+        "clue": "Keeping something running smoothly."
+      },
+      {
+        "word": "motivate",
+        "phonetic": "/ˈmoʊ.t̬ə.veɪt/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "激勵，使產生動機",
+        "root": "Latin movere (to move)",
+        "definition": "to provide someone with a reason for doing something",
+        "synonym": "inspire",
+        "sentence": "Praise from teachers can motivate students to study harder.",
+        "clue": "Giving inner drive and desire to act."
+      },
+      {
+        "word": "participate",
+        "phonetic": "/pɑːrˈtɪs.ə.peɪt/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "參與，參加",
+        "root": "Latin pars (part) + capere (take)",
+        "definition": "to take part in an action or event",
+        "synonym": "engage",
+        "sentence": "All club members are encouraged to participate in discussions.",
+        "clue": "Joining in with others."
+      },
+      {
+        "word": "potential",
+        "phonetic": "/poʊˈten.ʃəl/",
+        "pos": "adj.",
+        "level": "B1",
+        "zh": "潛在的，有潛力的",
+        "root": "Latin potentia (power)",
+        "definition": "having or showing the capacity to develop into something in the future",
+        "synonym": "possible",
+        "sentence": "The young violinist has immense musical potential.",
+        "clue": "Hidden ability waiting to blossom."
+      },
+      {
+        "word": "relevant",
+        "phonetic": "/ˈrel.ə.vənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "相關的，切題的",
+        "root": "Latin relevare (raise up)",
+        "definition": "closely connected or appropriate to what is being discussed",
+        "synonym": "applicable",
+        "sentence": "Please include only relevant details in your resume.",
+        "clue": "Belonging directly to the topic."
+      },
+      {
+        "word": "reliable",
+        "phonetic": "/rɪˈlaɪ.ə.bəl/",
+        "pos": "adj.",
+        "level": "B1",
+        "zh": "可靠的，值得信賴的",
+        "root": "English rely + -able",
+        "definition": "consistently good in quality or performance; trustworthy",
+        "synonym": "dependable",
+        "sentence": "He is a reliable friend who always keeps his promises.",
+        "clue": "Someone you can always trust."
+      },
+      {
+        "word": "resolve",
+        "phonetic": "/rɪˈzɑːlv/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "解決，下定決心",
+        "root": "Latin re- + solvere (loosen)",
+        "definition": "to settle or find a solution to a problem",
+        "synonym": "solve",
+        "sentence": "The team worked together to resolve the software bug.",
+        "clue": "Finding a lasting answer to an issue."
+      },
+      {
+        "word": "significant",
+        "phonetic": "/sɪɡˈnɪf.ə.kənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "顯著的，重大的",
+        "root": "Latin significare (indicate)",
+        "definition": "sufficiently great or important to be worthy of attention",
+        "synonym": "important",
+        "sentence": "There was a significant improvement in test scores.",
+        "clue": "Making a notable difference."
+      },
+      {
+        "word": "subsequent",
+        "phonetic": "/ˈsʌb.sɪ.kwənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "隨後的，接著的",
+        "root": "Latin sub- + sequi (follow)",
+        "definition": "coming after something in time; following",
+        "synonym": "following",
+        "sentence": "Subsequent studies confirmed the scientist's discovery.",
+        "clue": "Happening right after."
+      },
+      {
+        "word": "sufficient",
+        "phonetic": "/səˈfɪʃ.ənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "足夠的，充足的",
+        "root": "Latin sufficere (suffice)",
+        "definition": "enough to meet the needs of a situation",
+        "synonym": "enough",
+        "sentence": "Make sure you drink sufficient water during outdoor exercise.",
+        "clue": "As much as is needed."
+      },
+      {
+        "word": "transform",
+        "phonetic": "/trænˈsfɔːrm/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "改變，徹底轉變",
+        "root": "Latin trans- (across) + formare (to shape)",
+        "definition": "to make a marked change in form, nature, or appearance",
+        "synonym": "convert",
+        "sentence": "New paint and lighting transformed the old reading room.",
+        "clue": "Completely changing shape or state."
+      },
+      {
+        "word": "ultimate",
+        "phonetic": "/ˈʌl.tə.mət/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "最終的，終極的",
+        "root": "Latin ultimus (last)",
+        "definition": "being or happening at the end of a process; final",
+        "synonym": "final",
+        "sentence": "Our ultimate aim is to make learning fun and rewarding.",
+        "clue": "The final outcome at the very end."
+      },
+      {
+        "word": "undertake",
+        "phonetic": "/ˌʌn.dɚˈteɪk/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "承擔，著手進行",
+        "root": "English under + take",
+        "definition": "to commit oneself to and begin an enterprise or responsibility",
+        "synonym": "embark-on",
+        "sentence": "The university will undertake a large research initiative.",
+        "clue": "Taking on a major task."
+      }
+    ]
+  },
   "toeic": {
     "name": "TOEIC 750~990 Master",
     "icon": "💼",
@@ -3542,10 +3909,54 @@ function showAlchemyBlessing() {
   });
 }
 
+function calculateRunScore() {
+  if (!state) return { score: 0, grade: "C", ascMult: 1 };
+  const basePoints = (state.correct || 0) * 120;
+  const streakPoints = (state.maxStreak || 0) * 60;
+  const regionPoints = (state.region || 0) * 350 + (state.node || 0) * 75;
+  const relicPoints = (state.relics?.length || 0) * 90;
+  const ascMult = 1 + (state.ascension || 0) * 0.12;
+  const score = Math.round((basePoints + streakPoints + regionPoints + relicPoints) * ascMult);
+
+  let grade = "C";
+  if (score >= 3500) grade = "S+";
+  else if (score >= 2400) grade = "S";
+  else if (score >= 1500) grade = "A";
+  else if (score >= 800) grade = "B";
+  else grade = "C";
+
+  return { score, grade, ascMult };
+}
+
+function saveHighScoreRecord(victory = false) {
+  if (!state) return;
+  const meta = loadMeta();
+  meta.highScores = meta.highScores || [];
+  const { score, grade } = calculateRunScore();
+  const heroClass = CLASSES.find(c => c.id === state.characterClass) || CLASSES[0];
+  
+  const record = {
+    classIcon: heroClass.icon,
+    className: meta.bilingual ? (heroClass.zhName || heroClass.name) : heroClass.name,
+    ascension: state.ascension || 0,
+    grade,
+    score,
+    words: state.correct || 0,
+    date: new Date().toISOString().slice(0, 10),
+    victory
+  };
+
+  meta.highScores.push(record);
+  meta.highScores.sort((a, b) => b.score - a.score);
+  meta.highScores = meta.highScores.slice(0, 20);
+  localStorage.setItem(META_KEY, JSON.stringify(meta));
+}
+
 function showGameOver() {
   state.screen = "gameover";
   state.hp = 0;
   saveHighScoreRecord(false);
+  localStorage.removeItem(SAVE_KEY);
   const isZh = loadMeta().bilingual;
   const accuracy = state.wordsAnswered ? Math.round(state.correct / state.wordsAnswered * 100) : 0;
   const allWords = REGIONS.flatMap(r => r.words);
@@ -3588,7 +3999,10 @@ function showGameOver() {
       </div>
     </div>`;
 
-  $("#retry-button")?.addEventListener("click", showClassSelection);
+  $("#retry-button")?.addEventListener("click", () => {
+    state = null;
+    showClassSelection();
+  });
   $("#review-button")?.addEventListener("click", showLexicon);
   $("#fame-gameover-btn")?.addEventListener("click", showHallOfFame);
   $("#copy-chronicle-btn")?.addEventListener("click", () => {
@@ -3794,7 +4208,7 @@ async function fetchOnlineWord(rawWord) {
 function showDeckManager() {
   const isZh = loadMeta().bilingual;
   const meta = loadMeta();
-  meta.activeDecks = meta.activeDecks || ["toeic", "toefl", "gre"];
+  meta.activeDecks = meta.activeDecks || ["intermediate", "toeic", "toefl", "gre"];
   meta.customWords = meta.customWords || [];
   
   openModal(`
