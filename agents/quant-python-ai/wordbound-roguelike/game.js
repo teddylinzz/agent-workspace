@@ -554,25 +554,34 @@ function showPathChoice() {
         </div>
       </div>`;
   } else {
-    const pool = state.node === 0 ? ["normal", "normal", "mystery"] : ["normal", "elite", "rest", "mystery"];
+    const pool = state.node === 0
+      ? ["normal", "normal", "mystery"]
+      : state.node === 2
+        ? ["normal", "shop", "alchemy", "riddle"]
+        : state.node === 3
+          ? ["elite", "rest", "shop", "mystery"]
+          : ["normal", "elite", "rest", "mystery"];
     let types = shuffle(pool).slice(0, 3);
     while (types.length < 3) types.push("normal");
     const details = {
       normal: ["✦", "Wandering Words", "A balanced vocabulary battle.", "ENCOUNTER"],
       elite: ["♞", "The Difficult Road", "Harder foe · stronger relic chance.", "ELITE"],
       rest: ["♨", "A Quiet Clearing", "Restore resolve or sharpen your mind.", "REST"],
-      mystery: ["?", "An Unwritten Turn", "A curious event with uncertain rewards.", "UNKNOWN"]
+      mystery: ["?", "An Unwritten Turn", "A curious event with uncertain rewards.", "UNKNOWN"],
+      shop: ["◈", "Lexicon Bazaar", "Exchange ink for relics, potions, and power.", "MERCHANT"],
+      riddle: ["🧩", "The Riddler's Chest", "Unscramble runes to unlock relic treasures.", "MINI-GAME"],
+      alchemy: ["🔮", "Word Alchemy Shrine", "Identify root meanings for permanent blessings.", "SHRINE"]
     };
     $("#stage").innerHTML = `
       <div class="choice-stage">
         <span class="section-kicker">CHOOSE YOUR NEXT PAGE</span>
         <h1>The road divides.</h1>
-        <p class="section-copy">Each route changes your expedition. Build for survival, chase rare relics, or trust the unknown.</p>
+        <p class="section-copy">Each route changes your expedition. Build for survival, trade ink with merchants, solve ancient riddles, or face dangerous guardians.</p>
         <div class="path-choices">
           ${types.map(type => {
             const d = details[type];
             return `<button class="path-card ${type}" data-path="${type}">
-              ${type === "elite" ? '<span class="risk">RISKY</span>' : ""}
+              ${type === "elite" ? '<span class="risk">RISKY</span>' : type === "shop" ? '<span class="risk safe">SHOP</span>' : ""}
               <span class="path-icon">${d[0]}</span><small>${d[3]}</small><h3>${d[1]}</h3><p>${d[2]}</p>
             </button>`;
           }).join("")}
@@ -589,6 +598,9 @@ function choosePath(type) {
   if (type === "normal" || type === "elite" || type === "boss") startBattle(type);
   if (type === "rest") showRest();
   if (type === "mystery") showEvent();
+  if (type === "shop") showShop();
+  if (type === "riddle") showAnagramChest();
+  if (type === "alchemy") showAlchemyShrine();
 }
 
 function startBattle(type) {
@@ -1153,6 +1165,282 @@ function resolveEvent(effect) {
   if (effect === "bold") { state.hp = Math.max(1, state.hp - 5); gainXp(4); toast("Bold language leaves a mark. <b>+4 insight</b>"); }
   handleQuest();
   completeNode();
+}
+
+function showShop() {
+  state.screen = "event";
+  const unowned = RELICS.filter(r => !state.relics.includes(r.id));
+  const relicItem = unowned.length ? random(unowned) : null;
+  const isCartographer = state.characterClass === "cartographer";
+  const discount = isCartographer ? 0.8 : 1.0;
+  
+  const relicPrice = Math.round(24 * discount);
+  const healPrice = Math.round(14 * discount);
+  const sparkPrice = Math.round(10 * discount);
+  const insightPrice = Math.round(12 * discount);
+
+  $("#stage").innerHTML = `
+    <div class="event-stage shop-stage">
+      <div class="event-illustration shop-icon">◈</div>
+      <span class="section-kicker">WANDERING BAZAAR${isCartographer ? " · CARTOGRAPHER 20% DISCOUNT" : ""}</span>
+      <h1>Lexicon Bazaar</h1>
+      <p class="section-copy">A cloaked scholar lays out rare curio, elixirs, and ancient relics. Your current ink: <b>${state.ink} ◈</b></p>
+      
+      <div class="shop-grid">
+        ${relicItem ? `
+          <div class="shop-item">
+            <span class="shop-item-icon">${relicItem.icon}</span>
+            <div class="shop-item-info">
+              <b>${relicItem.name}</b>
+              <p>${relicItem.text}</p>
+            </div>
+            <button id="buy-relic" class="button button-primary" ${state.ink < relicPrice ? "disabled" : ""}>
+              Buy · ${relicPrice} ◈
+            </button>
+          </div>
+        ` : ""}
+        <div class="shop-item">
+          <span class="shop-item-icon">♨</span>
+          <div class="shop-item-info">
+            <b>Tonic of Resolve</b>
+            <p>Restore 16 Resolve immediately.</p>
+          </div>
+          <button id="buy-heal" class="button button-primary" ${state.ink < healPrice ? "disabled" : ""}>
+            Buy · ${healPrice} ◈
+          </button>
+        </div>
+        <div class="shop-item">
+          <span class="shop-item-icon">✦</span>
+          <div class="shop-item-info">
+            <b>Spark Crystals</b>
+            <p>Gain +2 Sparks for hints & swaps.</p>
+          </div>
+          <button id="buy-sparks" class="button button-primary" ${state.ink < sparkPrice ? "disabled" : ""}>
+            Buy · ${sparkPrice} ◈
+          </button>
+        </div>
+        <div class="shop-item">
+          <span class="shop-item-icon">✧</span>
+          <div class="shop-item-info">
+            <b>Scroll of Insight</b>
+            <p>Gain +3 Insight towards leveling up.</p>
+          </div>
+          <button id="buy-insight" class="button button-primary" ${state.ink < insightPrice ? "disabled" : ""}>
+            Buy · ${insightPrice} ◈
+          </button>
+        </div>
+      </div>
+      <button id="leave-shop" class="button button-ghost" style="margin-top: 24px;">Continue the Journey →</button>
+    </div>
+  `;
+
+  if (relicItem) {
+    $("#buy-relic")?.addEventListener("click", () => {
+      if (state.ink >= relicPrice) {
+        state.ink -= relicPrice;
+        state.relics.push(relicItem.id);
+        if (relicItem.id === "boots") { state.maxHp += 8; state.hp += 8; }
+        toast(`Acquired <b>${relicItem.name}</b>!`);
+        tone(480, .1); setTimeout(() => tone(720, .15), 80);
+        showShop();
+        updateHUD();
+      }
+    });
+  }
+
+  $("#buy-heal")?.addEventListener("click", () => {
+    if (state.ink >= healPrice) {
+      state.ink -= healPrice;
+      heal(16);
+      tone(440, .1);
+      showShop();
+      updateHUD();
+    }
+  });
+
+  $("#buy-sparks")?.addEventListener("click", () => {
+    if (state.ink >= sparkPrice) {
+      state.ink -= sparkPrice;
+      state.sparks = Math.min(9, state.sparks + 2);
+      toast("Acquired <b>+2 Sparks</b>!");
+      tone(600, .1);
+      showShop();
+      updateHUD();
+    }
+  });
+
+  $("#buy-insight")?.addEventListener("click", () => {
+    if (state.ink >= insightPrice) {
+      state.ink -= insightPrice;
+      gainXp(3);
+      toast("Absorbed <b>+3 Insight</b>!");
+      tone(540, .1);
+      showShop();
+      updateHUD();
+    }
+  });
+
+  $("#leave-shop")?.addEventListener("click", () => {
+    completeNode();
+  });
+}
+
+function showAnagramChest() {
+  state.screen = "event";
+  const regionWords = REGIONS[state.region % REGIONS.length].words;
+  const word = random(regionWords);
+  let shuffledLetters = shuffle(word.word.toUpperCase().split(""));
+  while (shuffledLetters.join("") === word.word.toUpperCase() && word.word.length > 2) {
+    shuffledLetters = shuffle(shuffledLetters);
+  }
+
+  $("#stage").innerHTML = `
+    <div class="event-stage riddle-stage">
+      <div class="event-illustration riddle-icon">🧩</div>
+      <span class="section-kicker">ANCIENT PUZZLE</span>
+      <h1>The Riddler's Chest</h1>
+      <p class="section-copy">A brass chest is sealed by scrambled runes. Unscramble the letters to claim the hidden relics and ink within.</p>
+      
+      <div class="riddle-box">
+        <span class="riddle-clue-label">CLUE / DEFINITION</span>
+        <blockquote class="riddle-clue">“${word.definition}”</blockquote>
+        ${word.zh ? `<small class="riddle-zh">釋義: ${word.zh}</small>` : ""}
+        
+        <div class="letter-tiles" id="letter-tiles">
+          ${shuffledLetters.map(l => `<span class="letter-tile">${l}</span>`).join("")}
+        </div>
+        
+        <form id="anagram-form" class="anagram-form">
+          <input id="anagram-input" type="text" autocomplete="off" spellcheck="false" placeholder="Type the unscrambled word…" aria-label="Unscrambled word">
+          <button type="submit" class="button button-primary">Unlock Chest ➔</button>
+        </form>
+        <button id="skip-riddle" class="reveal-answer" style="margin-top: 14px;">Leave the chest (+8 Ink consolation)</button>
+      </div>
+    </div>
+  `;
+
+  $("#anagram-form")?.addEventListener("submit", event => {
+    event.preventDefault();
+    const val = $("#anagram-input").value.trim().toLowerCase();
+    if (val === word.word.toLowerCase()) {
+      state.ink += 22;
+      state.learned[word.word] = (state.learned[word.word] || 0) + 1;
+      updateReviewRecord(word.word, true, "easy");
+      tone(540, .08); setTimeout(() => tone(720, .12), 80); setTimeout(() => tone(960, .2), 160);
+      toast("🎉 <b>Chest Unlocked!</b> +22 Ink & Discovered Relic choice!");
+      completeNode(false);
+      showRelicReward(22, "elite");
+    } else {
+      tone(180, .15);
+      $("#anagram-input").classList.add("wrong");
+      setTimeout(() => $("#anagram-input")?.classList.remove("wrong"), 600);
+      toast("Not the right word. Look at the clue closely!");
+    }
+  });
+
+  $("#skip-riddle")?.addEventListener("click", () => {
+    state.ink += 8;
+    toast("You pocketed 8 loose ink and moved forward.");
+    completeNode();
+  });
+
+  $("#anagram-input")?.focus();
+}
+
+function showAlchemyShrine() {
+  state.screen = "event";
+  const ROOTS_QUIZ = [
+    { root: "trans-", meaning: "across / beyond", word: "transcend", distractors: ["under / beneath", "backward / reverse", "against / anti"] },
+    { root: "bene-", meaning: "good / well", word: "benefactor", distractors: ["dark / evil", "small / tiny", "fast / swift"] },
+    { root: "chron-", meaning: "time", word: "synchronize", distractors: ["sound / voice", "fire / heat", "measure / count"] },
+    { root: "luc- / lum-", meaning: "light / brightness", word: "luminous", distractors: ["water / fluid", "earth / ground", "wind / air"] },
+    { root: "dur-", meaning: "hard / lasting", word: "endure", distractors: ["soft / fragile", "quick / momentary", "cold / ice"] },
+    { root: "scend-", meaning: "climb / step", word: "ascend", distractors: ["fall / drop", "burn / fire", "write / mark"] }
+  ];
+
+  const quiz = random(ROOTS_QUIZ);
+  const options = shuffle([quiz.meaning, ...quiz.distractors]);
+
+  $("#stage").innerHTML = `
+    <div class="event-stage alchemy-stage">
+      <div class="event-illustration alchemy-icon">🔮</div>
+      <span class="section-kicker">ETYMOLOGY ALTAR</span>
+      <h1>Word Alchemy Shrine</h1>
+      <p class="section-copy">Ancient runes glow with linguistic power. Connect the root to its primal meaning to receive a blessing from the altar.</p>
+      
+      <div class="alchemy-quiz">
+        <span class="alchemy-prompt">What does the root <b>“${quiz.root}”</b> (as in <em>${quiz.word}</em>) mean?</span>
+        <div class="alchemy-options">
+          ${options.map(opt => `<button class="button button-ghost alchemy-opt" data-ans="${escapeAttribute(opt)}">${opt}</button>`).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.querySelectorAll(".alchemy-opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.ans === quiz.meaning) {
+        tone(520, .1); setTimeout(() => tone(780, .18), 90);
+        showAlchemyBlessing();
+      } else {
+        tone(190, .15);
+        gainXp(1);
+        toast(`The correct meaning was “${quiz.meaning}”. Gained +1 insight.`);
+        completeNode();
+      }
+    });
+  });
+}
+
+function showAlchemyBlessing() {
+  $("#stage").innerHTML = `
+    <div class="reward-stage">
+      <span class="section-kicker">ROOT HARMONIZED</span>
+      <h1>Choose Your Blessing</h1>
+      <p class="section-copy">The shrine's glyphs align in brilliant golden light. Select your permanent expedition blessing:</p>
+      
+      <div class="reward-grid">
+        <button class="reward-card" id="bless-vitality">
+          <span class="reward-rarity">BLESSING</span>
+          <span class="reward-icon">💖</span>
+          <h3>Blessing of Vitality</h3>
+          <p>+6 Maximum Resolve & restore 12 HP immediately.</p>
+        </button>
+        <button class="reward-card" id="bless-sparks">
+          <span class="reward-rarity">BLESSING</span>
+          <span class="reward-icon">⚡</span>
+          <h3>Blessing of Clarity</h3>
+          <p>Gain +3 Sparks and +1 Insight.</p>
+        </button>
+        <button class="reward-card" id="bless-ink">
+          <span class="reward-rarity">BLESSING</span>
+          <span class="reward-icon">◈</span>
+          <h3>Blessing of Fortune</h3>
+          <p>Gain +26 Ink to spend at the Bazaar.</p>
+        </button>
+      </div>
+    </div>
+  `;
+
+  $("#bless-vitality")?.addEventListener("click", () => {
+    state.maxHp += 6;
+    heal(12);
+    toast("<b>Blessing of Vitality:</b> +6 Max HP!");
+    completeNode();
+  });
+
+  $("#bless-sparks")?.addEventListener("click", () => {
+    state.sparks = Math.min(9, state.sparks + 3);
+    gainXp(1);
+    toast("<b>Blessing of Clarity:</b> +3 Sparks!");
+    completeNode();
+  });
+
+  $("#bless-ink")?.addEventListener("click", () => {
+    state.ink += 26;
+    toast("<b>Blessing of Fortune:</b> +26 Ink!");
+    completeNode();
+  });
 }
 
 function showGameOver() {

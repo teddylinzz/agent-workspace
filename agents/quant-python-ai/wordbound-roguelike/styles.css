@@ -242,6 +242,33 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .class-stats { display: flex; gap: 12px; font: 500 8.5px var(--mono); color: var(--ink-soft); }
 .class-stats b { color: var(--teal-dark); font-weight: 700; }
 .class-quote { display: block; margin-top: 8px; font-style: italic; font-size: 9px; color: var(--gold); opacity: .9; }
+
+/* Shop / Mini-games CSS */
+.shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; text-align: left; }
+.shop-item { display: flex; flex-direction: column; justify-content: space-between; padding: 16px; border: 1px solid var(--line); border-radius: 4px 16px 4px 16px; background: var(--cream); }
+.shop-item-icon { font-size: 26px; margin-bottom: 8px; }
+.shop-item-info b { display: block; font: 700 16px var(--display); color: var(--ink); margin-bottom: 4px; }
+.shop-item-info p { margin: 0 0 12px; font-size: 10px; color: var(--ink-soft); }
+.shop-item .button { width: 100%; font-size: 11px; padding: 10px; }
+
+/* Anagram Chest */
+.riddle-box { max-width: 500px; margin: 16px auto; padding: 22px; border: 1px solid var(--line); border-radius: 4px 20px 4px 20px; background: var(--cream); text-align: center; }
+.riddle-clue-label { font: 600 8px var(--mono); color: var(--coral-dark); letter-spacing: .12em; }
+.riddle-clue { margin: 8px 0; font: 600 14px/1.5 var(--body); color: var(--ink); }
+.riddle-zh { display: block; margin-bottom: 12px; font: 600 11px var(--body); color: var(--teal-dark); }
+.letter-tiles { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 14px 0 18px; }
+.letter-tile { width: 36px; height: 40px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 6px; font: 800 18px var(--display); color: var(--ink); background: var(--gold); box-shadow: 0 4px 10px rgba(0,0,0,.08); }
+.anagram-form { display: flex; gap: 8px; justify-content: center; }
+.anagram-form input { flex: 1; max-width: 280px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 3px 10px 3px 10px; font: 700 15px var(--display); text-align: center; }
+.anagram-form input.wrong { border-color: var(--coral); background: rgba(231,91,73,.1); }
+
+/* Alchemy Shrine */
+.alchemy-quiz { max-width: 520px; margin: 16px auto; padding: 22px; border: 1px solid var(--line); border-radius: 4px 20px 4px 20px; background: var(--cream); text-align: center; }
+.alchemy-prompt { display: block; font: 600 14px/1.6 var(--body); margin-bottom: 18px; color: var(--ink); }
+.alchemy-prompt b { color: var(--purple); font-size: 17px; }
+.alchemy-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.alchemy-opt { padding: 14px; font-weight: 700; text-align: center; }
+
 .settings-list { display: grid; gap: 12px; }.settings-list button { display: flex; justify-content: space-between; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; cursor: pointer; }.danger-button { color: var(--coral-dark) !important; }
 .toast-region { position: fixed; z-index: 100; right: 22px; top: 88px; display: grid; gap: 8px; }
 .toast { min-width: 220px; padding: 12px 14px; border-radius: 3px 12px 3px 12px; color: white; background: var(--ink); box-shadow: 0 12px 35px rgba(20,42,40,.25); font-size: 10px; animation: toastIn .35s ease both; }.toast b { color: var(--gold); }
