@@ -2423,6 +2423,12 @@ function updateHUD() {
   updateHabitTracker();
   applyLanguageToUI();
 
+  const portraitWrap = $(".portrait-wrap");
+  if (portraitWrap) {
+    if (state.streak >= 4) portraitWrap.classList.add("streak-fire");
+    else portraitWrap.classList.remove("streak-fire");
+  }
+
   // Low HP visual and audio warning
   const isLowHp = state.hp > 0 && (state.hp / state.maxHp) <= 0.28;
   let vignette = $(".low-hp-vignette");

@@ -104,8 +104,11 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-
 .adventurer-panel { border-right: 1px solid var(--line); }
 .journey-panel { border-left: 1px solid var(--line); }
 
-.portrait-wrap { width: 128px; height: 138px; margin: 0 auto; position: relative; }
-.portrait-halo { position: absolute; inset: 8px 0; background: var(--gold); border-radius: 48% 52% 45% 55%; opacity: .38; transform: rotate(-8deg); }
+.portrait-wrap { width: 128px; height: 138px; margin: 0 auto; position: relative; transition: transform .3s ease; }
+.portrait-wrap.streak-fire .portrait-halo { animation: pulseAura 1.4s ease-in-out infinite alternate; background: radial-gradient(circle, #f39c12 0%, #e74c3c 100%); opacity: .85; filter: drop-shadow(0 0 16px rgba(243,156,18,0.7)); }
+.portrait-wrap.streak-fire .portrait { box-shadow: 0 0 25px rgba(231,76,60,0.6); }
+@keyframes pulseAura { 0% { transform: rotate(-8deg) scale(0.96); } 100% { transform: rotate(8deg) scale(1.18); } }
+.portrait-halo { position: absolute; inset: 8px 0; background: var(--gold); border-radius: 48% 52% 45% 55%; opacity: .38; transform: rotate(-8deg); transition: .4s ease; }
 .portrait { position: absolute; inset: 16px 8px 5px; overflow: hidden; display: grid; place-items: center; background: var(--coral); border-radius: 48% 48% 22% 22%; box-shadow: 0 10px 25px rgba(66,49,37,.17); }
 .portrait::after { content: ""; position: absolute; bottom: -38px; width: 125px; height: 95px; background: var(--teal-dark); border-radius: 50% 50% 0 0; }
 .portrait-face { position: relative; z-index: 2; display: grid; place-items: center; width: 57px; height: 65px; border-radius: 46% 46% 43% 43%; background: #e6b98c; font: 700 13px var(--mono); }
