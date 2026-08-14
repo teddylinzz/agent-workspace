@@ -983,6 +983,7 @@ function gainXp(amount) {
     state.maxHp += 3;
     state.hp = Math.min(state.maxHp, state.hp + 7);
     state.sparks += 1;
+    playLevelUpChime();
     toast(`<b>Level ${state.level}!</b> Resolve and sparks restored.`);
   }
 }
@@ -1046,6 +1047,7 @@ function getReviewWords(includeNotDue = false) {
 }
 
 function winBattle() {
+  playVictoryFanfare();
   const baseInk = battle.type === "boss" ? 35 : battle.type === "elite" ? 22 : 12;
   const ink = Math.round(baseInk * (hasRelic("bookmark") ? 1.3 : 1));
   state.ink += ink;
@@ -1661,9 +1663,15 @@ function resumeAfterPractice() {
 function speakWord(word) {
   if (!("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
+  const meta = loadMeta();
   const utterance = new SpeechSynthesisUtterance(word);
-  utterance.rate = .78;
-  utterance.lang = "en-US";
+  utterance.rate = meta.speechRate || 0.85;
+  utterance.lang = meta.voiceAccent || "en-US";
+  
+  const voices = speechSynthesis.getVoices();
+  const matchedVoice = voices.find(v => v.lang.startsWith(utterance.lang) || v.lang.startsWith("en"));
+  if (matchedVoice) utterance.voice = matchedVoice;
+  
   speechSynthesis.speak(utterance);
 }
 
@@ -1672,6 +1680,8 @@ function showSettings() {
   openModal(`<span class="modal-kicker">JOURNEY OPTIONS</span><h2>Settings</h2><div class="settings-list">
     <button id="modal-sound">Sound effects <b>${soundEnabled ? "ON" : "OFF"}</b></button>
     <button id="modal-bilingual">Bilingual Hints (EN + 中文) <b>${meta.bilingual ? "ON" : "OFF"}</b></button>
+    <button id="modal-speech-rate">Pronunciation Speed <b>${meta.speechRate === 0.65 ? "0.65x (Slow)" : meta.speechRate === 1.0 ? "1.0x (Fast)" : "0.85x (Normal)"}</b></button>
+    <button id="modal-autospeak">Auto-Pronounce Words <b>${meta.autoSpeak ? "ON" : "OFF"}</b></button>
     <button id="modal-home">Save & return to title <b>→</b></button>
     <button id="modal-reset" class="danger-button">Erase saved journey <b>×</b></button>
   </div>`);
@@ -1680,6 +1690,20 @@ function showSettings() {
     meta.bilingual = !meta.bilingual;
     localStorage.setItem(META_KEY, JSON.stringify(meta));
     toast(meta.bilingual ? "Bilingual hints enabled (EN + 中文)" : "English-only mode enabled");
+    showSettings();
+  });
+  $("#modal-speech-rate").addEventListener("click", () => {
+    const rates = [0.85, 1.0, 0.65];
+    const currIdx = rates.indexOf(meta.speechRate || 0.85);
+    meta.speechRate = rates[(currIdx + 1) % rates.length];
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    speakWord("Vocabulary");
+    showSettings();
+  });
+  $("#modal-autospeak").addEventListener("click", () => {
+    meta.autoSpeak = !meta.autoSpeak;
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    toast(meta.autoSpeak ? "Auto-pronounce enabled" : "Auto-pronounce disabled");
     showSettings();
   });
   $("#modal-home").addEventListener("click", () => { $("#modal").close(); returnHome(); });
@@ -1706,19 +1730,43 @@ function toggleSound() {
   if (soundEnabled) tone(520, .07);
 }
 
-function tone(frequency, duration) {
+function tone(frequency, duration = 0.1, type = "sine") {
   if (!soundEnabled) return;
   try {
     audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const gain = audioContext.createGain();
-    oscillator.type = "sine";
+    oscillator.type = type;
     oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(.035, audioContext.currentTime);
+    gain.gain.setValueAtTime(.04, audioContext.currentTime);
     gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
     oscillator.connect(gain).connect(audioContext.destination);
     oscillator.start(); oscillator.stop(audioContext.currentTime + duration);
   } catch { /* Sound is optional. */ }
+}
+
+function playChord(frequencies, duration = 0.35) {
+  if (!soundEnabled) return;
+  frequencies.forEach(f => tone(f, duration, "sine"));
+}
+
+function playArpeggio(frequencies, interval = 70, duration = 0.25) {
+  if (!soundEnabled) return;
+  frequencies.forEach((f, index) => {
+    setTimeout(() => tone(f, duration, "triangle"), index * interval);
+  });
+}
+
+function playVictoryFanfare() {
+  playArpeggio([523.25, 659.25, 783.99, 1046.50, 1318.51], 80, 0.35);
+}
+
+function playChestFanfare() {
+  playArpeggio([587.33, 739.99, 880.00, 1174.66], 60, 0.3);
+}
+
+function playLevelUpChime() {
+  playArpeggio([440, 554.37, 659.25, 880, 1108.73], 70, 0.4);
 }
 
 function toast(html) {
