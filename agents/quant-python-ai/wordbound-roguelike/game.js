@@ -3,102 +3,222 @@ const REGIONS = [
     name: "The Verdant Verge",
     tone: "#2f7a72",
     words: [
-      ["serene", "/səˈriːn/", "calm, peaceful, and untroubled", "peaceful", "The lake was serene before sunrise.", "It describes still water or a very calm person.", "A2"],
-      ["vivid", "/ˈvɪv.ɪd/", "producing strong, clear images in the mind", "striking", "She gave a vivid account of the journey.", "Think of a color or memory that feels intensely clear.", "B1"],
-      ["wander", "/ˈwɒn.dər/", "to move around without a fixed route", "roam", "We wandered through the old market.", "You do this when exploring without a map.", "A2"],
-      ["fragile", "/ˈfrædʒ.aɪl/", "easily broken or damaged", "delicate", "The fragile shell cracked in his hand.", "Glass often has this quality.", "B1"],
-      ["abundant", "/əˈbʌn.dənt/", "existing in large quantities", "plentiful", "Wildflowers were abundant in the valley.", "More than enough; present everywhere.", "B2"],
-      ["glimpse", "/ɡlɪmps/", "a quick or incomplete look", "peek", "I caught a glimpse of the fox.", "A very short look at something.", "B1"],
-      ["thrive", "/θraɪv/", "to grow or develop successfully", "flourish", "These plants thrive in warm shade.", "To do very well, not merely survive.", "B2"],
-      ["subtle", "/ˈsʌt.əl/", "not obvious; delicate and hard to notice", "faint", "The tea had a subtle floral taste.", "It may be easy to miss at first.", "B2"],
-      ["eager", "/ˈiː.ɡər/", "strongly wanting to do or have something", "keen", "The students were eager to begin.", "Excited and ready to act.", "A2"],
-      ["shelter", "/ˈʃel.tər/", "a place that gives protection", "refuge", "They found shelter from the rain.", "A safe place during bad weather.", "A2"]
+      ["serene", "/səˈriːn/", "calm, peaceful, and untroubled", "peaceful", "The lake was serene before sunrise.", "It describes still water or a very calm person.", "A2", "adj.", "安詳寧靜的", "Latin serenus (clear, unclouded)"],
+      ["vivid", "/ˈvɪv.ɪd/", "producing strong, clear images in the mind", "striking", "She gave a vivid account of the journey.", "Think of a color or memory that feels intensely clear.", "B1", "adj.", "生動清晰的", "Latin vivere (to live)"],
+      ["wander", "/ˈwɒn.dər/", "to move around without a fixed route", "roam", "We wandered through the old market.", "You do this when exploring without a map.", "A2", "v.", "漫遊、漫步", "Old English wandrian (move aimlessly)"],
+      ["fragile", "/ˈfrædʒ.aɪl/", "easily broken or damaged", "delicate", "The fragile shell cracked in his hand.", "Glass often has this quality.", "B1", "adj.", "脆弱易碎的", "Latin frangere (to break)"],
+      ["abundant", "/əˈbʌn.dənt/", "existing in large quantities", "plentiful", "Wildflowers were abundant in the valley.", "More than enough; present everywhere.", "B2", "adj.", "豐富充裕的", "Latin abundare (to overflow)"],
+      ["glimpse", "/ɡlɪmps/", "a quick or incomplete look", "peek", "I caught a glimpse of the fox.", "A very short look at something.", "B1", "n.", "短暫的一瞥", "Middle English glimsen (shine faintly)"],
+      ["thrive", "/θraɪv/", "to grow or develop successfully", "flourish", "These plants thrive in warm shade.", "To do very well, not merely survive.", "B2", "v.", "繁榮茁壯", "Old Norse thrifask (to prosper)"],
+      ["subtle", "/ˈsʌt.əl/", "not obvious; delicate and hard to notice", "faint", "The tea had a subtle floral taste.", "It may be easy to miss at first.", "B2", "adj.", "微妙隱約的", "Latin subtilis (finely woven)"],
+      ["eager", "/ˈiː.ɡər/", "strongly wanting to do or have something", "keen", "The students were eager to begin.", "Excited and ready to act.", "A2", "adj.", "熱切渴望的", "Latin acer (sharp, keen)"],
+      ["shelter", "/ˈʃel.tər/", "a place that gives protection", "refuge", "They found shelter from the rain.", "A safe place during bad weather.", "A2", "n.", "避難所、庇護", "Old English scildtruma (shield troop)"],
+      ["verdant", "/ˈvɜː.dənt/", "green with grass or rich vegetation", "lush", "The verdant hills stretched to the horizon.", "Full of fresh green plant life.", "C1", "adj.", "翠綠繁茂的", "Latin viridis (green)"],
+      ["breeze", "/briːz/", "a gentle and refreshing wind", "gust", "A cool breeze swept across the meadow.", "Light moving air on a sunny day.", "A2", "n.", "微風", "Spanish brisa (cold northeast wind)"],
+      ["canopy", "/ˈkæn.ə.pi/", "an overhead covering formed by trees or cloth", "awning", "Sunlight filtered through the dense forest canopy.", "The leafy roof of the woods.", "B2", "n.", "樹冠、頂篷", "Greek konopeion (mosquito net)"],
+      ["blossom", "/ˈblɒs.əm/", "to produce flowers or develop favorably", "bloom", "The apple trees began to blossom in April.", "Opening up with color and promise.", "B1", "v.", "開花、繁茂發展", "Old English blostm (flower)"],
+      ["sprout", "/spraʊt/", "to begin to grow shoots or develop new life", "bud", "Tiny green shoots sprouted from the rich earth.", "The very first sign of plant growth.", "B1", "v.", "發芽、萌芽", "Old English sprutan (to sprout)"],
+      ["wholesome", "/ˈhəʊl.səm/", "good for health, mind, or moral well-being", "healthy", "The village served wholesome home-cooked meals.", "Pure, nutritious, and comforting.", "B2", "adj.", "有益健康的、純真的", "Old English hal (healthy, whole)"],
+      ["meadow", "/ˈmed.əʊ/", "a field of grass and wild plants", "pasture", "Deer grazed peacefully in the open meadow.", "A wide green clearing in nature.", "A2", "n.", "草地、牧場", "Old English mæd (mown land)"],
+      ["petal", "/ˈpet.əl/", "one of the soft colored parts of a flower", "leaf", "Fallen rose petals carpeted the garden path.", "Delicate colored parts that make a flower beautiful.", "A2", "n.", "花瓣", "Greek petalon (outspread leaf)"],
+      ["foliage", "/ˈfəʊ.li.ɪdʒ/", "the leaves of a plant or tree collectively", "greenery", "Autumn turned the forest foliage into shades of copper.", "All the leaves on trees and bushes.", "B2", "n.", "葉子、植物總稱", "Latin folium (leaf)"],
+      ["nurture", "/ˈnɜː.tʃər/", "to care for and encourage the growth of something", "foster", "She nurtured her seedlings with clean water and care.", "Helping something delicate grow strong.", "B2", "v.", "培育、養育", "Latin nutrire (to nourish)"],
+      ["quench", "/kwentʃ/", "to satisfy thirst or extinguish fire", "slake", "A sip of cold spring water quenched his thirst.", "Putting out a flame or satisfying a deep craving.", "B2", "v.", "解渴、熄滅", "Old English cwencan (to extinguish)"],
+      ["rustle", "/ˈrʌs.əl/", "to make a soft dry sound of moving leaves", "swish", "Dry autumn leaves rustled beneath their boots.", "The whisper of leaves stirred by the wind.", "B1", "v.", "發出沙沙聲", "Middle English rustelen (soft friction sound)"],
+      ["wilderness", "/ˈwɪl.də.nəs/", "an uncultivated, wild, and natural area", "wilds", "They ventured deep into the northern wilderness.", "Untamed natural terrain.", "B2", "n.", "荒野、未開拓地", "Old English wilder (wild beast)"],
+      ["mossy", "/ˈmɒs.i/", "covered in or resembling soft green moss", "velvety", "The ancient stone steps were damp and mossy.", "Soft, damp green carpet growing on stones.", "B1", "adj.", "長滿青苔的", "Old English mos (bog)"],
+      ["rippling", "/ˈrɪp.lɪŋ/", "moving in small, gentle waves", "undulating", "The sunlight danced on the rippling stream.", "Small crests forming across calm water.", "B2", "adj.", "微波盪漾的", "Origin imitative (small ripples)"],
+      ["tranquility", "/træŋˈkwɪl.ə.ti/", "the state of being calm and peaceful", "serenity", "The tranquil garden offered pure peace of mind.", "Deep silence unbroken by chaos.", "B2", "n.", "平靜、祥和", "Latin tranquillus (quiet, calm)"],
+      ["burgeon", "/ˈbɜː.dʒən/", "to begin to grow or increase rapidly", "expand", "A burgeoning curiosity pushed the traveler forward.", "Swelling with new life and rapid expansion.", "C1", "v.", "迅速成長、蓬勃發展", "Old French burjon (bud)"],
+      ["sylvan", "/ˈsɪl.vən/", "associated with the woods or pleasantly rural", "wooded", "A sylvan path wound through the tall ancient oaks.", "Poetic descriptor for forest landscapes.", "C2", "adj.", "森林的、樹木茂密的", "Latin silva (forest)"],
+      ["emerald", "/ˈem.ər.əld/", "a bright green precious stone or vibrant color", "green", "The valley shone like an emerald after the rain.", "Brilliant, glowing jewel green.", "B1", "adj.", "翠綠色的、翡翠", "Greek smaragdos (green gem)"],
+      ["harmonious", "/hɑːˈməʊ.ni.əs/", "tuneful, balanced, and free from disagreement", "concordant", "The birds created a harmonious morning song.", "Fitting together smoothly and pleasantly.", "B2", "adj.", "和諧悅耳的", "Greek harmonia (agreement, joining)"]
     ]
   },
   {
     name: "The Ember Archives",
     tone: "#c5573f",
     words: [
-      ["ancient", "/ˈeɪn.ʃənt/", "belonging to the very distant past", "age-old", "They uncovered an ancient inscription.", "Far older than simply old.", "A2"],
-      ["decipher", "/dɪˈsaɪ.fər/", "to discover the meaning of difficult writing", "decode", "Mira deciphered the faded message.", "To turn a code into meaning.", "B2"],
-      ["reluctant", "/rɪˈlʌk.tənt/", "unwilling and hesitant", "unwilling", "He was reluctant to leave the fire.", "You do not really want to do it.", "B2"],
-      ["peculiar", "/pɪˈkjuː.li.ər/", "strange or unusual", "odd", "A peculiar sound came from the wall.", "Not what you normally expect.", "B2"],
-      ["diligent", "/ˈdɪl.ɪ.dʒənt/", "showing steady and careful effort", "hardworking", "The diligent scholar checked every line.", "Careful work sustained over time.", "B2"],
-      ["scorch", "/skɔːtʃ/", "to burn the surface of something", "sear", "The flame scorched the paper's edge.", "Heat damages it without burning it completely.", "B2"],
-      ["preserve", "/prɪˈzɜːv/", "to keep something safe from harm or decay", "protect", "The vault preserves rare books.", "Keep it in good condition for the future.", "B1"],
-      ["obscure", "/əbˈskjʊər/", "not well known or difficult to understand", "unclear", "The poem contains an obscure reference.", "Hidden from common knowledge.", "B2"],
-      ["insight", "/ˈɪn.saɪt/", "a deep and accurate understanding", "perception", "Her notes offered new insight into the mystery.", "Seeing beneath the surface of an idea.", "B2"],
-      ["linger", "/ˈlɪŋ.ɡər/", "to remain somewhere longer than expected", "remain", "The scent of smoke lingered in the hall.", "It stays even after it should have gone.", "B2"]
+      ["ancient", "/ˈeɪn.ʃənt/", "belonging to the very distant past", "age-old", "They uncovered an ancient inscription.", "Far older than simply old.", "A2", "adj.", "古老久遠的", "Latin ante (before)"],
+      ["decipher", "/dɪˈsaɪ.fər/", "to discover the meaning of difficult writing", "decode", "Mira deciphered the faded message.", "To turn a code into meaning.", "B2", "v.", "破譯、解讀", "Latin de (reversal) + cipher (zero/code)"],
+      ["reluctant", "/rɪˈlʌk.tənt/", "unwilling and hesitant", "unwilling", "He was reluctant to leave the fire.", "You do not really want to do it.", "B2", "adj.", "不情願的、猶豫的", "Latin reluctari (to struggle against)"],
+      ["peculiar", "/pɪˈkjuː.li.ər/", "strange or unusual", "odd", "A peculiar sound came from the wall.", "Not what you normally expect.", "B2", "adj.", "古怪特殊的", "Latin peculium (private property)"],
+      ["diligent", "/ˈdɪl.ɪ.dʒənt/", "showing steady and careful effort", "hardworking", "The diligent scholar checked every line.", "Careful work sustained over time.", "B2", "adj.", "勤奮細緻的", "Latin diligere (to value highly, choose)"],
+      ["scorch", "/skɔːtʃ/", "to burn the surface of something", "sear", "The flame scorched the paper's edge.", "Heat damages it without burning it completely.", "B2", "v.", "燒焦、灼傷", "Old Norse skrokkr (shriveled body)"],
+      ["preserve", "/prɪˈzɜːv/", "to keep something safe from harm or decay", "protect", "The vault preserves rare books.", "Keep it in good condition for the future.", "B1", "v.", "保存、維護", "Latin prae (before) + servare (to keep)"],
+      ["obscure", "/əbˈskjʊər/", "not well known or difficult to understand", "unclear", "The poem contains an obscure reference.", "Hidden from common knowledge.", "B2", "adj.", "晦澀難懂的、默默無聞的", "Latin obscurus (dark, dim)"],
+      ["insight", "/ˈɪn.saɪt/", "a deep and accurate understanding", "perception", "Her notes offered new insight into the mystery.", "Seeing beneath the surface of an idea.", "B2", "n.", "洞察力、深刻見解", "Middle English in + sight (inner vision)"],
+      ["linger", "/ˈlɪŋ.ɡər/", "to remain somewhere longer than expected", "remain", "The scent of smoke lingered in the hall.", "It stays even after it should have gone.", "B2", "v.", "逗留、徘徊", "Old English langan (to long for)"],
+      ["archive", "/ˈɑː.kaɪv/", "a collection of historical documents or records", "repository", "Scholars searched the imperial archive for truth.", "A secure storehouse for historic texts.", "B2", "n.", "檔案館、文獻庫", "Greek arkheion (public record office)"],
+      ["manuscript", "/ˈmæn.jʊ.skrɪpt/", "a handwritten or typed piece of literature", "text", "The fragile manuscript was written in gold ink.", "A historical text written by hand.", "B2", "n.", "手稿、原稿", "Latin manu (by hand) + scriptus (written)"],
+      ["parchment", "/ˈpɑːtʃ.mənt/", "stiff animal skin prepared for writing", "vellum", "Scribes wrote sacred annals on rolled parchment.", "Historical paper-like material made from animal skin.", "B2", "n.", "羊皮紙", "Latin Pergamum (ancient writing hub)"],
+      ["chronicle", "/ˈkrɒn.ɪ.kəl/", "a factual written account of historical events", "record", "The chronicle detailed five centuries of peace and war.", "Recording history year by year.", "B2", "n.", "編年史、記錄", "Greek chronos (time)"],
+      ["ignite", "/ɪɡˈnaɪt/", "to catch fire or cause something to burn", "kindle", "A stray spark ignited the dry tinder.", "Setting something ablaze.", "B2", "v.", "點燃、引發", "Latin ignis (fire)"],
+      ["kindle", "/ˈkɪn.dəl/", "to start a fire or arouse an emotion", "spark", "Her passionate speech kindled a love for learning.", "Lighting a flame in a hearth or heart.", "C1", "v.", "點燃、激起", "Old Norse kynda (to kindle)"],
+      ["illuminate", "/ɪˈluː.mɪ.neɪt/", "to light up or make something clear and easy to understand", "clarify", "Candles illuminated the library; his lecture illuminated the theory.", "Shining light physically or intellectually.", "B2", "v.", "照亮、闡明", "Latin lumen (light)"],
+      ["relic", "/ˈrel.ɪk/", "an object surviving from an earlier time", "artifact", "The golden compass was a cherished relic of the empire.", "A remnant from long ago.", "B2", "n.", "遺物、聖物", "Latin relinquere (to leave behind)"],
+      ["cryptic", "/ˈkrɪp.tɪk/", "having a meaning that is mysterious or obscure", "enigmatic", "The wizard left a cryptic note before vanishing.", "A puzzle wrapped in hidden meaning.", "C1", "adj.", "神秘隱晦的", "Greek kryptos (hidden)"],
+      ["tome", "/təʊm/", "a large, heavy, and scholarly book", "volume", "He lifted a dusty leather-bound tome from the shelf.", "A grand and weighty academic book.", "C1", "n.", "大部頭典籍", "Greek tomos (section, roll of papyrus)"],
+      ["scroll", "/skrəʊl/", "a roll of parchment containing writing", "roll", "She unrolled the silk scroll to read the decree.", "A long rolled parchment.", "B1", "n.", "卷軸、手卷", "Old French escrouele (strip of parchment)"],
+      ["forge", "/fɔːdʒ/", "to shape metal with fire or create something through effort", "craft", "Hardship helped forge an unbreakable friendship.", "Creating strength in intense heat.", "B2", "v.", "鍛造、努力締造", "Latin fabrica (workshop)"],
+      ["parable", "/ˈpær.ə.bəl/", "a simple story used to illustrate a moral lesson", "fable", "The elder taught wisdom through an ancient parable.", "A short allegorical tale with a moral.", "C1", "n.", "寓言故事", "Greek parabole (comparison)"],
+      ["scintilla", "/sɪnˈtɪl.ə/", "a tiny trace or spark of a specified quality", "shred", "There was not a scintilla of doubt in her testimony.", "The smallest conceivable spark or shred.", "C2", "n.", "極微小的一絲、火星", "Latin scintilla (spark)"],
+      ["ardent", "/ˈɑː.dənt/", "very enthusiastic or passionate", "fervent", "He was an ardent collector of forgotten poems.", "Burning with passionate interest.", "C1", "adj.", "熱烈的、熾熱的", "Latin ardere (to burn)"],
+      ["ember", "/ˈem.bər/", "a small glowing piece of burning wood in a dying fire", "spark", "A glowing ember remained in the hearth until dawn.", "Warm remnants of a fire.", "B2", "n.", "餘燼、火種", "Old English æmyrge (ashes)"],
+      ["inscribe", "/ɪnˈskraɪb/", "to write or carve words on a surface", "engrave", "The jeweler inscribed their names inside the ring.", "Carving permanent letters into stone or metal.", "B2", "v.", "題寫、雕刻銘記", "Latin in + scribere (to write)"],
+      ["lore", "/lɔːr/", "traditional knowledge and stories passed by word of mouth", "mythology", "The village elders preserved centuries of folklore.", "Ancient cultural tales and wisdom.", "B2", "n.", "傳說、口頭知識", "Old English lar (teaching, learning)"],
+      ["erudite", "/ˈer.ʊ.daɪt/", "having or showing profound knowledge and scholarship", "scholarly", "The erudite professor spoke six dead languages.", "Deeply educated and literate.", "C2", "adj.", "博學多聞的", "Latin erudire (to educate, polish from raw state)"],
+      ["fable", "/ˈfeɪ.bəl/", "a short story conveying a moral, often with animal characters", "tale", "Aesop's fables remain memorable across millennia.", "A timeless moral lesson told in story.", "B1", "n.", "寓言", "Latin fabula (story, talk)"]
     ]
   },
   {
     name: "The Moonlit Mere",
     tone: "#665089",
     words: [
-      ["tranquil", "/ˈtræŋ.kwɪl/", "quiet and free from disturbance", "placid", "The garden felt tranquil at dusk.", "A peaceful atmosphere with no interruption.", "B2"],
-      ["elusive", "/iˈluː.sɪv/", "difficult to find, catch, or achieve", "evasive", "The answer remained elusive.", "Always seeming just beyond reach.", "C1"],
-      ["reflect", "/rɪˈflekt/", "to think carefully and deeply", "consider", "She paused to reflect on the choice.", "Mirrors do this with light; minds do it with ideas.", "B1"],
-      ["murky", "/ˈmɜː.ki/", "dark, dirty, or difficult to see through", "cloudy", "Shapes moved beneath the murky water.", "Water you cannot see through clearly.", "B2"],
-      ["solitary", "/ˈsɒl.ɪ.tər.i/", "existing or living alone", "lone", "A solitary heron watched the shore.", "One, with no companions nearby.", "B2"],
-      ["immerse", "/ɪˈmɜːs/", "to become completely involved in something", "absorb", "He immersed himself in the story.", "To enter so deeply that the outside fades away.", "B2"],
-      ["fleeting", "/ˈfliː.tɪŋ/", "lasting for only a short time", "brief", "They shared a fleeting smile.", "Here for a moment, then gone.", "C1"],
-      ["yearn", "/jɜːn/", "to want something very strongly", "long", "She yearned to see the mountains again.", "A deep, emotional kind of wanting.", "B2"],
-      ["bewilder", "/bɪˈwɪl.dər/", "to confuse someone completely", "baffle", "The shifting paths bewildered the travelers.", "To leave someone with no idea what is happening.", "C1"],
-      ["resilient", "/rɪˈzɪl.i.ənt/", "able to recover quickly from difficulty", "tough", "The resilient reeds rose after the storm.", "It bends under pressure and comes back.", "B2"]
+      ["tranquil", "/ˈtræŋ.kwɪl/", "quiet and free from disturbance", "placid", "The garden felt tranquil at dusk.", "A peaceful atmosphere with no interruption.", "B2", "adj.", "寧靜安詳的", "Latin tranquillus (calm)"],
+      ["elusive", "/iˈluː.sɪv/", "difficult to find, catch, or achieve", "evasive", "The answer remained elusive.", "Always seeming just beyond reach.", "C1", "adj.", "難以捉摸的、避而不見的", "Latin eludere (to evade, slip away)"],
+      ["reflect", "/rɪˈflekt/", "to think carefully and deeply", "consider", "She paused to reflect on the choice.", "Mirrors do this with light; minds do it with ideas.", "B1", "v.", "深思反省、倒映", "Latin re (back) + flectere (to bend)"],
+      ["murky", "/ˈmɜː.ki/", "dark, dirty, or difficult to see through", "cloudy", "Shapes moved beneath the murky water.", "Water you cannot see through clearly.", "B2", "adj.", "昏暗渾濁的", "Old Norse myrkr (darkness)"],
+      ["solitary", "/ˈsɒl.ɪ.tər.i/", "existing or living alone", "lone", "A solitary heron watched the shore.", "One, with no companions nearby.", "B2", "adj.", "獨自孤單的", "Latin solus (alone)"],
+      ["immerse", "/ɪˈmɜːs/", "to become completely involved in something", "absorb", "He immersed himself in the story.", "To enter so deeply that the outside fades away.", "B2", "v.", "沉浸、完全融入", "Latin in + mergere (to plunge)"],
+      ["fleeting", "/ˈfliː.tɪŋ/", "lasting for only a short time", "brief", "They shared a fleeting smile.", "Here for a moment, then gone.", "C1", "adj.", "短暫飛逝的", "Old English fleotan (to float, fleet)"],
+      ["yearn", "/jɜːn/", "to want something very strongly", "long", "She yearned to see the mountains again.", "A deep, emotional kind of wanting.", "B2", "v.", "深切渴望、嚮往", "Old English giernan (to desire)"],
+      ["bewilder", "/bɪˈwɪl.dər/", "to confuse someone completely", "baffle", "The shifting paths bewildered the travelers.", "To leave someone with no idea what is happening.", "C1", "v.", "使困惑迷茫", "English wild (lead into the wilderness)"],
+      ["resilient", "/rɪˈzɪl.i.ənt/", "able to recover quickly from difficulty", "tough", "The resilient reeds rose after the storm.", "It bends under pressure and comes back.", "B2", "adj.", "有韌性的、能迅速恢復的", "Latin resilire (to leap back)"],
+      ["luminous", "/ˈluː.mɪ.nəs/", "giving off light; bright or shining", "radiant", "The moon was luminous against the midnight sky.", "Glowing brightly in the dark.", "B2", "adj.", "發光的、明亮的", "Latin lumen (light)"],
+      ["shimmer", "/ˈʃɪm.ər/", "to shine with a soft, wavering light", "glimmer", "The surface of the lake shimmered under starlight.", "Gentle flickering reflections on water.", "B1", "v.", "閃爍微光", "Old English scimian (to glitter)"],
+      ["nocturnal", "/nɒkˈtɜː.nəl/", "active or happening at night", "nighttime", "Owls are nocturnal predators with remarkable hearing.", "Belonging to nighttime rather than daylight.", "B2", "adj.", "夜間活動的、夜行的", "Latin nox (night)"],
+      ["somber", "/ˈsɒm.bər/", "dark, dull, or serious and sad", "solemn", "A somber mood settled over the misty castle.", "Solemn, heavy, and quiet atmosphere.", "B2", "adj.", "憂鬱陰沉的", "Latin sub + umbra (under shadow)"],
+      ["ethereal", "/iˈθɪə.ri.əl/", "extremely delicate and light; heavenly", "celestial", "Her ethereal voice echoed through the quiet valley.", "Light and delicate as if from heaven.", "C2", "adj.", "超凡脫俗的、縹緲的", "Greek aither (pure upper air)"],
+      ["whisper", "/ˈwɪs.pər/", "to speak very softly using only breath", "murmur", "She whispered the secret in his ear.", "Quiet speaking so others cannot overhear.", "A2", "v.", "低語、耳語", "Old English hwisprian (to whisper)"],
+      ["drift", "/drɪft/", "to be carried slowly by a current of water or air", "float", "Petals drifted slowly down the silent river.", "Moving without steering.", "B1", "v.", "漂流、漂移", "Old Norse dript (snow drift)"],
+      ["serenade", "/ˌser.əˈneɪd/", "a romantic piece of music performed at night", "melody", "A lone violinist serenaded the quiet square at dusk.", "A nighttime musical tribute.", "C1", "n.", "小夜曲", "Italian sereno (calm, clear night sky)"],
+      ["cascade", "/kæsˈkeɪd/", "to pour downward rapidly and in large quantities", "waterfall", "Silvery water cascaded over the smooth granite rocks.", "Pouring down like a waterfall.", "B2", "v.", "如瀑布般垂落", "Latin cadere (to fall)"],
+      ["silhouette", "/ˌsɪl.uˈet/", "the dark outline of someone or something against lighter background", "outline", "The castle's silhouette stood stark against the twilight.", "A shadow outline showing external shape.", "B2", "n.", "剪影、輪廓", "Named after Étienne de Silhouette"],
+      ["mystic", "/ˈmɪs.tɪk/", "involving spiritual mysteries or obscure truths", "occult", "The monks practiced ancient mystic meditation.", "Pertaining to deep spiritual enigmas.", "B2", "adj.", "神秘的、玄妙的", "Greek mystes (initiate into mysteries)"],
+      ["hazy", "/ˈheɪ.zi/", "covered by a fine mist or unclear in memory", "foggy", "His childhood memories had grown pleasant but hazy.", "Veiled in light fog or slight blur.", "B1", "adj.", "朦朧模糊的", "Origin unknown (connected to haze)"],
+      ["rippling", "/ˈrɪp.lɪŋ/", "flowing in small gentle undulations", "wavy", "A rippling current carried the paper boat away.", "Soft waves upon still water.", "B2", "adj.", "漣漪蕩漾的", "Imitative origin"],
+      ["melancholy", "/ˈmel.əŋ.kɒl.i/", "a feeling of pensive sadness with no obvious cause", "sorrow", "A sweet melancholy lingered in the minor chords.", "A gentle, thoughtful sadness.", "B2", "n.", "憂鬱、感傷", "Greek melas (black) + khole (bile)"],
+      ["quiver", "/ˈkwɪv.ər/", "to tremble or shake with a slight rapid motion", "shiver", "Her hand quivered as she opened the sealed letter.", "A small involuntary trembling.", "B2", "v.", "顫抖、微顫", "Old English cwifer (lively)"],
+      ["solitude", "/ˈsɒl.ɪ.tjuːd/", "the state or situation of being alone in peace", "privacy", "The author cherished the uninterrupted solitude of the woods.", "Peaceful isolation from society.", "B2", "n.", "獨處、幽居", "Latin solus (alone)"],
+      ["fathom", "/ˈfæð.əm/", "to understand a difficult problem after deep thought", "comprehend", "He could not fathom the reasons for her sudden departure.", "Measuring the deep waters of a mystery.", "C1", "v.", "徹底理解、測深", "Old English fæthm (outstretched arms)"],
+      ["lullaby", "/ˈlʌl.ə.baɪ/", "a quiet, gentle song sung to send someone to sleep", "cradle-song", "The soothing lullaby comforted the restless child.", "Soft music that invites sleep.", "B1", "n.", "搖籃曲", "Middle English lullen (to lull)"],
+      ["reverie", "/ˈrev.ər.i/", "a state of being pleasantly lost in one's thoughts", "daydream", "A tap on her shoulder broke her pleasant reverie.", "A daydream full of creative thought.", "C1", "n.", "遐想、沉思", "Old French rever (to dream, rave)"],
+      ["murmur", "/ˈmɜː.mər/", "a low, continuous, and indistinct sound", "hum", "The soft murmur of the stream helped him fall asleep.", "Indistinct gentle sound in the background.", "B2", "n.", "低語、潺潺聲", "Latin murmurare (to whisper, rumble)"]
     ]
   },
   {
     name: "The Gilded Heights",
     tone: "#b7832f",
     words: [
-      ["ascend", "/əˈsend/", "to move upward", "climb", "They began to ascend the narrow ridge.", "The opposite of descend.", "B2"],
-      ["formidable", "/ˈfɔː.mɪ.də.bəl/", "inspiring fear or respect through strength", "daunting", "A formidable guardian blocked the gate.", "So powerful that it makes you pause.", "C1"],
-      ["perilous", "/ˈper.ɪ.ləs/", "full of danger or risk", "hazardous", "The final crossing was perilous.", "A stronger and more dramatic word for dangerous.", "C1"],
-      ["vantage", "/ˈvɑːn.tɪdʒ/", "a position giving a good view or advantage", "viewpoint", "From this vantage, the whole valley was visible.", "A useful place from which to see.", "C1"],
-      ["endure", "/ɪnˈdjʊər/", "to continue despite difficulty", "withstand", "The climbers endured the bitter wind.", "To keep going through pain or hardship.", "B2"],
-      ["meager", "/ˈmiː.ɡər/", "too small in amount", "scant", "They survived on meager supplies.", "Less than what is needed.", "C1"],
-      ["abrupt", "/əˈbrʌpt/", "sudden and unexpected", "sudden", "The trail came to an abrupt end.", "It happens with no gentle transition.", "B2"],
-      ["steadfast", "/ˈsted.fɑːst/", "firm and loyal; not changing", "resolute", "She remained steadfast in the storm.", "Unshaken in belief or purpose.", "C1"],
-      ["summit", "/ˈsʌm.ɪt/", "the highest point of a mountain", "peak", "Clouds gathered below the summit.", "The very top of a mountain.", "B1"],
-      ["dauntless", "/ˈdɔːnt.ləs/", "showing determination and no fear", "fearless", "The dauntless guide pressed onward.", "Courage that refuses to be discouraged.", "C1"]
+      ["ascend", "/əˈsend/", "to move upward", "climb", "They began to ascend the narrow ridge.", "The opposite of descend.", "B2", "v.", "攀登、上升", "Latin ad (to) + scandere (to climb)"],
+      ["formidable", "/ˈfɔː.mɪ.də.bəl/", "inspiring fear or respect through strength", "daunting", "A formidable guardian blocked the gate.", "So powerful that it makes you pause.", "C1", "adj.", "令人敬畏的、強大的", "Latin formido (fear)"],
+      ["perilous", "/ˈper.ɪ.ləs/", "full of danger or risk", "hazardous", "The final crossing was perilous.", "A stronger and more dramatic word for dangerous.", "C1", "adj.", "極為危險的", "Latin periculum (danger)"],
+      ["vantage", "/ˈvɑːn.tɪdʒ/", "a position giving a good view or advantage", "viewpoint", "From this vantage, the whole valley was visible.", "A useful place from which to see.", "C1", "n.", "有利位置、制高點", "French avantage (advantage)"],
+      ["endure", "/ɪnˈdjʊər/", "to continue despite difficulty", "withstand", "The climbers endured the bitter wind.", "To keep going through pain or hardship.", "B2", "v.", "忍耐、持久支撐", "Latin durus (hard)"],
+      ["meager", "/ˈmiː.ɡər/", "too small in amount", "scant", "They survived on meager supplies.", "Less than what is needed.", "C1", "adj.", "微薄貧乏的", "Latin macer (lean, thin)"],
+      ["abrupt", "/əˈbrʌpt/", "sudden and unexpected", "sudden", "The trail came to an abrupt end.", "It happens with no gentle transition.", "B2", "adj.", "突然的、生硬唐突的", "Latin ab (away) + rumpere (to break)"],
+      ["steadfast", "/ˈsted.fɑːst/", "firm and loyal; not changing", "resolute", "She remained steadfast in the storm.", "Unshaken in belief or purpose.", "C1", "adj.", "堅定不移的", "Old English stede (place) + fæst (fast, firm)"],
+      ["summit", "/ˈsʌm.ɪt/", "the highest point of a mountain", "peak", "Clouds gathered below the summit.", "The very top of a mountain.", "B1", "n.", "頂峰、頂點", "Latin summus (highest)"],
+      ["dauntless", "/ˈdɔːnt.ləs/", "showing determination and no fear", "fearless", "The dauntless guide pressed onward.", "Courage that refuses to be discouraged.", "C1", "adj.", "無畏果敢的", "Latin domare (to tame) + less"],
+      ["pinnacle", "/ˈpɪn.ə.kəl/", "the most successful point or a high pointed rock", "apex", "Reaching the summit was the pinnacle of his climbing career.", "The very peak of accomplishment.", "C1", "n.", "頂峰、巔峰", "Latin pinna (wing, fin, feather)"],
+      ["valiant", "/ˈvæl.i.ənt/", "possessing or showing great courage or determination", "brave", "The scouts made a valiant effort to cross the gorge.", "Heroic courage in the face of peril.", "B2", "adj.", "英勇的、勇猛的", "Latin valere (to be strong)"],
+      ["precipice", "/ˈpres.ɪ.pɪs/", "a very steep cliff or hazardous situation", "brink", "They stood carefully at the edge of the rocky precipice.", "A sheer vertical cliff edge.", "C1", "n.", "懸崖峭壁、險境", "Latin praeceps (headlong, steep)"],
+      ["rugged", "/ˈrʌɡ.ɪd/", "having a broken, rocky, and uneven surface", "craggy", "The mountain trail was steep and rugged.", "Rough, wild, and sturdy terrain.", "B2", "adj.", "崎嶇不平的、粗獷堅韌的", "Old Norse rogg (shaggy tuft)"],
+      ["elevate", "/ˈel.ɪ.veɪt/", "to raise something to a higher position or level", "lift", "Daily practice will elevate your mastery of language.", "Lifting up physically or intellectually.", "B2", "v.", "提升、拔高", "Latin e + levare (to lift, make light)"],
+      ["loftiness", "/ˈlɒf.ti.nəs/", "great height or nobility of spirit", "grandeur", "The loftiness of the snowy peaks took their breath away.", "Towering height or noble grandeur.", "C1", "n.", "崇高、高聳", "Old Norse lopt (air, upper room)"],
+      ["arduous", "/ˈɑː.dʒu.əs/", "involving or requiring strenuous effort", "exhausting", "The expedition faced an arduous climb through freezing sleet.", "Extremely tough, taxing work.", "C1", "adj.", "艱鉅繁重的", "Latin arduus (steep, difficult)"],
+      ["altitude", "/ˈæl.tɪ.tjuːd/", "the height of an object or point above sea level", "elevation", "At high altitude, the air becomes thinner.", "Measurement of vertical height.", "B2", "n.", "海拔、高度", "Latin altus (high)"],
+      ["stamina", "/ˈstæm.ɪ.nə/", "the ability to sustain prolonged physical or mental effort", "endurance", "Long mountain treks require immense stamina.", "Staying power under physical pressure.", "B2", "n.", "耐力、持久力", "Latin stamen (thread of life)"],
+      ["traverse", "/trəˈvɜːs/", "to travel across or through a difficult area", "cross", "The adventurers traversed the glacier with iron crampons.", "Crossing wide or rugged expanses.", "C1", "v.", "橫渡、橫越", "Latin transversus (turned across)"],
+      ["ridge", "/rɪdʒ/", "a long, narrow hilltop or mountain crest", "crest", "They walked along the narrow mountain ridge at dawn.", "The elevated backbone of a mountain.", "B1", "n.", "山脊、山脈", "Old English hrycg (back, spine)"],
+      ["tenacious", "/təˈneɪ.ʃəs/", "holding firm; tending to keep a firm hold", "persistent", "Her tenacious spirit refused to give up on the summit.", "Refusing to let go of a goal.", "C1", "adj.", "堅毅不撓的、緊握的", "Latin tenere (to hold)"],
+      ["soar", "/sɔːr/", "to fly or rise high in the air", "ascend", "An eagle soared effortlessly over the deep canyon.", "Gliding high with ease.", "B1", "v.", "翱翔、飆升", "Latin ex + aura (out of the air)"],
+      ["granite", "/ˈɡræn.ɪt/", "a very hard crystalline rock", "stone", "The fortress was built of solid grey granite.", "Immensely hard mountain rock.", "B2", "n.", "花崗岩", "Italian granito (grained)"],
+      ["gorge", "/ɡɔːdʒ/", "a narrow valley between hills, usually with a stream", "canyon", "A rope bridge stretched across the roaring gorge.", "A deep, sheer mountain canyon.", "B2", "n.", "峽谷", "Latin gurges (whirlpool, throat)"],
+      ["monumental", "/ˌmɒn.jʊˈmen.təl/", "great in importance, extent, or size", "colossal", "Finishing the manuscript was a monumental achievement.", "Massive and historic in scale.", "B2", "adj.", "豐碑般的、極其重大的", "Latin monumentum (memorial)"],
+      ["intrepid", "/ɪnˈtrep.ɪd/", "fearless and adventurous", "daring", "The intrepid explorer crossed the uncharted desert alone.", "Unafraid of danger or exploration.", "C1", "adj.", "勇往直前的、無畏的", "Latin in (not) + trepidus (alarmed)"],
+      ["summitry", "/ˈsʌm.ɪ.tri/", "the art or practice of high-level meetings at peaks", "diplomacy", "Great minds gathered for summitry above the clouds.", "Peak-level coordination.", "C2", "n.", "高峰會談、峰會策略", "Latin summus (highest)"],
+      ["resolute", "/ˈrez.ə.luːt/", "admirably purposeful, determined, and unwavering", "firm", "He remained resolute in defending the vulnerable villagers.", "Fixed firmly in intention.", "C1", "adj.", "堅決剛毅的", "Latin resolvere (to untie, decide firmly)"],
+      ["majestic", "/məˈdʒes.tɪk/", "having or showing impressive beauty or scale", "grand", "The majestic snow-capped peaks pierced the clouds.", "Royally grand and breathtaking.", "B2", "adj.", "雄偉壯麗的", "Latin majestas (greatness)"]
     ]
   },
   {
     name: "The Clockwork Quarter",
     tone: "#39758c",
     words: [
-      ["intricate", "/ˈɪn.trɪ.kət/", "having many small, connected details", "complex", "The lock contained an intricate mechanism.", "Detailed in a complicated, impressive way.", "C1"],
-      ["meticulous", "/məˈtɪk.jə.ləs/", "extremely careful about small details", "precise", "Her meticulous notes filled three volumes.", "Care so exact that nothing is overlooked.", "C1"],
-      ["obsolete", "/ˈɒb.səl.iːt/", "no longer used because something newer exists", "outdated", "The machine became obsolete decades ago.", "Technology left behind by newer inventions.", "C1"],
-      ["synchronize", "/ˈsɪŋ.krə.naɪz/", "to make things happen at the same time", "coordinate", "The gears synchronize every hour.", "Matching timing exactly.", "C1"],
-      ["innovate", "/ˈɪn.ə.veɪt/", "to introduce new ideas or methods", "invent", "Small teams often innovate quickly.", "Creating a better way rather than repeating the old one.", "B2"],
-      ["erratic", "/ɪˈræt.ɪk/", "unpredictable and irregular", "inconsistent", "The device produced an erratic rhythm.", "No steady pattern can be trusted.", "C1"],
-      ["augment", "/ɔːɡˈment/", "to make something greater by adding to it", "enhance", "A new lens augmented her vision.", "Increase or improve by adding something.", "C1"],
-      ["feasible", "/ˈfiː.zə.bəl/", "possible and practical to do", "workable", "The engineer proposed a feasible solution.", "It can realistically be accomplished.", "B2"],
-      ["redundant", "/rɪˈdʌn.dənt/", "unnecessary because it is more than needed", "superfluous", "The backup made the old system redundant.", "Extra, but without a useful purpose.", "C1"],
-      ["calibrate", "/ˈkæl.ɪ.breɪt/", "to adjust an instrument for accuracy", "tune", "You must calibrate the compass first.", "Set a measuring tool so it gives correct results.", "C1"]
+      ["intricate", "/ˈɪn.trɪ.kət/", "having many small, connected details", "complex", "The lock contained an intricate mechanism.", "Detailed in a complicated, impressive way.", "C1", "adj.", "錯綜複雜精細的", "Latin intricare (to entangle)"],
+      ["meticulous", "/məˈtɪk.jə.ləs/", "extremely careful about small details", "precise", "Her meticulous notes filled three volumes.", "Care so exact that nothing is overlooked.", "C1", "adj.", "一絲不苟細緻的", "Latin metus (fear)"],
+      ["obsolete", "/ˈɒb.səl.iːt/", "no longer used because something newer exists", "outdated", "The machine became obsolete decades ago.", "Technology left behind by newer inventions.", "C1", "adj.", "過時淘汰的", "Latin obsolescere (to wear out)"],
+      ["synchronize", "/ˈsɪŋ.krə.naɪz/", "to make things happen at the same time", "coordinate", "The gears synchronize every hour.", "Matching timing exactly.", "C1", "v.", "使同步、協調時間", "Greek syn (together) + chronos (time)"],
+      ["innovate", "/ˈɪn.ə.veɪt/", "to introduce new ideas or methods", "invent", "Small teams often innovate quickly.", "Creating a better way rather than repeating the old one.", "B2", "v.", "創新、革新", "Latin in + novus (new)"],
+      ["erratic", "/ɪˈræt.ɪk/", "unpredictable and irregular", "inconsistent", "The device produced an erratic rhythm.", "No steady pattern can be trusted.", "C1", "adj.", "不穩定的、難以預料的", "Latin errare (to stray, wander)"],
+      ["augment", "/ɔːɡˈment/", "to make something greater by adding to it", "enhance", "A new lens augmented her vision.", "Increase or improve by adding something.", "C1", "v.", "擴增、增強", "Latin augere (to increase)"],
+      ["feasible", "/ˈfiː.zə.bəl/", "possible and practical to do", "workable", "The engineer proposed a feasible solution.", "It can realistically be accomplished.", "B2", "adj.", "切實可行的", "Latin facere (to do, make)"],
+      ["redundant", "/rɪˈdʌn.dənt/", "unnecessary because it is more than needed", "superfluous", "The backup made the old system redundant.", "Extra, but without a useful purpose.", "C1", "adj.", "多餘重複的", "Latin re + undare (to surge in waves)"],
+      ["calibrate", "/ˈkæl.ɪ.breɪt/", "to adjust an instrument for accuracy", "tune", "You must calibrate the compass first.", "Set a measuring tool so it gives correct results.", "C1", "v.", "校準、校正", "Arabic qalib (mold) -> caliber"],
+      ["mechanism", "/ˈmek.ə.nɪz.əm/", "a system of parts working together in a machine", "device", "The clock mechanism relies on weighted pendulums.", "A structured assembly of moving gears.", "B2", "n.", "機械裝置、運作機制", "Greek mekhane (machine)"],
+      ["precision", "/prɪˈsɪʒ.ən/", "the quality of being exact and accurate", "exactness", "Crafting microchips requires surgical precision.", "Spot-on exactness.", "B2", "n.", "精確、精密", "Latin praecidere (to cut off in front)"],
+      ["ingenious", "/ɪnˈdʒiː.ni.əs/", "clever, original, and inventive", "inventive", "The inventor devised an ingenious solar water pump.", "Showing brilliant inventive flair.", "C1", "adj.", "心靈手巧的、巧妙的", "Latin ingenium (mind, natural talent)"],
+      ["cog", "/kɒɡ/", "a wheel or bar with teeth that mesh with another part", "gear", "Every small cog is essential to the great clockwork tower.", "A single tooth on a gear.", "B1", "n.", "齒輪的一齒、小角色", "Middle English cogge (cog)"],
+      ["automaton", "/ɔːˈtɒm.ə.tɒn/", "a moving mechanical device made in imitation of a human", "robot", "The brass automaton served tea with uncanny grace.", "A self-operating antique robot.", "C1", "n.", "自動機器人、自動機械", "Greek automatos (acting of oneself)"],
+      ["tinker", "/ˈtɪŋ.kər/", "to make small changes to something in an effort to repair it", "fiddle", "He spent Sunday afternoons tinkering with vintage watches.", "Experimenting and adjusting small parts.", "B2", "v.", "修補、擺弄擺弄", "Middle English tinker (mender of kettles)"],
+      ["dynamo", "/ˈdaɪ.nə.məʊ/", "a machine that generates electricity; an energetic person", "generator", "The river current spun the powerhouse dynamo.", "A generator of raw kinetic power.", "B2", "n.", "發電機、精力充沛者", "Greek dynamis (power)"],
+      ["apparatus", "/ˌæp.əˈreɪ.təs/", "the technical equipment or machinery needed for a task", "equipment", "The laboratory was equipped with complex glass apparatus.", "A specialized set of tools or instruments.", "C1", "n.", "儀器、設備器材", "Latin apparare (to make ready)"],
+      ["prototype", "/ˈprəʊ.tə.taɪp/", "a first, typical, or preliminary model of something", "model", "The team tested their lightweight glider prototype.", "The very first test build before mass production.", "B2", "n.", "原型機、雛形", "Greek protos (first) + typos (model)"],
+      ["systematic", "/ˌsɪs.təˈmæt.ɪk/", "done or acting according to a fixed plan or system", "methodical", "She adopted a systematic approach to debugging the code.", "Methodical and thoroughly structured.", "B2", "adj.", "有系統的、井井有條的", "Greek systema (organized whole)"],
+      ["friction", "/ˈfrɪk.ʃən/", "the resistance that one surface encounters when moving over another", "resistance", "Lubricating the axles reduces friction and wear.", "Resistance when two surfaces rub.", "B2", "n.", "摩擦力、不和摩擦", "Latin fricare (to rub)"],
+      ["oscillate", "/ˈɒs.ɪ.leɪt/", "to move or swing back and forth at a regular speed", "swing", "The heavy pendulum oscillated with hypnotic rhythm.", "Swinging rhythmically side to side.", "C1", "v.", "擺動、震盪搖擺", "Latin oscillum (swing)"],
+      ["schematic", "/skiːˈmæt.ɪk/", "a diagram showing the main parts of an electrical circuit", "blueprint", "The technician studied the schematic before rewiring.", "A technical diagram or blueprint.", "C1", "n.", "電路圖、原理圖", "Greek schema (form, shape)"],
+      ["leverage", "/ˈliː.vər.ɪdʒ/", "the power to influence a person or the mechanical advantage of a lever", "advantage", "Engineers use leverage to lift heavy iron beams.", "Using a mechanical or strategic advantage.", "B2", "n.", "槓桿作用、優勢力量", "Old French levier (to raise)"],
+      ["conduit", "/ˈkɒn.djuː.ɪt/", "a channel for conveying water or other fluid, or cables", "channel", "Underground conduits carried fresh water to every house.", "A protective tube or transmission pipeline.", "C1", "n.", "管道、傳輸途徑", "Latin conducere (to bring together)"],
+      ["efficient", "/ɪˈfɪʃ.ənt/", "achieving maximum productivity with minimum wasted effort", "effective", "The modernized turbine is forty percent more efficient.", "Producing great output with minimal waste.", "B1", "adj.", "高效率的", "Latin efficere (to bring about, accomplish)"],
+      ["velocity", "/vəˈlɒs.ə.ti/", "the speed of something in a given direction", "speed", "The piston reached maximum velocity at mid-stroke.", "Speed with directional vector.", "B2", "n.", "速度、速率", "Latin velox (swift)"],
+      ["reconfigure", "/ˌriː.kənˈfɪɡ.ər/", "to rearrange the elements or settings of a system", "reorganize", "They reconfigured the circuit board to double its processing speed.", "Rearranging components for better performance.", "C1", "v.", "重新配置、調整結構", "Latin re + configurare (to shape)"],
+      ["resonate", "/ˈrez.ən.eɪt/", "to produce or be filled with a deep, full, reverberating sound", "echo", "Her heartfelt speech resonated with the entire engineering crew.", "Striking a resonant harmonic chord.", "C1", "v.", "共鳴、引起共振", "Latin re + sonare (to sound)"],
+      ["equilibrium", "/ˌek.wɪˈlɪb.ri.əm/", "a state in which opposing forces or influences are balanced", "balance", "The gyroscopes kept the vessel in perfect equilibrium.", "Stable state of balanced physical forces.", "C1", "n.", "平衡狀態、均衡", "Latin aequus (equal) + libra (balance)"]
     ]
   },
   {
     name: "The Celestial Library",
     tone: "#3c6570",
     words: [
-      ["profound", "/prəˈfaʊnd/", "having deep meaning or great insight", "deep", "The discovery had a profound effect on her.", "Far beneath the surface in meaning or impact.", "B2"],
-      ["contemplate", "/ˈkɒn.təm.pleɪt/", "to think deeply for a long time", "ponder", "They contemplated the stars in silence.", "A patient, serious form of thinking.", "C1"],
-      ["inevitable", "/ɪˈnev.ɪ.tə.bəl/", "certain to happen and impossible to avoid", "unavoidable", "Change was inevitable.", "Nothing can stop it from happening.", "B2"],
-      ["ambiguous", "/æmˈbɪɡ.ju.əs/", "having more than one possible meaning", "unclear", "The oracle gave an ambiguous reply.", "It can be understood in different ways.", "C1"],
-      ["transcend", "/trænˈsend/", "to go beyond the usual limits", "surpass", "Great stories transcend their own time.", "Rise beyond an ordinary boundary.", "C1"],
-      ["ephemeral", "/ɪˈfem.ər.əl/", "lasting for a very short time", "momentary", "The comet's glow was ephemeral.", "Beautiful perhaps, but quickly gone.", "C2"],
-      ["paradox", "/ˈpær.ə.dɒks/", "a statement that seems impossible but may be true", "contradiction", "The time loop created a paradox.", "It appears to oppose itself.", "C1"],
-      ["ubiquitous", "/juːˈbɪk.wɪ.təs/", "seeming to be present everywhere", "widespread", "Tiny screens have become ubiquitous.", "You encounter it almost everywhere you look.", "C2"],
-      ["discern", "/dɪˈsɜːn/", "to recognize something that is hard to see", "detect", "She could discern a pattern in the noise.", "Notice through careful attention.", "C1"],
-      ["enigma", "/ɪˈnɪɡ.mə/", "a person or thing that is mysterious", "mystery", "The silent astronomer remained an enigma.", "A puzzle that resists explanation.", "C1"]
+      ["profound", "/prəˈfaʊnd/", "having deep meaning or great insight", "deep", "The discovery had a profound effect on her.", "Far beneath the surface in meaning or impact.", "B2", "adj.", "深奧的、深刻深遠的", "Latin pro (forward) + fundus (bottom)"],
+      ["contemplate", "/ˈkɒn.təm.pleɪt/", "to think deeply for a long time", "ponder", "They contemplated the stars in silence.", "A patient, serious form of thinking.", "C1", "v.", "沉思凝視、深思", "Latin templum (place for observation)"],
+      ["inevitable", "/ɪˈnev.ɪ.tə.bəl/", "certain to happen and impossible to avoid", "unavoidable", "Change was inevitable.", "Nothing can stop it from happening.", "B2", "adj.", "不可避免的、必然發生的", "Latin in (not) + evitare (to avoid)"],
+      ["ambiguous", "/æmˈbɪɡ.ju.əs/", "having more than one possible meaning", "unclear", "The oracle gave an ambiguous reply.", "It can be understood in different ways.", "C1", "adj.", "含糊不清的、模稜兩可的", "Latin ambi (both ways) + agere (to drive)"],
+      ["transcend", "/trænˈsend/", "to go beyond the usual limits", "surpass", "Great stories transcend their own time.", "Rise beyond an ordinary boundary.", "C1", "v.", "超越、凌駕", "Latin trans (across) + scandere (to climb)"],
+      ["ephemeral", "/ɪˈfem.ər.əl/", "lasting for a very short time", "momentary", "The comet's glow was ephemeral.", "Beautiful perhaps, but quickly gone.", "C2", "adj.", "短暫易逝的、曇花一現的", "Greek epi (upon) + hemera (day)"],
+      ["paradox", "/ˈpær.ə.dɒks/", "a statement that seems impossible but may be true", "contradiction", "The time loop created a paradox.", "It appears to oppose itself.", "C1", "n.", "悖論、似非而是的說法", "Greek para (beyond) + doxa (opinion)"],
+      ["ubiquitous", "/juːˈbɪk.wɪ.təs/", "seeming to be present everywhere", "widespread", "Tiny screens have become ubiquitous.", "You encounter it almost everywhere you look.", "C2", "adj.", "無所不在的、普遍存在的", "Latin ubique (everywhere)"],
+      ["discern", "/dɪˈsɜːn/", "to recognize something that is hard to see", "detect", "She could discern a pattern in the noise.", "Notice through careful attention.", "C1", "v.", "辨明、洞悉察覺", "Latin dis (apart) + cernere (to distinguish)"],
+      ["enigma", "/ɪˈnɪɡ.mə/", "a person or thing that is mysterious", "mystery", "The silent astronomer remained an enigma.", "A puzzle that resists explanation.", "C1", "n.", "謎團、難以理解的人事物", "Greek ainigma (riddle)"],
+      ["celestial", "/sɪˈles.ti.əl/", "belonging or relating to heaven or space", "heavenly", "Constellations form grand celestial maps in the night sky.", "Pertaining to stars, planets, and outer space.", "B2", "adj.", "天空的天體的、神聖的", "Latin caelum (sky, heaven)"],
+      ["infinity", "/ɪnˈfɪn.ə.ti/", "the state of being endless or boundless", "eternity", "Mathematicians explore the profound nature of infinity.", "Boundless without any conceivable limit.", "B2", "n.", "無限、無窮", "Latin in (not) + finis (end)"],
+      ["astral", "/ˈæs.trəl/", "relating to or resembling the stars", "stellar", "Astral projections revealed distant galaxies.", "Starlike or celestial in character.", "C1", "adj.", "星辰的、星體的", "Greek astron (star)"],
+      ["illuminate", "/ɪˈluː.mɪ.neɪt/", "to enlighten spiritually or intellectually", "enlighten", "Philosophy aims to illuminate the human condition.", "Bringing profound clarity to the dark.", "B2", "v.", "啟迪、照亮心智", "Latin lumen (light)"],
+      ["sanctuary", "/ˈsæŋk.tʃʊə.ri/", "a place of safety or sacred quiet", "haven", "The high library was a quiet sanctuary for thinkers.", "A protected haven for deep reflection.", "B2", "n.", "避難所、聖所", "Latin sanctus (holy)"],
+      ["omnipresent", "/ˌɒm.nɪˈprez.ənt/", "widely or constantly encountered; widespread", "pervasive", "The force of gravity is omnipresent throughout the cosmos.", "Present at every single point in the universe.", "C2", "adj.", "無所不在的", "Latin omnis (all) + praesens (present)"],
+      ["immutable", "/ɪˈmjuː.tə.bəl/", "unchanging over time or unable to be changed", "fixed", "The laws of mathematics remain immutable.", "Permanent and incapable of alteration.", "C2", "adj.", "永恆不變的", "Latin in (not) + mutare (to change)"],
+      ["luminary", "/ˈluː.mɪ.nər.i/", "a person who inspires or influences others", "leader", "World-renowned luminaries gathered for the symposium.", "An intellectual or creative superstar.", "C1", "n.", "傑出人物、引領者", "Latin lumen (light)"],
+      ["quintessence", "/kwɪnˈtes.əns/", "the most perfect or typical example of a quality", "epitome", "Her poetry was the quintessence of lyric grace.", "The purest distilled essence.", "C2", "n.", "精髓、典範精華", "Latin quinta essentia (fifth element)"],
+      ["constellation", "/ˌkɒn.stəˈleɪ.ʃən/", "a group of stars forming a recognizable pattern", "pattern", "Sailors navigated by the constellation of Orion.", "A named cluster of stars in the heavens.", "B2", "n.", "星座、星群", "Latin con (together) + stella (star)"],
+      ["solstice", "/ˈsɒl.stɪs/", "either of the two times in the year when the sun reaches its highest or lowest point", "turning-point", "The summer solstice marks the longest day of the year.", "Sun turning point in astronomical calendar.", "C1", "n.", "至日（夏至或冬至）", "Latin sol (sun) + stitium (stoppage)"],
+      ["metaphysical", "/ˌmet.əˈfɪz.ɪ.kəl/", "relating to the branch of philosophy dealing with the nature of reality", "philosophical", "They engaged in a lively metaphysical debate on free will.", "Beyond tangible physical mechanics.", "C2", "adj.", "形而上學的、超自然的", "Greek meta (beyond) + physika (physics)"],
+      ["equilibrium", "/ˌek.wɪˈlɪb.ri.əm/", "a state of emotional or cosmic balance", "harmony", "Meditation restored his inner equilibrium.", "Harmonious cosmic stability.", "C1", "n.", "身心平衡、均勢", "Latin aequus (equal) + libra (scale)"],
+      ["zenith", "/ˈzen.ɪθ/", "the time at which something is most powerful or highest point in sky", "culmination", "At the zenith of its power, the civilization built grand observatories.", "The highest peak in the celestial hemisphere.", "C1", "n.", "天頂、頂點巔峰", "Arabic samt ar-ras (direction over head)"],
+      ["abyss", "/əˈbɪs/", "a deep or seemingly bottomless chasm or void", "void", "He peered into the cosmic abyss of distant space.", "An immeasurably deep void.", "C1", "n.", "深淵、無底洞", "Greek abyssos (bottomless)"],
+      ["serendipity", "/ˌser.ənˈdɪp.ə.ti/", "the occurrence of events by chance in a happy way", "fortune", "Finding the rare astronomy textbook was pure serendipity.", "A joyful and fortunate accidental discovery.", "C1", "n.", "意外之喜、機緣巧合", "Persian fairy tale Three Princes of Serendip"],
+      ["ethereal", "/iˈθɪə.ri.əl/", "extremely delicate and light in a way that seems not of this world", "heavenly", "The aurora borealis cast an ethereal green glow.", " otherworldly and airy.", "C2", "adj.", "空靈超塵的", "Greek aither (pure upper air)"],
+      ["revelation", "/ˌrev.əˈleɪ.ʃən/", "a surprising and previously unknown fact made known", "disclosure", "The astronomer made a stunning revelation about dark matter.", "A sudden unveiling of hidden truth.", "B2", "n.", "啟示、真相大白", "Latin revelare (to unveil)"],
+      ["sagacious", "/səˈɡeɪ.ʃəs/", "having or showing keen mental discernment and good judgment", "wise", "The sagacious librarian guided seekers toward timeless truths.", "Having deep wisdom and razor-sharp judgment.", "C2", "adj.", "睿智精明的、有遠見的", "Latin sagax (wise, perceptive)"],
+      ["cosmos", "/ˈkɒz.mɒs/", "the universe seen as a well-ordered whole", "universe", "Astronomy invites us to contemplate our humble place in the vast cosmos.", "The majestic ordered universe.", "B2", "n.", "宇宙、萬物體系", "Greek kosmos (order, world)"]
     ]
   }
 ].map(region => ({
   ...region,
-  words: region.words.map(([word, phonetic, definition, synonym, sentence, clue, level]) => ({
-    word, phonetic, definition, synonym, sentence, clue, level
+  words: region.words.map(([word, phonetic, definition, synonym, sentence, clue, level, pos, zh, root]) => ({
+    word, phonetic, definition, synonym, sentence, clue, level, pos: pos || "adj.", zh: zh || "", root: root || ""
   }))
 }));
 
@@ -171,7 +291,8 @@ let soundEnabled = true;
 let audioContext = null;
 
 function freshState() {
-  const knownWords = loadMeta().learned || {};
+  const meta = loadMeta();
+  const knownWords = meta.learned || {};
   return {
     hp: 42, maxHp: 42, level: 1, xp: 0, xpNext: 6,
     sparks: 3, ink: 0, streak: 0, maxStreak: 0,
@@ -183,10 +304,10 @@ function freshState() {
 }
 
 function loadMeta() {
-  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {}, reviews: {}, notes: {} };
+  const defaults = { totalWords: 0, bestStreak: 0, expeditions: 0, learned: {}, reviews: {}, notes: {}, bilingual: true };
   try {
     const loaded = JSON.parse(localStorage.getItem(META_KEY));
-    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {}, reviews: loaded.reviews || {}, notes: loaded.notes || {} } : defaults;
+    return loaded ? { ...defaults, ...loaded, learned: loaded.learned || {}, reviews: loaded.reviews || {}, notes: loaded.notes || {}, bilingual: loaded.bilingual !== undefined ? loaded.bilingual : true } : defaults;
   } catch { return defaults; }
 }
 
@@ -530,7 +651,17 @@ function showFeedback(correct, html) {
 }
 
 function wordMemoryMap(word) {
-  return `<span class="mini-memory-map"><span><small>MEANING</small>${word.definition}</span><span><small>NEAR WORD</small>${word.synonym}</span><span><small>IN CONTEXT</small><i>${word.sentence}</i></span></span>`;
+  const meta = loadMeta();
+  const showZh = meta.bilingual && word.zh;
+  const rootInfo = word.root ? `<span><small>ROOT / ORIGIN</small><em>${word.root}</em></span>` : "";
+  const zhInfo = showZh ? `<span class="memory-zh"><small>CHINESE 釋義</small><b>${word.zh}</b></span>` : "";
+  return `<span class="mini-memory-map">
+    <span><small>MEANING (${word.pos || "word"})</small>${word.definition}</span>
+    ${zhInfo}
+    <span><small>NEAR WORD</small>${word.synonym}</span>
+    <span><small>IN CONTEXT</small><i>${word.sentence}</i></span>
+    ${rootInfo}
+  </span>`;
 }
 
 function showDamage(value, player) {
@@ -794,13 +925,28 @@ function showLexicon() {
     else totals.learning += 1;
     return totals;
   }, { learning: 0, strong: 0, mastered: 0 });
-  const notes = loadMeta().notes;
+  const meta = loadMeta();
+  const notes = meta.notes;
   const content = learned.length ? learned.map(([key, count]) => {
     const word = allWords.find(item => item.word === key);
+    if (!word) return "";
     const review = reviews[key];
     const status = review ? review.mastered || review.strength >= 5 ? "mastered" : review.strength >= 3 ? "strong" : "learning" : "discovered";
-    return `<div class="lexicon-word ${review && !review.mastered ? "needs-review" : ""}"><b>${word.word}</b><span>${word.phonetic} · recalled ${count}×</span><mark class="${status}">${status}</mark><p>${word.definition}</p>${notes[key] ? `<blockquote>“${notes[key]}”</blockquote>` : ""}</div>`;
-  }).join("") : '<p class="section-copy">Your lexicon is waiting for its first word.</p>';
+    const showZh = meta.bilingual && word.zh;
+    return `<div class="lexicon-word ${review && !review.mastered ? "needs-review" : ""}">
+      <div class="lex-header">
+        <b>${word.word}</b>
+        <span class="lex-pos">${word.pos || ""}</span>
+        <span class="lex-level">${word.level || ""}</span>
+        ${showZh ? `<span class="lex-zh">${word.zh}</span>` : ""}
+      </div>
+      <span class="lex-meta">${word.phonetic} · recalled ${count}×</span>
+      <mark class="${status}">${status}</mark>
+      <p>${word.definition}</p>
+      ${word.root ? `<small class="lex-root">Origin: ${word.root}</small>` : ""}
+      ${notes[key] ? `<blockquote>“${notes[key]}”</blockquote>` : ""}
+    </div>`;
+  }).filter(Boolean).join("") : '<p class="section-copy">Your lexicon is waiting for its first word.</p>';
   openModal(`<span class="modal-kicker">YOUR LIVING RECORD</span><h2>Lexicon</h2>
     <div class="mastery-strip"><div><b>${mastery.learning}</b><span>Learning</span></div><div><b>${mastery.strong}</b><span>Strong</span></div><div><b>${mastery.mastered}</b><span>Mastered</span></div></div>
     ${reviewWords.length ? `<div class="review-callout"><div><small>WORDS TO REVISIT</small><b>${dueCount} due now · ${reviewWords.length} learning</b><p>Short, no-penalty recall sessions strengthen the words you missed.</p></div><button id="start-review-modal" class="button button-primary">Practice now →</button></div>` : ""}
@@ -969,12 +1115,20 @@ function speakWord(word) {
 }
 
 function showSettings() {
+  const meta = loadMeta();
   openModal(`<span class="modal-kicker">JOURNEY OPTIONS</span><h2>Settings</h2><div class="settings-list">
     <button id="modal-sound">Sound effects <b>${soundEnabled ? "ON" : "OFF"}</b></button>
+    <button id="modal-bilingual">Bilingual Hints (EN + 中文) <b>${meta.bilingual ? "ON" : "OFF"}</b></button>
     <button id="modal-home">Save & return to title <b>→</b></button>
     <button id="modal-reset" class="danger-button">Erase saved journey <b>×</b></button>
   </div>`);
   $("#modal-sound").addEventListener("click", () => { toggleSound(); showSettings(); });
+  $("#modal-bilingual").addEventListener("click", () => {
+    meta.bilingual = !meta.bilingual;
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    toast(meta.bilingual ? "Bilingual hints enabled (EN + 中文)" : "English-only mode enabled");
+    showSettings();
+  });
   $("#modal-home").addEventListener("click", () => { $("#modal").close(); returnHome(); });
   $("#modal-reset").addEventListener("click", () => {
     if (confirm("Erase this saved journey? Your run progress will be lost.")) {
