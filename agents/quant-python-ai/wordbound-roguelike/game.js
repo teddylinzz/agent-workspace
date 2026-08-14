@@ -2090,33 +2090,76 @@ function renderPracticeQuestion() {
   const review = loadMeta().reviews[word.word] || { strength: 0 };
   const mode = review.strength === 0 ? "definition" : review.strength === 1 ? "cloze" : review.strength === 2 ? "audio-definition" : review.strength >= 4 ? "typed-cloze" : "typed-definition";
   const property = mode === "definition" || mode === "audio-definition" ? "definition" : "word";
-  const distractors = shuffle(allWords.filter(item => item.word !== word.word)).slice(0, 3).map(item => item[property]);
-  const answers = shuffle([word[property], ...distractors]);
+  const isZh = loadMeta().bilingual;
+  const distractors = shuffle(allWords.filter(item => item.word !== word.word)).slice(0, 3);
+  const answerItems = shuffle([word, ...distractors]);
   const typed = mode.startsWith("typed");
   const prompt = mode === "definition"
-    ? "What does this word mean?"
+    ? (isZh ? "選擇最符合的英文釋義：" : "What does this word mean?")
     : mode === "audio-definition"
-      ? "Listen to the word, then connect it to its meaning."
+      ? (isZh ? "聆聽發音，並選擇其相應釋義：" : "Listen to the word, then connect it to its meaning.")
     : mode.includes("cloze")
       ? makeCloze(word)
       : word.definition;
-  const label = mode === "definition" ? "MEANING RECALL" : mode === "cloze" ? "CONTEXT CLUE" : mode === "audio-definition" ? "LISTEN & CONNECT" : mode === "typed-cloze" ? "USE IN CONTEXT" : "ACTIVE PRODUCTION";
+
+  const label = mode === "definition"
+    ? (isZh ? "詞義回想" : "MEANING RECALL")
+    : mode === "cloze"
+      ? (isZh ? "語境填空" : "CONTEXT CLUE")
+      : mode === "audio-definition"
+        ? (isZh ? "聽音辨義" : "LISTEN & CONNECT")
+        : mode === "typed-cloze"
+          ? (isZh ? "語境默寫" : "USE IN CONTEXT")
+          : (isZh ? "主動拼寫" : "ACTIVE PRODUCTION");
+
+  let headerTitle = word.word;
+  let headerSubtitle = `${word.phonetic} ${isZh && word.zh ? `· ${word.zh}` : ""}`;
+
+  if (typed) {
+    headerTitle = mode === "typed-cloze" ? (isZh ? "句中缺少一個單字" : "Complete the sentence") : (isZh ? "默寫該單字" : "Recall the word");
+    headerSubtitle = isZh ? `首字母 “${word.word[0]}” · ${word.word.length} 個字母 ${word.zh ? `· ${word.zh}` : ""}` : `Starts with “${word.word[0]}” · ${word.word.length} letters`;
+  } else if (mode === "audio-definition") {
+    headerTitle = isZh ? "仔細聆聽發音" : "Listen closely";
+    headerSubtitle = isZh ? "聲音 → 詞意連結" : "Sound → meaning";
+  } else if (mode === "cloze") {
+    headerTitle = isZh ? "句中缺少一個關鍵單字" : "A word is missing";
+    headerSubtitle = isZh ? `提示：${word.zh || ""} · ${word.pos || ""}` : `Choose the word that fits · ${word.pos || ""}`;
+  }
+
+  const showSpeaker = !typed && mode !== "cloze";
+
   practice.current = { word, mode, property, correctValue: word[property] };
   practice.attempts[word.word] = (practice.attempts[word.word] || 0) + 1;
   practice.answered = false;
   $("#stage").innerHTML = `<div class="practice-stage">
-    <div class="practice-progress"><span>RECALL SESSION</span><b>${practice.index + 1} / ${practice.words.length}</b></div>
+    <div class="practice-progress"><span>${isZh ? "單字複習測驗" : "RECALL SESSION"}</span><b>${practice.index + 1} / ${practice.words.length}</b></div>
     <div class="practice-meter"><span style="width:${practice.index / practice.words.length * 100}%"></span></div>
     <div class="practice-card">
-      <span class="practice-kicker">${label} · ${typed ? "TYPE IT FROM MEMORY" : "CHOOSE ONE"}</span>
-      <div class="practice-word-row"><div><h1>${typed ? "Recall the word" : mode === "audio-definition" ? "Listen closely" : word.word}</h1><p>${typed ? `Starts with “${word.word[0]}” · ${word.word.length} letters` : mode === "audio-definition" ? "Sound → meaning" : word.phonetic}</p></div>${typed ? "" : '<button id="practice-speak" class="speak-button" aria-label="Hear pronunciation">◖))</button>'}</div>
+      <span class="practice-kicker">${label} · ${typed ? (isZh ? "拼寫輸入" : "TYPE IT FROM MEMORY") : (isZh ? "四選一" : "CHOOSE ONE")}</span>
+      <div class="practice-word-row">
+        <div>
+          <h1>${headerTitle}</h1>
+          <p>${headerSubtitle}</p>
+        </div>
+        ${showSpeaker ? '<button id="practice-speak" class="speak-button" aria-label="Hear pronunciation">◖))</button>' : ""}
+      </div>
       <p class="challenge-prompt practice-prompt">${prompt}</p>
       ${typed
-        ? `<form id="typed-recall-form" class="typed-recall"><input id="typed-recall-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type the word…" aria-label="Type the missing word"><button class="button button-primary" type="submit">Check →</button></form><button id="reveal-answer" class="reveal-answer">I don't remember</button>`
-        : `<div class="answer-grid">${answers.map((answer, index) => `<button class="answer-button practice-answer" data-answer="${escapeAttribute(answer)}"><span>${String.fromCharCode(65 + index)}</span>${answer}</button>`).join("")}</div>`}
+        ? `<form id="typed-recall-form" class="typed-recall"><input id="typed-recall-input" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="${isZh ? "輸入單字…" : "Type the word…"}" aria-label="Type the missing word"><button class="button button-primary" type="submit">${isZh ? "確認 →" : "Check →"}</button></form><button id="reveal-answer" class="reveal-answer">${isZh ? "想不起來 (查看解答)" : "I don't remember"}</button>`
+        : `<div class="answer-grid">${answerItems.map((item, index) => {
+            const val = item[property];
+            const zh = (isZh && item.zh && property === "word") ? `<span class="answer-zh">（${item.zh}）</span>` : "";
+            return `<button class="answer-button practice-answer" data-answer="${escapeAttribute(val)}">
+              <span class="answer-key">${String.fromCharCode(65 + index)}</span>
+              <div class="answer-content">
+                <span class="answer-main">${val}</span>
+                ${zh}
+              </div>
+            </button>`;
+          }).join("")}</div>`}
       <div id="practice-feedback" class="practice-feedback" hidden></div>
     </div>
-    <button id="leave-practice" class="practice-leave">← Return to journey</button>
+    <button id="leave-practice" class="practice-leave">${isZh ? "← 返回旅程地圖" : "← Return to journey"}</button>
   </div>`;
   $("#practice-speak")?.addEventListener("click", () => speakWord(word.word));
   if (mode === "audio-definition") setTimeout(() => speakWord(word.word), 180);
