@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/agents/quant-python-ai/wordbound-roguelike/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/agents/quant-python-ai/wordbound-roguelike/$1"
+    }
+  ]
+}
