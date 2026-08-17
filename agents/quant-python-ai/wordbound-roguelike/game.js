@@ -1893,6 +1893,260 @@ const EXAM_DECKS = {
         "clue": "Respectful submission to authority."
       }
     ]
+  },
+  "lifestyle": {
+    "name": "Lifestyle, Travel & Food (生活日常、美食與旅行)",
+    "icon": "☕",
+    "desc": "High-yield vocabulary for global travel, culinary arts, hospitality, and daily conversations.",
+    "words": [
+      {
+        "word": "itinerary",
+        "phonetic": "/aɪˈtɪn.ə.rer.i/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "行程，旅行計畫",
+        "root": "Latin iter (journey)",
+        "definition": "a planned route or journey schedule",
+        "synonym": "schedule",
+        "sentence": "Our travel itinerary includes three days exploring historic Kyoto.",
+        "clue": "A detailed schedule for a trip."
+      },
+      {
+        "word": "delicacy",
+        "phonetic": "/ˈdel.ə.kə.si/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "佳餚，美食",
+        "root": "Latin delicatus (delightful)",
+        "definition": "something delightful or pleasing, especially a choice food",
+        "synonym": "treat",
+        "sentence": "Truffles are regarded as a rare culinary delicacy.",
+        "clue": "A special, expensive, or rare food item."
+      },
+      {
+        "word": "scenic",
+        "phonetic": "/ˈsiː.nɪk/",
+        "pos": "adj.",
+        "level": "B1",
+        "zh": "風景優美的",
+        "root": "Greek skene (stage/scene)",
+        "definition": "providing or relating to views of impressive natural scenery",
+        "synonym": "picturesque",
+        "sentence": "We took the scenic coastal route along the ocean cliffs.",
+        "clue": "Having beautiful natural views."
+      },
+      {
+        "word": "accommodation",
+        "phonetic": "/əˌkɑː.məˈdeɪ.ʃən/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "住宿，膳宿",
+        "root": "Latin ad- + commodare (to fit)",
+        "definition": "a room, group of rooms, or building in which someone may stay",
+        "synonym": "lodging",
+        "sentence": "The tour package covers both flights and luxury hotel accommodation.",
+        "clue": "A place to sleep and stay during a journey."
+      },
+      {
+        "word": "hospitality",
+        "phonetic": "/ˌhɑː.spɪˈtæl.ə.t̬i/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "熱情好客，殷勤招待",
+        "root": "Latin hospes (guest)",
+        "definition": "the friendly and generous reception and entertainment of guests",
+        "synonym": "warmth",
+        "sentence": "We were deeply moved by the warm hospitality of the villagers.",
+        "clue": "Generous and kind treatment of visitors."
+      },
+      {
+        "word": "ambiance",
+        "phonetic": "/ˌɑːm.biˈɑːns/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "氣氛，氛圍",
+        "root": "French ambiant (surrounding)",
+        "definition": "the character and atmosphere of a place",
+        "synonym": "atmosphere",
+        "sentence": "Soft acoustic jazz created a cozy ambiance in the bistro.",
+        "clue": "The special mood or feeling of an environment."
+      },
+      {
+        "word": "souvenir",
+        "phonetic": "/ˌsuː.vəˈnɪr/",
+        "pos": "n.",
+        "level": "B1",
+        "zh": "紀念品",
+        "root": "French souvenir (to remember)",
+        "definition": "a thing that is kept as a reminder of a person, place, or event",
+        "synonym": "memento",
+        "sentence": "She bought a miniature lighthouse as a souvenir of the harbor.",
+        "clue": "An object kept to remember a journey."
+      },
+      {
+        "word": "commute",
+        "phonetic": "/kəˈmjuːt/",
+        "pos": "v.",
+        "level": "B1",
+        "zh": "通勤，往返上班",
+        "root": "Latin commutare (to exchange)",
+        "definition": "to travel some distance between home and workplace regularly",
+        "synonym": "travel",
+        "sentence": "Thousands of workers commute into the central district by metro each morning.",
+        "clue": "Daily travel between home and office."
+      },
+      {
+        "word": "cuisine",
+        "phonetic": "/kwɪˈziːn/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "料理，菜餚",
+        "root": "French cuisine (kitchen/cooking)",
+        "definition": "a style or method of cooking, especially characteristic of a region",
+        "synonym": "cooking",
+        "sentence": "Mediterranean cuisine is renowned for fresh olive oil and aromatic herbs.",
+        "clue": "A regional cooking style."
+      },
+      {
+        "word": "wanderlust",
+        "phonetic": "/ˈwɑːn.dɚ.lʌst/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "漫遊癖，對旅行的強烈渴望",
+        "root": "German wandern (wander) + Lust (desire)",
+        "definition": "a strong desire to travel and explore the world",
+        "synonym": "travel-bug",
+        "sentence": "Her boundless wanderlust took her to six continents in five years.",
+        "clue": "A deep thirst to see faraway places."
+      }
+    ]
+  },
+  "tech_ai": {
+    "name": "AI, Tech & Digital Frontier (人工智慧與科技前沿)",
+    "icon": "🤖",
+    "desc": "Essential terminology for machine learning, software architecture, automation, and modern tech.",
+    "words": [
+      {
+        "word": "algorithm",
+        "phonetic": "/ˈæl.ɡə.rɪ.ðəm/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "演算法，演算法則",
+        "root": "Persian mathematician al-Khwarizmi",
+        "definition": "a process or set of rules followed in calculations or problem-solving",
+        "synonym": "procedure",
+        "sentence": "The recommendation algorithm suggests books based on your reading history.",
+        "clue": "Step-by-step logic for solving a computing problem."
+      },
+      {
+        "word": "automation",
+        "phonetic": "/ˌɑː.t̬əˈmeɪ.ʃən/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "自動化",
+        "root": "Greek automatos (acting of oneself)",
+        "definition": "the use of largely automatic equipment in a system or operation",
+        "synonym": "mechanization",
+        "sentence": "Factory automation dramatically increased production speed and safety.",
+        "clue": "Operating machines without human intervention."
+      },
+      {
+        "word": "cognitive",
+        "phonetic": "/ˈkɑːɡ.nə.t̬ɪv/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "認知的，感知的",
+        "root": "Latin cognoscere (know)",
+        "definition": "related to mental processes of perception, memory, and judgment",
+        "synonym": "intellectual",
+        "sentence": "Playing strategy puzzles enhances sharp cognitive abilities in seniors.",
+        "clue": "Having to do with the thinking mind."
+      },
+      {
+        "word": "parameter",
+        "phonetic": "/pəˈræm.ə.t̬ɚ/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "參數，界限",
+        "root": "Greek para- (beside) + metron (measure)",
+        "definition": "a numerical or other measurable factor defining a system or setting conditions",
+        "synonym": "variable",
+        "sentence": "Large neural networks tune billions of parameters during training.",
+        "clue": "A numerical setting that configures a model."
+      },
+      {
+        "word": "scalable",
+        "phonetic": "/ˈskeɪ.lə.bəl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "具擴展性的，可擴充的",
+        "root": "Latin scala (ladder)",
+        "definition": "able to be changed in size or scale to handle growing workloads",
+        "synonym": "expandable",
+        "sentence": "Cloud databases provide a scalable infrastructure for rapid app growth.",
+        "clue": "Able to handle 10x more users without crashing."
+      },
+      {
+        "word": "heuristic",
+        "phonetic": "/hjuːˈrɪs.tɪk/",
+        "pos": "adj.",
+        "level": "C1",
+        "zh": "啟發式的，經驗法則的",
+        "root": "Greek heuriskein (to find/discover)",
+        "definition": "enabling someone to discover or learn something for themselves; a practical shortcut",
+        "synonym": "practical-rule",
+        "sentence": "The search engine uses a clever heuristic to prune unlikely paths.",
+        "clue": "A practical rule of thumb that speeds up decisions."
+      },
+      {
+        "word": "iteration",
+        "phonetic": "/ˌɪt̬.əˈreɪ.ʃən/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "迭代，重複循環",
+        "root": "Latin iterare (to repeat)",
+        "definition": "the repetition of a process in order to generate a sequence of outcomes",
+        "synonym": "cycle",
+        "sentence": "With each software iteration, the app becomes faster and more polished.",
+        "clue": "A new version born from another cycle of improvement."
+      },
+      {
+        "word": "infrastructure",
+        "phonetic": "/ˈɪn.frəˌstrʌk.tʃɚ/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "基礎建設，基礎架構",
+        "root": "Latin infra (below) + structura (building)",
+        "definition": "the basic physical and organizational structures and facilities needed for operation",
+        "synonym": "framework",
+        "sentence": "High-speed fiber optics form the backbone of modern digital infrastructure.",
+        "clue": "The fundamental underlying system that powers everything."
+      },
+      {
+        "word": "encryption",
+        "phonetic": "/ɪnˈkrɪp.ʃən/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "加密，密碼化",
+        "root": "Greek kryptos (hidden)",
+        "definition": "the process of converting information or data into a secure code",
+        "synonym": "encoding",
+        "sentence": "End-to-end encryption protects sensitive messages from interception.",
+        "clue": "Scrambling data so only authorized keys can read it."
+      },
+      {
+        "word": "autonomous",
+        "phonetic": "/ɑːˈtɑː.nə.məs/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "自主的，自治的",
+        "root": "Greek auto- (self) + nomos (law)",
+        "definition": "acting independently or having the freedom to do so",
+        "synonym": "self-governing",
+        "sentence": "Autonomous electric shuttles navigated the campus safely.",
+        "clue": "Operating on its own without manual control."
+      }
+    ]
   }
 };
 
@@ -2364,19 +2618,83 @@ function returnHome() {
   updateContinueButton();
 }
 
+
+const DAILY_MODIFIERS_POOL = [
+  { id: "etymo_rush", name: "Etymology Rush", zhName: "語源共鳴", desc: "Latin/Greek roots deal double damage & grant +2 Insight.", zhDesc: "字根單字造成雙倍傷害並獲得 +2 點經驗。" },
+  { id: "high_stakes", name: "High Stakes", zhName: "高額籌碼", desc: "+80% Ink rewards, but mistakes deal +3 damage.", zhDesc: "墨水獎勵提高 80%，但答錯受到額外 3 點傷害。" },
+  { id: "bazaar_bloom", name: "Bazaar Bloom", zhName: "黑市繁榮", desc: "Shops are 50% cheaper and carry Polychrome relics.", zhDesc: "黑市半價且有高機率刷出五彩傳奇遺物。" },
+  { id: "glass_cannon", name: "Glass Cannon", zhName: "玻璃大砲", desc: "Max HP is 24, but Critical Hits deal 300% damage.", zhDesc: "生命上限降為 24，但暴擊傷害提升為 300%。" },
+  { id: "polyglot_grace", name: "Polyglot's Grace", zhName: "通曉萬國", desc: "Start with +4 Sparks and 2 Potions pre-filled.", zhDesc: "起始額外獲得 4 點火花並自帶 2 瓶隨機藥水。" },
+  { id: "vault_frenzy", name: "Vault Frenzy", zhName: "密室狂熱", desc: "Wordle Vaults appear twice as often with +10 bonus ink.", zhDesc: "Wordle 密室出現機率翻倍且獎勵額外 +10 墨水。" }
+];
+
+function getDailyModifiers(dateStr) {
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
+    hash |= 0;
+  }
+  const idx1 = Math.abs(hash) % DAILY_MODIFIERS_POOL.length;
+  const idx2 = (Math.abs(hash >> 3) + 1) % DAILY_MODIFIERS_POOL.length;
+  return [DAILY_MODIFIERS_POOL[idx1], DAILY_MODIFIERS_POOL[idx2 === idx1 ? (idx2 + 1) % DAILY_MODIFIERS_POOL.length : idx2]];
+}
+
 function startDailyExpedition() {
   const todayStr = new Date().toISOString().slice(0, 10);
+  const isZh = loadMeta().bilingual;
+  const mods = getDailyModifiers(todayStr);
+  
   state = freshState("cartographer");
   state.isDaily = true;
   state.dailyDate = todayStr;
+  state.dailyMods = mods;
   soundEnabled = true;
+  
+  if (mods.some(m => m.id === "glass_cannon")) {
+    state.hp = 24;
+    state.maxHp = 24;
+  }
+  if (mods.some(m => m.id === "polyglot_grace")) {
+    state.sparks = 7;
+    state.potions = ["strength_potion", "insight_brew"];
+  }
+
   const meta = loadMeta();
   meta.expeditions += 1;
   localStorage.setItem(META_KEY, JSON.stringify(meta));
-  toast(`⭐ <b>Daily Expedition for ${todayStr}</b> began!`);
+
+  const modNames = mods.map(m => isZh ? m.zhName : m.name).join(" · ");
+  toast(isZh ? `⭐ <b>今日特異律則啟用：</b> ${modNames}` : `⭐ <b>Daily Modifiers Active:</b> ${modNames}`);
   enterGame();
   showPathChoice();
 }
+
+function showSeedModal() {
+  const isZh = loadMeta().bilingual;
+  const randomSeed = "LEX-" + Math.floor(1000 + Math.random() * 9000);
+  openModal(`
+    <span class="modal-kicker">CUSTOM SEEDED EXPEDITION</span>
+    <h2>${isZh ? "自訂遠征種子碼 (Run Seed)" : "Custom Seeded Run"}</h2>
+    <p class="section-copy">${isZh ? "輸入自訂的種子碼以生成完全固定的地圖、詞彙與事件，適合與好友進行競速挑戰！" : "Enter a custom seed to generate a fixed sequence of encounters, words, and relics to compete with friends!"}</p>
+    <div style="margin: 16px 0; display: flex; gap: 8px;">
+      <input id="custom-seed-input" type="text" value="${randomSeed}" style="flex:1;padding:12px;font:700 16px var(--mono);border:1px solid var(--line);border-radius:6px;text-align:center;text-transform:uppercase;" />
+      <button id="start-seed-btn" class="button button-primary">${isZh ? "啟動種子遠征 ➔" : "Start Run ➔"}</button>
+    </div>
+  `);
+
+  $("#start-seed-btn")?.addEventListener("click", () => {
+    const seed = $("#custom-seed-input")?.value.trim().toUpperCase() || randomSeed;
+    state = freshState("scholar");
+    state.seed = seed;
+    state.isSeeded = true;
+    soundEnabled = true;
+    closeModal();
+    enterGame();
+    toast(isZh ? `🎲 <b>已載入種子：</b> ${seed}` : `🎲 <b>Loaded Seed:</b> ${seed}`);
+    showPathChoice();
+  });
+}
+
 
 function updateHUD() {
   if (!state) return;
@@ -2641,10 +2959,10 @@ function showPathChoice() {
     const pool = state.node === 0
       ? ["normal", "normal", "mystery"]
       : state.node === 2
-        ? ["normal", "shop", "alchemy", "riddle"]
+        ? ["normal", "shop", "alchemy", "riddle", "vault"]
         : state.node === 3
-          ? ["elite", "rest", "shop", "mystery"]
-          : ["normal", "elite", "rest", "mystery"];
+          ? ["elite", "rest", "shop", "vault", "mystery"]
+          : ["normal", "elite", "rest", "riddle", "mystery"];
     let types = shuffle(pool).slice(0, 3);
     while (types.length < 3) types.push("normal");
     const details = isZh ? {
@@ -2654,6 +2972,7 @@ function showPathChoice() {
       mystery: ["?", "未知的岔路 (Unwritten Turn)", "充滿驚喜或考驗的隨機事件。", "未知 UNKNOWN"],
       shop: ["◈", "字彙黑市 (Lexicon Bazaar)", "消耗墨水購買遺物、藥劑與火花水晶。", "商人 MERCHANT"],
       riddle: ["🧩", "字謎寶箱 (Riddler's Chest)", "重組字母古文，直接解鎖寶箱遺物。", "小遊戲 PUZZLE"],
+      vault: ["🗝️", "萬字密碼庫 (Wordle Vault)", "5次機會解開古代5~6字密碼門，奪取傳奇遺物！", "密室 VAULT"],
       alchemy: ["🔮", "字根煉金祭壇 (Alchemy Shrine)", "辨識古老字根，獲取永久屬性祝福。", "祭壇 SHRINE"]
     } : {
       normal: ["✦", "Wandering Words", "A balanced vocabulary battle.", "ENCOUNTER"],
@@ -2662,6 +2981,7 @@ function showPathChoice() {
       mystery: ["?", "An Unwritten Turn", "A curious event with uncertain rewards.", "UNKNOWN"],
       shop: ["◈", "Lexicon Bazaar", "Exchange ink for relics, potions, and power.", "MERCHANT"],
       riddle: ["🧩", "The Riddler's Chest", "Unscramble runes to unlock relic treasures.", "MINI-GAME"],
+      vault: ["🗝️", "The Wordle Vault", "Crack the 5~6 letter ancient cipher to claim rare relics!", "VAULT"],
       alchemy: ["🔮", "Word Alchemy Shrine", "Identify root meanings for permanent blessings.", "SHRINE"]
     };
     $("#stage").innerHTML = `
@@ -2692,6 +3012,7 @@ function choosePath(type) {
   if (type === "mystery") showEvent();
   if (type === "shop") showShop();
   if (type === "riddle") showAnagramChest();
+  if (type === "vault") showWordleVault();
   if (type === "alchemy") showAlchemyShrine();
 }
 
@@ -3364,14 +3685,18 @@ function wordMemoryMap(word) {
   </span>`;
 }
 
-function showDamage(value, player) {
+function showDamage(value, player, isCrit = false, isShield = false) {
   const target = player ? $(".portrait-wrap") : $("#enemy-art");
+  if (!target) return;
   const box = target.getBoundingClientRect();
   const number = document.createElement("span");
   number.className = "damage-number";
-  number.textContent = typeof value === "number" ? `−${value}` : value;
-  number.style.left = `${box.left + box.width / 2}px`;
-  number.style.top = `${box.top + box.height / 3}px`;
+  if (isCrit) number.classList.add("crit");
+  if (isShield) number.classList.add("shield");
+  if (player) number.classList.add("player-hit");
+  number.textContent = typeof value === "number" ? `−${value}${isCrit ? " 💥" : ""}` : value;
+  number.style.left = `${box.left + box.width / 2 + (Math.random() * 20 - 10)}px`;
+  number.style.top = `${box.top + box.height / 3 + (Math.random() * 14 - 7)}px`;
   document.body.appendChild(number);
   setTimeout(() => number.remove(), 850);
 }
@@ -3383,7 +3708,7 @@ function triggerScreenShake(intensity = "sm") {
   setTimeout(() => el.classList.remove(cls), 360);
 }
 
-function spawnParticles(x, y, color = "#e3ac46", count = 12) {
+function spawnParticles(x, y, color = "#e3ac46", count = 14) {
   for (let i = 0; i < count; i++) {
     const p = document.createElement("span");
     p.className = "spark-particle";
@@ -3391,12 +3716,24 @@ function spawnParticles(x, y, color = "#e3ac46", count = 12) {
     p.style.top = `${y}px`;
     p.style.backgroundColor = color;
     const angle = Math.random() * Math.PI * 2;
-    const dist = 25 + Math.random() * 55;
+    const dist = 24 + Math.random() * 40;
     p.style.setProperty("--tx", `${Math.cos(angle) * dist}px`);
     p.style.setProperty("--ty", `${Math.sin(angle) * dist}px`);
     document.body.appendChild(p);
-    setTimeout(() => p.remove(), 650);
+    setTimeout(() => p.remove(), 600);
   }
+}
+
+function showBossDialogue(text, duration = 3000) {
+  const enemyZone = $(".enemy-zone");
+  if (!enemyZone) return;
+  const existing = $(".boss-speech-bubble");
+  if (existing) existing.remove();
+  const bubble = document.createElement("div");
+  bubble.className = "boss-speech-bubble";
+  bubble.innerHTML = text;
+  enemyZone.appendChild(bubble);
+  setTimeout(() => { if (bubble) bubble.remove(); }, duration);
 }
 
 function showFloatingBanner(text, type = "quickwit") {
@@ -5155,6 +5492,11 @@ function openModal(html) {
   modal.showModal();
 }
 
+function closeModal() {
+  const modal = $("#modal");
+  if (modal && modal.open) modal.close();
+}
+
 function toggleSound() {
   soundEnabled = !soundEnabled;
   if (state) updateHUD();
@@ -5246,6 +5588,7 @@ function toast(html) {
 
 $("#new-run-button").addEventListener("click", showClassSelection);
 $("#daily-run-button")?.addEventListener("click", startDailyExpedition);
+$("#seed-title-button")?.addEventListener("click", showSeedModal);
 $("#sanctuary-title-button")?.addEventListener("click", showSanctuary);
 $("#sanctuary-button")?.addEventListener("click", showSanctuary);
 $("#achievements-title-button")?.addEventListener("click", showAchievements);
@@ -5350,6 +5693,7 @@ function applyLanguageToUI() {
   
   if ($("#new-run-button")) $("#new-run-button").innerHTML = isZh ? "開啟全新冒險 <span>→</span>" : "Begin a new journey <span>→</span>";
   if ($("#daily-run-button")) $("#daily-run-button").textContent = isZh ? "⭐ 每日隨機遠征" : "⭐ Daily Expedition";
+  if ($("#seed-title-button")) $("#seed-title-button").textContent = isZh ? "🎲 自訂種子碼" : "🎲 Custom Seed";
   if ($("#continue-button")) $("#continue-button").textContent = isZh ? "繼續當前冒險" : "Continue journey";
   
   const revCount = getReviewWords(true).length;
@@ -5634,3 +5978,195 @@ function setupHeroWordCard() {
 }
 
 setupHeroWordCard();
+
+
+function showWordleVault() {
+  state.screen = "event";
+  const isZh = loadMeta().bilingual;
+  const allWords = REGIONS[state.region % REGIONS.length].words;
+  const eligible = allWords.filter(w => w.word.length >= 4 && w.word.length <= 6 && /^[a-zA-Z]+$/.test(w.word));
+  const targetObj = random(eligible.length ? eligible : allWords);
+  const secretWord = targetObj.word.toUpperCase();
+  const wordLength = secretWord.length;
+  const maxAttempts = 5;
+  
+  let currentAttempt = 0;
+  let currentGuess = "";
+  let gameOver = false;
+  const guesses = [];
+  const keyStates = {};
+
+  function renderWordleStage() {
+    $("#stage").innerHTML = `
+      <div class="event-stage vault-stage">
+        <div class="event-illustration vault-icon">🗝️</div>
+        <span class="section-kicker">${isZh ? "古代密碼密室" : "ANCIENT CIPHER VAULT"}</span>
+        <h1>${isZh ? "萬字密碼金庫 (Wordle Vault)" : "The Wordle Vault"}</h1>
+        <p class="section-copy">${isZh ? `依據 🟩 綠（正確）、🟨 黃（存在但位置不同）、⬛ 灰（不存在）反饋，在 5 次內猜出 ${wordLength} 個字母的古老密碼！` : `Guess the ${wordLength}-letter secret cipher in 5 tries using 🟩 Green, 🟨 Yellow, and ⬛ Gray feedback.`}</p>
+        
+        <div class="vault-box">
+          <span class="riddle-clue-label">${isZh ? "金庫銘刻線索" : "VAULT CLUE / DEFINITION"}</span>
+          <blockquote class="riddle-clue">“${targetObj.definition}”</blockquote>
+          ${targetObj.zh ? `<small class="riddle-zh">${isZh ? "繁中釋義" : "Meaning"}: ${targetObj.zh}</small>` : ""}
+          
+          <div class="wordle-grid" id="wordle-grid">
+            ${Array.from({ length: maxAttempts }).map((_, rowIdx) => `
+              <div class="wordle-row" data-row="${rowIdx}">
+                ${Array.from({ length: wordLength }).map((_, colIdx) => `
+                  <div class="wordle-cell" data-col="${colIdx}"></div>
+                `).join("")}
+              </div>
+            `).join("")}
+          </div>
+
+          <div class="wordle-keyboard" id="wordle-keyboard">
+            ${[
+              ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+              ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+              ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
+            ].map(row => `
+              <div class="wordle-key-row">
+                ${row.map(k => `
+                  <button type="button" class="wordle-key ${k === 'ENTER' || k === '⌫' ? 'wide' : ''} ${keyStates[k] || ''}" data-key="${k}">${k}</button>
+                `).join("")}
+              </div>
+            `).join("")}
+          </div>
+          
+          <button id="leave-vault" class="reveal-answer" style="margin-top: 14px;">${isZh ? "離開金庫 (獲得 6 點安慰墨水)" : "Leave vault (+6 Ink consolation)"}</button>
+        </div>
+      </div>
+    `;
+
+    // Keyboard handlers
+    document.querySelectorAll(".wordle-key").forEach(kBtn => {
+      kBtn.addEventListener("click", () => handleKey(kBtn.dataset.key));
+    });
+
+    $("#leave-vault")?.addEventListener("click", () => {
+      state.ink += 6;
+      toast(isZh ? "你收下 6 點散落的墨水並離開金庫。" : "You pocketed 6 loose ink and left.");
+      completeNode();
+    });
+
+    updateGridDisplay();
+  }
+
+  function handleKey(key) {
+    if (gameOver) return;
+    if (key === "ENTER") {
+      submitGuess();
+    } else if (key === "⌫" || key === "BACKSPACE") {
+      if (currentGuess.length > 0) {
+        currentGuess = currentGuess.slice(0, -1);
+        updateGridDisplay();
+        tone(360, 0.04);
+      }
+    } else if (/^[A-Z]$/.test(key)) {
+      if (currentGuess.length < wordLength) {
+        currentGuess += key;
+        updateGridDisplay();
+        tone(520, 0.04);
+      }
+    }
+  }
+
+  function updateGridDisplay() {
+    const rowEl = document.querySelector(`.wordle-row[data-row='${currentAttempt}']`);
+    if (!rowEl) return;
+    const cells = rowEl.querySelectorAll(".wordle-cell");
+    cells.forEach((cell, idx) => {
+      cell.textContent = currentGuess[idx] || "";
+      if (currentGuess[idx]) cell.classList.add("filled");
+      else cell.classList.remove("filled");
+    });
+  }
+
+  function submitGuess() {
+    if (currentGuess.length < wordLength) {
+      toast(isZh ? `請輸入完整的 ${wordLength} 個字母！` : `Word must be ${wordLength} letters long!`);
+      tone(180, 0.12);
+      return;
+    }
+
+    const rowEl = document.querySelector(`.wordle-row[data-row='${currentAttempt}']`);
+    const cells = rowEl.querySelectorAll(".wordle-cell");
+    const guessArr = currentGuess.split("");
+    const targetArr = secretWord.split("");
+    const result = Array(wordLength).fill("absent");
+    const targetCounts = {};
+
+    targetArr.forEach(c => targetCounts[c] = (targetCounts[c] || 0) + 1);
+
+    // Pass 1: exact matches
+    guessArr.forEach((c, i) => {
+      if (c === targetArr[i]) {
+        result[i] = "correct";
+        targetCounts[c]--;
+      }
+    });
+
+    // Pass 2: present matches
+    guessArr.forEach((c, i) => {
+      if (result[i] !== "correct" && targetCounts[c] > 0) {
+        result[i] = "present";
+        targetCounts[c]--;
+      }
+    });
+
+    // Animate cells
+    result.forEach((status, i) => {
+      setTimeout(() => {
+        cells[i].classList.add(status);
+        const k = guessArr[i];
+        if (status === "correct" || !keyStates[k] || (status === "present" && keyStates[k] !== "correct")) {
+          keyStates[k] = status;
+          const kBtn = document.querySelector(`.wordle-key[data-key='${k}']`);
+          if (kBtn) {
+            kBtn.className = `wordle-key ${k === 'ENTER' || k === '⌫' ? 'wide' : ''} ${status}`;
+          }
+        }
+      }, i * 140);
+    });
+
+    const isWin = currentGuess === secretWord;
+
+    setTimeout(() => {
+      if (isWin) {
+        gameOver = true;
+        state.ink += 30;
+        state.learned[targetObj.word] = (state.learned[targetObj.word] || 0) + 1;
+        updateReviewRecord(targetObj.word, true, "easy");
+        tone(580, .1); setTimeout(() => tone(780, .15), 100); setTimeout(() => tone(1040, .25), 220);
+        toast(isZh ? "🎉 <b>密碼破解成功！</b> 獲得 +30 墨水與古代遺物！" : "🎉 <b>Vault Cracked!</b> +30 Ink & Ancient Relic choice!");
+        setTimeout(() => {
+          completeNode(false);
+          showRelicReward(30, "boss");
+        }, 800);
+      } else {
+        currentAttempt++;
+        currentGuess = "";
+        if (currentAttempt >= maxAttempts) {
+          gameOver = true;
+          tone(200, 0.25);
+          toast(isZh ? `密碼已鎖定！正確密碼為 <b>${secretWord}</b>。獲得 +8 墨水。` : `Vault locked! Cipher was <b>${secretWord}</b>. +8 Ink.`);
+          state.ink += 8;
+          state.learned[targetObj.word] = (state.learned[targetObj.word] || 0) + 1;
+          setTimeout(() => completeNode(true), 1500);
+        }
+      }
+    }, wordLength * 140 + 200);
+  }
+
+  // Physical keyboard listener
+  const keydownListener = (e) => {
+    if (gameOver || state.screen !== "event") return;
+    if (e.key === "Enter") handleKey("ENTER");
+    else if (e.key === "Backspace") handleKey("BACKSPACE");
+    else if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
+  };
+
+  document.addEventListener("keydown", keydownListener, { once: false });
+
+  renderWordleStage();
+}
