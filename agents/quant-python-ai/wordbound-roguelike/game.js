@@ -790,6 +790,126 @@ const EXAM_DECKS = {
         "synonym": "embark-on",
         "sentence": "The university will undertake a large research initiative.",
         "clue": "Taking on a major task."
+      },
+      {
+        "word": "crucial",
+        "phonetic": "/ˈkruː.ʃəl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "至關重要的",
+        "root": "Latin crux (cross)",
+        "definition": "extremely important or necessary",
+        "synonym": "vital",
+        "sentence": "Accurate maps are crucial for survival in the wilderness.",
+        "clue": "Of the greatest importance."
+      },
+      {
+        "word": "persevere",
+        "phonetic": "/ˌpɜː.sɪˈvɪər/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "堅持不懈",
+        "root": "Latin perseverare (persist)",
+        "definition": "to continue trying despite difficulties",
+        "synonym": "persist",
+        "sentence": "If you persevere through the challenges, you will triumph.",
+        "clue": "Keep going even when it's hard."
+      },
+      {
+        "word": "diverse",
+        "phonetic": "/daɪˈvɜːs/",
+        "pos": "adj.",
+        "level": "B1",
+        "zh": "多樣的，形形色色的",
+        "root": "Latin divertere (turn different ways)",
+        "definition": "showing a great deal of variety; very different",
+        "synonym": "varied",
+        "sentence": "The archipelago is home to a diverse ecosystem.",
+        "clue": "Many different kinds."
+      },
+      {
+        "word": "clarify",
+        "phonetic": "/ˈklær.ɪ.faɪ/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "闡明，澄清",
+        "root": "Latin clarus (clear)",
+        "definition": "to make something clearer and easier to understand",
+        "synonym": "explain",
+        "sentence": "The scholar paused to clarify the ancient prophecy.",
+        "clue": "Make free from confusion."
+      },
+      {
+        "word": "abrupt",
+        "phonetic": "/əˈbrʌpt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "突然的，唐突的",
+        "root": "Latin ab- (away) + rumpere (break)",
+        "definition": "sudden and unexpected",
+        "synonym": "sudden",
+        "sentence": "The winding trail came to an abrupt end at the cliff.",
+        "clue": "Happening without warning."
+      },
+      {
+        "word": "genuine",
+        "phonetic": "/ˈdʒen.ju.ɪn/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "真正的，真誠的",
+        "root": "Latin genuinus (natural, native)",
+        "definition": "truly what something is said to be; authentic and honest",
+        "synonym": "authentic",
+        "sentence": "Her genuine kindness won over the entire village.",
+        "clue": "Real and not fake."
+      },
+      {
+        "word": "momentum",
+        "phonetic": "/məˈmen.təm/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "動能，勢頭",
+        "root": "Latin movimentum (movement)",
+        "definition": "the force or speed with which something moves forward",
+        "synonym": "impetus",
+        "sentence": "The expedition gained momentum after discovering the artifact.",
+        "clue": "Forward drive and energy."
+      },
+      {
+        "word": "elaborate",
+        "phonetic": "/iˈlæb.ər.ət/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "精巧複雜的，詳盡的",
+        "root": "Latin ex- (out) + labor (work)",
+        "definition": "detailed and complicated in design or planning",
+        "synonym": "intricate",
+        "sentence": "The temple gate was carved with elaborate gold patterns.",
+        "clue": "Full of complex details."
+      },
+      {
+        "word": "reluctant",
+        "phonetic": "/rɪˈlʌk.tənt/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "勉強的，猶豫不決的",
+        "root": "Latin reluctari (struggle against)",
+        "definition": "unwilling and hesitant to act",
+        "synonym": "hesitant",
+        "sentence": "He was reluctant to enter the dark cavern alone.",
+        "clue": "Unwilling to do something."
+      },
+      {
+        "word": "sustain",
+        "phonetic": "/səˈsteɪn/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "維持，支撐",
+        "root": "Latin sub- (up from below) + tenere (hold)",
+        "definition": "to support, nourish, or keep something in existence",
+        "synonym": "maintain",
+        "sentence": "Clean water and discipline sustained the travelers.",
+        "clue": "Keep alive or continuing."
       }
     ]
   },
@@ -2018,6 +2138,78 @@ const EXAM_DECKS = {
         "synonym": "travel-bug",
         "sentence": "Her boundless wanderlust took her to six continents in five years.",
         "clue": "A deep thirst to see faraway places."
+      },
+      {
+        "word": "culinary",
+        "phonetic": "/ˈkʌl.ə.ner.i/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "烹飪的，料理的",
+        "root": "Latin culina (kitchen)",
+        "definition": "connected with cooking or kitchens",
+        "synonym": "gastronomic",
+        "sentence": "Paris is celebrated worldwide for its culinary traditions.",
+        "clue": "Related to delicious cooking."
+      },
+      {
+        "word": "refreshment",
+        "phonetic": "/rɪˈfreʃ.mənt/",
+        "pos": "n.",
+        "level": "B1",
+        "zh": "茶點，恢復體力",
+        "root": "French refreschir (make fresh)",
+        "definition": "drinks and light food offered in social gatherings",
+        "synonym": "snacks",
+        "sentence": "Light refreshments were served after the concert.",
+        "clue": "Food and drink that revive you."
+      },
+      {
+        "word": "tranquility",
+        "phonetic": "/træŋˈkwɪl.ə.ti/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "寧靜，安詳",
+        "root": "Latin tranquillus (calm)",
+        "definition": "the peaceful state of being calm and quiet",
+        "synonym": "serenity",
+        "sentence": "The secluded mountain lake offered deep tranquility.",
+        "clue": "Peace free from noise."
+      },
+      {
+        "word": "exotic",
+        "phonetic": "/ɪɡˈzɑː.t̬ɪk/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "異國風情的，奇特的",
+        "root": "Greek exotikos (foreign)",
+        "definition": "originating in or characteristic of a distant foreign country",
+        "synonym": "foreign",
+        "sentence": "The bazaar was filled with exotic spices and rare teas.",
+        "clue": "From a faraway, colorful place."
+      },
+      {
+        "word": "leisure",
+        "phonetic": "/ˈliː.ʒɚ/",
+        "pos": "n.",
+        "level": "B1",
+        "zh": "閒暇，休閒",
+        "root": "Latin licere (to be permitted)",
+        "definition": "time free from work or duties, spent in relaxation",
+        "synonym": "recreation",
+        "sentence": "She enjoys reading poetry in her leisure time.",
+        "clue": "Free time to relax."
+      },
+      {
+        "word": "nourish",
+        "phonetic": "/ˈnɜːr.ɪʃ/",
+        "pos": "v.",
+        "level": "B2",
+        "zh": "滋養，養育",
+        "root": "Latin nutrire (feed, nurse)",
+        "definition": "to provide food or other substances necessary for growth",
+        "synonym": "feed",
+        "sentence": "Hearty stew nourished the tired hikers after a long day.",
+        "clue": "Provide essential sustenance."
       }
     ]
   },
@@ -2145,6 +2337,78 @@ const EXAM_DECKS = {
         "synonym": "self-governing",
         "sentence": "Autonomous electric shuttles navigated the campus safely.",
         "clue": "Operating on its own without manual control."
+      },
+      {
+        "word": "neural",
+        "phonetic": "/ˈnʊr.əl/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "神經的，神經網路的",
+        "root": "Greek neuron (nerve)",
+        "definition": "relating to a nerve or the nervous system / neural network",
+        "synonym": "nervous",
+        "sentence": "Neural networks mimic the interconnected pathways of the human brain.",
+        "clue": "Brain-like connections."
+      },
+      {
+        "word": "bandwidth",
+        "phonetic": "/ˈbænd.wɪtθ/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "頻寬，處理能力",
+        "root": "Germanic band + width",
+        "definition": "the capacity for data transfer or mental capacity to handle tasks",
+        "synonym": "capacity",
+        "sentence": "Streaming 4K video requires generous internet bandwidth.",
+        "clue": "Data transmission limit."
+      },
+      {
+        "word": "quantum",
+        "phonetic": "/ˈkwɑːn.təm/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "量子，重大的躍進",
+        "root": "Latin quantus (how much)",
+        "definition": "the smallest quantity of energy or a significant sudden leap",
+        "synonym": "atomic",
+        "sentence": "Quantum computing unlocks calculations impossible for classical machines.",
+        "clue": "Smallest unit of physics."
+      },
+      {
+        "word": "redundancy",
+        "phonetic": "/rɪˈdʌn.dən.si/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "備援機制，冗餘",
+        "root": "Latin redundare (overflow)",
+        "definition": "the inclusion of extra components as backups in case of failure",
+        "synonym": "backup",
+        "sentence": "Data centers install multiple generators for power redundancy.",
+        "clue": "Backup safety systems."
+      },
+      {
+        "word": "synthetic",
+        "phonetic": "/sɪnˈθet̬.ɪk/",
+        "pos": "adj.",
+        "level": "B2",
+        "zh": "合成的，人工製造的",
+        "root": "Greek synthetikos (put together)",
+        "definition": "made by chemical synthesis or artificial generation",
+        "synonym": "artificial",
+        "sentence": "Synthetic voices have become remarkably lifelike and expressive.",
+        "clue": "Man-made, not natural."
+      },
+      {
+        "word": "benchmark",
+        "phonetic": "/ˈbentʃ.mɑːrk/",
+        "pos": "n.",
+        "level": "B2",
+        "zh": "基準測試，衡量標準",
+        "root": "Surveyor's bench mark",
+        "definition": "a standard or point of reference against which things may be compared",
+        "synonym": "standard",
+        "sentence": "The new model set a world record on the AI reasoning benchmark.",
+        "clue": "A comparative standard."
       }
     ]
   }
@@ -3131,28 +3395,116 @@ function updateEnemyShieldUI() {
   }
 }
 
+
+// ── Unified Dynamic Vocabulary & Shuffle Bag Engine ──
+function getAllActiveWords() {
+  const meta = loadMeta();
+  const activeKeys = meta.activeDecks || ["intermediate", "toeic", "toefl", "gre", "lifestyle", "tech_ai"];
+  const deckWords = [];
+  
+  activeKeys.forEach(key => {
+    if (EXAM_DECKS[key] && EXAM_DECKS[key].words) {
+      deckWords.push(...EXAM_DECKS[key].words);
+    }
+  });
+
+  if (meta.customDecks && meta.customDecks.length) {
+    meta.customDecks.forEach(cd => {
+      if (cd.words) deckWords.push(...cd.words);
+    });
+  }
+
+  const baseWords = REGIONS.flatMap(r => r.words);
+  const wordMap = new Map();
+  [...baseWords, ...deckWords].forEach(w => {
+    if (w && w.word && !wordMap.has(w.word.toLowerCase())) {
+      wordMap.set(w.word.toLowerCase(), w);
+    }
+  });
+
+  return Array.from(wordMap.values());
+}
+
+function getRegionWordPool(regionIndex) {
+  const meta = loadMeta();
+  const baseRegion = REGIONS[regionIndex % REGIONS.length].words;
+  const allActive = getAllActiveWords();
+  
+  // Assign active decks smoothly across regions by theme/level
+  const pool = [...baseRegion];
+  allActive.forEach(w => {
+    if (!pool.some(p => p.word.toLowerCase() === w.word.toLowerCase())) {
+      // Balance distribution: early regions get A2/B1/B2, later get B2/C1/C2
+      const isLate = (regionIndex % REGIONS.length) >= 3;
+      const isAdvanced = w.level === "C1" || w.level === "C2" || w.level === "Advanced";
+      if ((isLate && isAdvanced) || (!isLate && !isAdvanced) || Math.random() < 0.4) {
+        pool.push(w);
+      }
+    }
+  });
+  return pool;
+}
+
 function getWord() {
   state.banishedWords = state.banishedWords || [];
   state.gildedWords = state.gildedWords || [];
-  const regionWords = REGIONS[state.region % REGIONS.length].words.filter(w => !state.banishedWords.includes(w.word));
-  const allWords = REGIONS.flatMap(region => region.words).filter(w => !state.banishedWords.includes(w.word));
-  const reviewRecords = loadMeta().reviews;
-  const dueReviews = allWords.filter(word => {
-    const review = reviewRecords[word.word];
-    return review && review.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
+  state.seen = state.seen || [];
+  battle.usedWords = battle.usedWords || [];
+
+  const meta = loadMeta();
+  const fullRegionPool = getRegionWordPool(state.region).filter(w => !state.banishedWords.includes(w.word));
+  const reviewRecords = meta.reviews || {};
+
+  // Check Spaced Repetition Due Reviews (capped to 1 per encounter with 25% max probability)
+  const dueReviews = fullRegionPool.filter(word => {
+    const r = reviewRecords[word.word];
+    return r && r.dueAt <= Date.now() && !battle.usedWords.includes(word.word);
   });
-  let available = regionWords.filter(word => !battle.usedWords.includes(word.word));
-  if (!available.length) { battle.usedWords = []; available = regionWords; }
-  const unseen = available.filter(word => !state.seen.includes(word.word));
-  const reviewWord = dueReviews.length
-    ? shuffle(dueReviews).sort((a, b) => reviewRecords[b.word].misses - reviewRecords[a.word].misses)[0]
-    : null;
-  const word = reviewWord && Math.random() < .6 ? reviewWord : random(unseen.length ? unseen : available);
-  battle.usedWords.push(word.word);
-  if (!state.seen.includes(word.word)) state.seen.push(word.word);
-  if (state.seen.length > 45) state.seen.shift();
-  return word;
+
+  let chosenWord = null;
+
+  // 1. Spaced Repetition review word (at most once every 4 questions to prevent word monopolization)
+  if (dueReviews.length > 0 && battle.turn % 4 === 1 && Math.random() < 0.35) {
+    chosenWord = shuffle(dueReviews)[0];
+  }
+
+  // 2. Shuffle Bag Draw Pile: maintain true randomness without repeats
+  if (!chosenWord) {
+    if (!state.wordDrawPile || state.wordDrawPile.length === 0) {
+      // Create new draw pile from full active pool, filtering out recent cross-run history
+      const unseenInRun = fullRegionPool.filter(w => !state.seen.includes(w.word));
+      const poolToShuffle = unseenInRun.length >= 4 ? unseenInRun : fullRegionPool;
+      state.wordDrawPile = shuffle([...poolToShuffle]);
+    }
+
+    // Filter available from draw pile
+    let candidateIdx = state.wordDrawPile.findIndex(w => !battle.usedWords.includes(w.word));
+    if (candidateIdx === -1) {
+      // Reshuffle draw pile if exhausted in current battle
+      state.wordDrawPile = shuffle(fullRegionPool.filter(w => !battle.usedWords.includes(w.word)));
+      candidateIdx = 0;
+    }
+
+    if (state.wordDrawPile.length > 0) {
+      chosenWord = state.wordDrawPile.splice(candidateIdx >= 0 ? candidateIdx : 0, 1)[0];
+    }
+  }
+
+  // Fallback safe pick
+  if (!chosenWord) {
+    const remaining = fullRegionPool.filter(w => !battle.usedWords.includes(w.word));
+    chosenWord = remaining.length ? random(remaining) : random(fullRegionPool);
+  }
+
+  battle.usedWords.push(chosenWord.word);
+  if (!state.seen.includes(chosenWord.word)) state.seen.push(chosenWord.word);
+  
+  // Keep anti-repetition memory fresh across 60 words
+  if (state.seen.length > 60) state.seen.shift();
+
+  return chosenWord;
 }
+
 
 function renderQuestion() {
   battle.locked = false;
@@ -3161,7 +3513,7 @@ function renderQuestion() {
   battle.current = getWord();
   $("#enemy-art").classList.remove("hurt", "attack");
   const word = battle.current;
-  const regionWords = REGIONS[state.region % REGIONS.length].words;
+  const regionWords = getRegionWordPool(state.region);
   const isZh = loadMeta().bilingual;
   
   // Question Archetype selection: Ensure question and answer are never identical
